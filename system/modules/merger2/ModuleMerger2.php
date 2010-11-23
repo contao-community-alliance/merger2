@@ -44,38 +44,41 @@ class ModuleMerger2 extends Module
 	 */
 	protected $strTemplate = 'mod_merger2';
 	
+	
 	/**
 	 * function: language(..)
-	 * 
-	 * @param mixed $language
+	 * Test the page language.
+	 * @param mixed $strLanguage
 	 * @return boolean
 	 */
-	private function language($language) {
+	private function language($strLanguage) {
 		global $objPage;
-		return (strtolower($objPage->language) == strtolower($language));
+		return (strtolower($objPage->language) == strtolower($strLanguage));
 	}
+	
 	
 	/**
 	 * function: page(..)
-	 * 
-	 * @param mixed $id
+	 * Test the page id or alias.
+	 * @param mixed $strId
 	 * @return boolean
 	 */
-	private function page($id) {
+	private function page($strId) {
 		global $objPage;
-		return (intval($id) == $objPage->id || $id == $objPage->alias) ? true : false;
+		return (intval($strId) == $objPage->id || $strId == $objPage->alias) ? true : false;
 	}
+	
 	
 	/**
 	 * function: pageInPath(..)
-	 * 
-	 * @param mixed $id
+	 * Test if page id or alias is in path.
+	 * @param mixed $strId
 	 * @return boolean
 	 */
-	private function pageInPath($id) {
+	private function pageInPath($strId) {
 		$page = $GLOBALS['objPage'];
 		while (true) {
-			if (intval($id) == $page->id || $id == $page->alias)
+			if (intval($strId) == $page->id || $strId == $page->alias)
 				return true;
 			if ($page->pid > 0) {
 				$page = $this->Database->prepare("SELECT * FROM tl_page WHERE id=?")
@@ -90,27 +93,26 @@ class ModuleMerger2 extends Module
 	}
 	
 	/**
-	 * Boolean evaluate function.
-	 * 
-	 * @param string $value
+	 * Evaluate value to bool.
+	 * @param string $strValue
 	 * @return boolean
 	 */
-	private function boolean($value) {
-		switch (strtolower($value)) {
+	private function boolean($strValue) {
+		switch (strtolower($strValue)) {
 		case 'true': case '1': case '!false': case '!0': return true;
 		case 'false': case '0': case '!true': case '!1': return false;
-		default: throw new Exception('Illegal boolean value: "' . $value . '"');
+		default: throw new Exception('Illegal boolean value: "' . $strValue . '"');
 		}
 	}
 	
 	/**
 	 * function: depth(..)
-	 * 
-	 * @param mixed $value
+	 * Test the page depth.
+	 * @param mixed $strValue
 	 * @return boolean
 	 */
-	private function depth($value) {
-		if (preg_match('#^(<|>|<=|>=|=|!=)?\\s*(\\d+)$#', $value, $m)) {
+	private function depth($strValue) {
+		if (preg_match('#^(<|>|<=|>=|=|!=)?\\s*(\\d+)$#', $strValue, $m)) {
 			$cmp = $m[1] ? $m[1] : '=';
 			$i = intval($m[2]);
 			
@@ -134,24 +136,24 @@ class ModuleMerger2 extends Module
 			case '!=': return $n != $i;
 			}
 		} else {
-			throw new Exception('Illegal depth value: "' . $value . '"');
+			throw new Exception('Illegal depth value: "' . $strValue . '"');
 		}
 	}
 	
 	/**
 	 * function: articleExists(..)
-	 * 
-	 * @param string $column
-	 * @param boolean $includeUnpublished
+	 * Test if an article exists in the column.
+	 * @param string $strColumn
+	 * @param boolean $boolIncludeUnpublished
 	 * @return boolean;
 	 */
-	function articleExists($column, $includeUnpublished = false) {
+	function articleExists($strColumn, $boolIncludeUnpublished = false) {
 		global $objPage;
 		$time = time();
 		$objArticle = $this->Database->prepare("SELECT COUNT(id) as count FROM tl_article WHERE pid=? AND inColumn=?" .
-										($includeUnpublished ? '' : " AND (start='' OR start<?) AND (stop='' OR stop>?) AND published=1"))
+										($boolIncludeUnpublished ? '' : " AND (start='' OR start<?) AND (stop='' OR stop>?) AND published=1"))
 									 ->limit(1)
-									 ->execute($objPage->id, $column, $time, $time);
+									 ->execute($objPage->id, $strColumn, $time, $time);
 		if ($objArticle->next())
 			return $objArticle->count > 0;
 		else
@@ -160,26 +162,25 @@ class ModuleMerger2 extends Module
 	
 	/**
 	 * function: children(..)
-	 * 
-	 * @param integer $count
-	 * @param boolean $includeUnpublished
+	 * Test if the page have the specific count of children.
+	 * @param integer $intCount
+	 * @param boolean $boolIncludeUnpublished
 	 * @return boolean
 	 */
-	function children($count, $includeUnpublished = false) {
+	function children($intCount, $boolIncludeUnpublished = false) {
 		global $objPage;
 		$time = time();
 		$objChildren = $this->Database->prepare("SELECT COUNT(id) as count FROM tl_page WHERE pid=?" .
-										($includeUnpublished ? '' : " AND (start='' OR start<?) AND (stop='' OR stop>?) AND published=1"))
+										($boolIncludeUnpublished ? '' : " AND (start='' OR start<?) AND (stop='' OR stop>?) AND published=1"))
 									 ->limit(1)
 									 ->execute($objPage->id, $time, $time);
 		if ($objChildren->next())
-			return $objChildren->count >= $count;
+			return $objChildren->count >= $intCount;
 		return false;
 	}
 	
 	/**
-	 * Evaluate a function with boolean result.
-	 * 
+	 * Evaluate a function to bool result.
 	 * @param array $matches
 	 * @return boolean
 	 */
@@ -199,8 +200,7 @@ class ModuleMerger2 extends Module
 	}
 	
 	/**
-	 * Evaluate a function with string result.
-	 * 
+	 * Evaluate a function to string result.
 	 * @param array $matches
 	 * @return string
 	 */
@@ -210,7 +210,6 @@ class ModuleMerger2 extends Module
 	
 	/**
 	 * Evaluate AND concatenation.
-	 * 
 	 * @param array $matches
 	 * @return string
 	 */
@@ -222,7 +221,6 @@ class ModuleMerger2 extends Module
 	
 	/**
 	 * Evaluate OR concatenation.
-	 * 
 	 * @param array $matches
 	 * @return string
 	 */
@@ -234,7 +232,6 @@ class ModuleMerger2 extends Module
 	
 	/**
 	 * Evaluate a block.
-	 * 
 	 * @param array $matches
 	 * @return string
 	 */
@@ -244,36 +241,56 @@ class ModuleMerger2 extends Module
 	
 	/**
 	 * Evaluate an expression.
-	 * 
 	 * @param string $expression
 	 * @return boolean
 	 */
 	private function evaluate($expression) {
-		$count = 0;
-		do {
-			$expression = preg_replace_callback('#(\\w+)\\(([^\\)]*)\\)#',
+		$intCount = 0;
+		// evaluate all functions
+		do
+		{
+			$expression = preg_replace_callback(
+				'#(\\w+)\\(([^\\)]*)\\)#',
 				array(&$this, 'evaluateFunction'),
 				$expression,
 				-1,
-				$count);
-		} while($count > 0);
-		do {
-			$expression = preg_replace_callback('#\\(([^\\)]+)\\)#', array(&$this, 'evaluateBlock'), $expression, -1, $count);
-		} while ($count > 0);
-		do {
-			$expression = preg_replace_callback('#(!?true|!?false|!?0|!?1)\\s+(and|&)\\s+(!?true|!?false|!?0|!?1)#i',
+				$intCount);
+		}
+		while($intCount > 0);
+		// evaluate blocks
+		do
+		{
+			$expression = preg_replace_callback(
+				'#\\(([^\\)]+)\\)#',
+				array(&$this, 'evaluateBlock'),
+				$expression,
+				-1,
+				$intCount);
+		}
+		while ($intCount > 0);
+		// evaluate 'and'-concatenations
+		do
+		{
+			$expression = preg_replace_callback(
+				'#(!?true|!?false|!?0|!?1)\\s+(and|&)\\s+(!?true|!?false|!?0|!?1)#i',
 				array(&$this, 'evaluateAnd'),
 				$expression,
 				-1,
-				$count);
-		} while($count > 0);
-		do {
-			$expression = preg_replace_callback('#(!?true|!?false|!?0|!?1)\\s+(or|\\|)\\s+(!?true|!?false|!?0|!?1)#i',
+				$intCount);
+		}
+		while($intCount > 0);
+		// evaluate 'or'-concatenations
+		do
+		{
+			$expression = preg_replace_callback(
+				'#(!?true|!?false|!?0|!?1)\\s+(or|\\|)\\s+(!?true|!?false|!?0|!?1)#i',
 				array(&$this, 'evaluateOr'),
 				$expression,
 				-1,
-				$count);
-		} while($count > 0);
+				$intCount);
+		}
+		while($intCount > 0);
+		// return a boolean result
 		return $this->boolean($expression);
 	}
 	
@@ -324,7 +341,7 @@ class ModuleMerger2 extends Module
 			$objArticles = $this->Database->prepare("SELECT id FROM tl_article WHERE pid=? AND inColumn=?" . ($onlyInheritable ? " AND inheritable=1" : "") . (!BE_USER_LOGGED_IN ? " AND (start='' OR start<$time) AND (stop='' OR stop>$time) AND published=1" : "") . " ORDER BY sorting")
 										  ->execute($objPage->id, $strColumn);
 
-			if (($count = $objArticles->numRows) < 1)
+			if (($intCount = $objArticles->numRows) < 1)
 			{
 				return '';
 			}
@@ -333,7 +350,7 @@ class ModuleMerger2 extends Module
 
 			while ($objArticles->next())
 			{
-				$return .= $this->getPageArticle($objPage, $objArticles->id, (($count > 1) ? true : false), false, $strColumn);
+				$return .= $this->getPageArticle($objPage, $objArticles->id, (($intCount > 1) ? true : false), false, $strColumn);
 			}
 
 			return $return;
@@ -398,13 +415,14 @@ class ModuleMerger2 extends Module
 
 	/**
 	 * Generate an article and return it as string
+	 * 
 	 * @param integer
 	 * @param boolean
 	 * @param boolean
 	 * @param string
 	 * @return string
 	 */
-	protected function getPageArticle(&$objPage, $varId, $blnMultiMode=false, $blnIsInsertTag=false, $strColumn='main')
+	protected function getPageArticle(&$objPage, $varId, $boolMultiMode=false, $boolIsInsertTag=false, $strColumn='main')
 	{
 		if (!$varId)
 		{
@@ -414,7 +432,7 @@ class ModuleMerger2 extends Module
 		$this->import('Database');
 
 		// Get article
-		$objArticle = $this->Database->prepare("SELECT *, author AS authorId, (SELECT name FROM tl_user WHERE id=author) AS author FROM tl_article WHERE (id=? OR alias=?)" . (!$blnIsInsertTag ? " AND pid=?" : ""))
+		$objArticle = $this->Database->prepare("SELECT *, author AS authorId, (SELECT name FROM tl_user WHERE id=author) AS author FROM tl_article WHERE (id=? OR alias=?)" . (!$boolIsInsertTag ? " AND pid=?" : ""))
 									 ->limit(1)
 									 ->execute((is_numeric($varId) ? $varId : 0), $varId, $objPage->id);
 
@@ -436,54 +454,108 @@ class ModuleMerger2 extends Module
 		}
 		
 		$objArticle->headline = $objArticle->title;
-		$objArticle->multiMode = $blnMultiMode;
+		$objArticle->multiMode = $boolMultiMode;
 
 		$objArticle = new ModuleArticle($objArticle, $strColumn);
-		return $objArticle->generate($blnIsInsertTag);
+		return $objArticle->generate($boolIsInsertTag);
 	}
 
-	protected function inheritArticle(&$objPage, $max = 0, $lvl = 0) {
-		$objParent = $this->Database->prepare('SELECT * FROM tl_page WHERE id = ?')
-									->limit(1)
-									->execute($objPage->pid);
+	
+	/**
+	 * Inherit article from parent page
+	 */
+	protected function inheritArticle(&$objPage, $intMax = 0, $intLevel = 0) {
+		$objParent = $this->Database->prepare('
+				SELECT
+					*
+				FROM
+					tl_page
+				WHERE
+					id = ?')
+			->limit(1)
+			->execute($objPage->pid);
 		if ($objParent->next()) {
 			$html = $this->getPageFrontendModule($objParent, 0, $this->strColumn, true);
-			if ($max == 0 || $max < ++$lvl)
-				$html .= $this->inheritArticle($objParent, $max, $lvl);
+			if ($intMax == 0 || $intMax < ++$intLevel)
+				$html .= $this->inheritArticle($objParent, $intMax, $intLevel);
 			return $html;
 		}
 		return '';
 	}
 	
+	
+	/**
+	 * Mode is "all"
+	 */
 	protected function isModeAll() {
-		return $this->mergerMode == 'all';
+		return $this->merger_mode == 'all';
 	}
 	
+	
+	/**
+	 * Mode is "up first false"
+	 */
 	protected function isModeUpFirstFalse() {
-		return $this->mergerMode == 'upFirstFalse';
+		return $this->merger_mode == 'upFirstFalse';
 	}
 	
+	
+	/**
+	 * Mode is "up first true"
+	 */
 	protected function isModeUpFirstTrue() {
-		return $this->mergerMode == 'upFirstTrue';
+		return $this->merger_mode == 'upFirstTrue';
 	}
 	
+	
+	/**
+	 * Display a wildcard in the back end
+	 * @return string
+	 */
 	public function generate() {
-		if (strlen($this->mergerContainer)) {
+		if (TL_MODE == 'BE')
+		{
+			$objTemplate = new BackendTemplate('be_wildcard');
+
+			$objTemplate->wildcard = '### MERGER2 ###';
+			$objTemplate->title = $this->headline;
+			$objTemplate->id = $this->id;
+			$objTemplate->link = $this->name;
+			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+
+			return $objTemplate->parse();
+		}
+		
+		// generate the merger container
+		if ($this->merger_container)
+		{
 			return parent::generate();
-		} else {
+		}
+		
+		// or only the content
+		else
+		{
 			return $this->generateContent();
 		}
 	}
 	
+	
+	/**
+	 * Generate module
+	 */
 	protected function compile()
 	{
 		$this->Template->content = $this->generateContent();
 	}
 	
+	
+	/**
+	 * Generate content
+	 */
 	protected function generateContent() {
-		$tpl = new FrontendTemplate($this->mergerTemplate);
+		$tpl = new FrontendTemplate($this->merger_template);
 		
-		$modules = deserialize($this->mergerData);
+		$modules = deserialize($this->merger_data);
 		$tpl->content = '';
 		foreach ($modules as $module) {
 			$result = null;

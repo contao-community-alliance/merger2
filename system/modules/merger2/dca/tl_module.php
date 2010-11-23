@@ -31,39 +31,40 @@
 /**
  * Add palettes to tl_module
  */
-$GLOBALS['TL_DCA']['tl_module']['palettes']['Merger2'] = '{title_legend},name,headline,type;{config_legend},mergerMode,mergerTemplate,mergerContainer,mergerData;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['Merger2'] = '{title_legend},name,headline,type;{config_legend},merger_mode,merger_template,merger_container,merger_data;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space';
 
 
 /**
  * Add fields to tl_module
  */
 
-$GLOBALS['TL_DCA']['tl_module']['fields']['mergerMode'] = array
+$GLOBALS['TL_DCA']['tl_module']['fields']['merger_mode'] = array
 (
-	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['mergerMode'],
+	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['merger_mode'],
 	'inputType'               => 'select',
 	'options'                 => &$GLOBALS['TL_LANG']['merger2']['mode'],
 	'eval'                    => array('tl_class'=>'w50')
 );
 
-$GLOBALS['TL_DCA']['tl_module']['fields']['mergerTemplate'] = array
+$GLOBALS['TL_DCA']['tl_module']['fields']['merger_template'] = array
 (
-	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['mergerTemplate'],
+	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['merger_template'],
 	'default'                 => 'merger_default',
 	'inputType'               => 'select',
 	'options'                 => $this->getTemplateGroup('merger_'),
 	'eval'                    => array('tl_class'=>'clr w50')
 );
 
-$GLOBALS['TL_DCA']['tl_module']['fields']['mergerContainer'] = array(
-	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['mergerContainer'],
+$GLOBALS['TL_DCA']['tl_module']['fields']['merger_container'] = array(
+	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['merger_container'],
 	'inputType'               => 'checkbox',
 	'eval'                    => array('tl_class'=>'w50')
 );
 
-$GLOBALS['TL_DCA']['tl_module']['fields']['mergerData'] = array(
-	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['mergerData'],
-	'inputType'               => 'mergerModuleWizard'
+$GLOBALS['TL_DCA']['tl_module']['fields']['merger_data'] = array(
+	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['merger_data'],
+	'inputType'               => 'mergerModuleWizard',
+	'eval'                    => array('tl_class'=>'clr')
 );
 
 ?>

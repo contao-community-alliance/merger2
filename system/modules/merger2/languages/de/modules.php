@@ -36,6 +36,6 @@ $GLOBALS['TL_LANG']['MOD']['merger2'] = 'Merger - second generation';
 /**
  * Front end modules
  */
-$GLOBALS['TL_LANG']['FMD']['Merger2'] = array('Merger - second generation', 'Ermöglicht bedingte Kontrolle über den eingefügten Inhalt.');
+$GLOBALS['TL_LANG']['FMD']['Merger2'] = array('Merger - second generation', 'Fügt mehrere Elemente (Artikel und Module) zusammen und ermöglicht bedingte Kontrolle über die Ausgabe.');
 
 ?>
