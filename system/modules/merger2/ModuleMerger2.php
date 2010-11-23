@@ -50,7 +50,8 @@ class ModuleMerger2 extends Module
 	 * @return boolean
 	 */
 	private function language($language) {
-		return ($GLOBALS['TL_LANGUAGE'] == strtolower($language));
+		global $objPage;
+		return (strtolower($objPage->language) == strtolower($language));
 	}
 	
 	/**
