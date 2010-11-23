@@ -472,25 +472,27 @@ class ModuleMerger2 extends Module
 		$modules = deserialize($this->mergerData);
 		$tpl->content = '';
 		foreach ($modules as $module) {
-			$result = true;
-			if (strlen($module['condition'])) {
-				$result = $this->evaluate($module['condition']);
+			$result = null;
+			$condition = trim(html_entity_decode($module['condition']));
+			if (strlen($condition)) {
+				$result = $this->evaluate($condition);
 			}
-			if ($result) {
+			if ($result || $result === null) {
+				$content = '';
 				switch ($module['content']) {
 				case '-':
 					break;
 					
 				case 'article':
-					$tpl->content .= $this->getPageFrontendModule($GLOBALS['objPage'], 0, $this->strColumn);
+					$content = $this->getPageFrontendModule($GLOBALS['objPage'], 0, $this->strColumn);
 					break;
 					
 				case 'inherit_articles':
-					$tpl->content .= $this->inheritArticle($GLOBALS['objPage'], 1);
+					$content = $this->inheritArticle($GLOBALS['objPage'], 1);
 					break;
 					
 				case 'inherit_all_articles':
-					$tpl->content .= $this->inheritArticle($GLOBALS['objPage']);
+					$content = $this->inheritArticle($GLOBALS['objPage']);
 					break;
 					
 				case 'inherit_articles_fallback':
@@ -498,7 +500,6 @@ class ModuleMerger2 extends Module
 					if (!strlen($content)) {
 						$content = $this->inheritArticle($GLOBALS['objPage'], 1);
 					}
-					$tpl->content .= $content;
 					break;
 					
 				case 'inherit_all_articles_fallback':
@@ -506,15 +507,20 @@ class ModuleMerger2 extends Module
 					if (!strlen($content)) {
 						$content = $this->inheritArticle($GLOBALS['objPage']);
 					}
-					$tpl->content .= $content;
 					break;
 					
 				default:
-					$tpl->content .= $this->getPageFrontendModule($GLOBALS['objPage'], $module, $this->strColumn);
+					$content = $this->getPageFrontendModule($GLOBALS['objPage'], $module, $this->strColumn);
+				}
+				
+				$tpl->content .= $content;
+				if ($result === null) {
+					$result = strlen($content) > 0;
 				}
 			}
-			if ($result && $this->isModeUpFirstTrue() || !$result && $this->isModeUpFirstFalse())
+			if ($result && $this->isModeUpFirstTrue() || !$result && $this->isModeUpFirstFalse()) {
 				break;
+			}
 		}
 		
 		$this->Template->content = $tpl->parse();
