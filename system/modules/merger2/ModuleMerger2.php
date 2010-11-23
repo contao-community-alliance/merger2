@@ -79,13 +79,11 @@ class ModuleMerger2 extends Module
 		$page = $GLOBALS['objPage'];
 		while (true) {
 			if (intval($strId) == $page->id || $strId == $page->alias)
+			{
 				return true;
+			}
 			if ($page->pid > 0) {
-				$page = $this->Database->prepare("SELECT * FROM tl_page WHERE id=?")
-									   ->limit(1)
-									   ->execute($page->pid);
-				if (!$page->next())
-					return false;
+				$page = $this->getPageDetails($page->pid);
 			} else {
 				return false;
 			}
@@ -117,14 +115,10 @@ class ModuleMerger2 extends Module
 			$i = intval($m[2]);
 			
 			$n = 0;
-			$page = $GLOBALS['objPage'];
+			$page = $this->getPageDetails($GLOBALS['objPage']->id);
 			while ($page->pid > 0 && $page->type != 'root') {
 				$n ++;
-				$page = $this->Database->prepare("SELECT * FROM tl_page WHERE id=?")
-									   ->limit(1)
-									   ->execute($page->pid);
-				if (!$page->next())
-					break;
+				$page = $this->getPageDetails($page->pid);
 			}
 			
 			switch ($cmp) {
