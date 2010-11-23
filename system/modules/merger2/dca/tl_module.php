@@ -30,7 +30,7 @@
 /**
  * Add palettes to tl_module
  */
-$GLOBALS['TL_DCA']['tl_module']['palettes']['Merger2'] = '{title_legend},name,headline,type;{config_legend},mergerMode,mergerTemplate,mergerData;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['Merger2'] = '{title_legend},name,headline,type;{config_legend},mergerMode,mergerTemplate,mergerContainer,mergerData;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space';
 
 
 /**
@@ -39,7 +39,6 @@ $GLOBALS['TL_DCA']['tl_module']['palettes']['Merger2'] = '{title_legend},name,he
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['mergerMode'] = array(
 	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['mergerMode'],
-	'exclude'                 => true,
 	'inputType'               => 'select',
 	'options'                 => &$GLOBALS['TL_LANG']['merger2']['mode'],
 	'eval'                    => array('tl_class'=>'w50')
@@ -48,16 +47,19 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['mergerMode'] = array(
 $GLOBALS['TL_DCA']['tl_module']['fields']['mergerTemplate'] = array(
 	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['mergerTemplate'],
 	'default'                 => 'merger_default',
-	'exclude'                 => true,
 	'inputType'               => 'select',
 	'options'                 => $this->getTemplateGroup('merger_'),
+	'eval'                    => array('tl_class'=>'clr w50')
+);
+
+$GLOBALS['TL_DCA']['tl_module']['fields']['mergerContainer'] = array(
+	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['mergerContainer'],
+	'inputType'               => 'checkbox',
 	'eval'                    => array('tl_class'=>'w50')
 );
 
-$GLOBALS['TL_DCA']['tl_module']['fields']['mergerData'] = array
-(
+$GLOBALS['TL_DCA']['tl_module']['fields']['mergerData'] = array(
 	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['mergerData'],
-	'exclude'                 => true,
 	'inputType'               => 'mergerModuleWizard'
 );
 

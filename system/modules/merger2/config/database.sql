@@ -14,6 +14,7 @@
 CREATE TABLE `tl_module` (
   `mergerMode` varchar(14) NOT NULL default '',
   `mergerTemplate` varchar(64) NOT NULL default 'modulemerger_default',
+  `mergerContainer` char(1) NOT NULL default '',
   `mergerData` blob NULL,
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 

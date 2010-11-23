@@ -465,8 +465,20 @@ class ModuleMerger2 extends Module
 		return $this->mergerMode == 'upFirstTrue';
 	}
 	
+	public function generate() {
+		if (strlen($this->mergerContainer)) {
+			return parent::generate();
+		} else {
+			return $this->generateContent();
+		}
+	}
+	
 	protected function compile()
 	{
+		$this->Template->content = $this->generateContent();
+	}
+	
+	protected function generateContent() {
 		$tpl = new FrontendTemplate($this->mergerTemplate);
 		
 		$modules = deserialize($this->mergerData);
@@ -523,7 +535,7 @@ class ModuleMerger2 extends Module
 			}
 		}
 		
-		$this->Template->content = $tpl->parse();
+		return $tpl->parse();
 	}
 	
 }

@@ -32,6 +32,7 @@
  */
 $GLOBALS['TL_LANG']['tl_module']['mergerMode']      = array('Modus', 'Der Auswertemodus.');
 $GLOBALS['TL_LANG']['tl_module']['mergerTemplate']  = array('Template', '');
+$GLOBALS['TL_LANG']['tl_module']['mergerContainer'] = array('Container einfügen', 'Inhalte in Container einpacken. Der Container ist erforderlich, wenn CSS-Id/Klasse oder Abstände gesetzt werden.');
 $GLOBALS['TL_LANG']['tl_module']['mergerData']      = array('Inhalte', 'Bitte wählen Sie die einzufügenden Inhalte aus.');
 
 /**
