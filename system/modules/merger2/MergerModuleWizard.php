@@ -126,7 +126,6 @@ class MergerModuleWizard extends Widget
 		}
 
 		// Get all modules from DB
-		$objModules = $this->Database->prepare("SELECT id, name FROM tl_module WHERE id != ? ORDER BY name")->execute($this->currentRecord);
 		$modules = array(
 			array('id' => '-', 'name' => '-'),
 			array('label' => &$GLOBALS['TL_LANG']['merger2']['legend_article'], 'items' => array(
@@ -139,21 +138,24 @@ class MergerModuleWizard extends Widget
 			array('label' => &$GLOBALS['TL_LANG']['merger2']['legend_inherit_module'], 'items' => array(
 				array('id' => 'inherit_modules', 'name' => &$GLOBALS['TL_LANG']['merger2']['inherit_modules']),
 				array('id' => 'inherit_all_modules', 'name' => &$GLOBALS['TL_LANG']['merger2']['inherit_all_modules'])
-			)),
-			'default' => array('label' => &$GLOBALS['TL_LANG']['merger2']['legend_module'], 'items' => array()
-		));
+			))
+		);
 
-		while ($objModules->next())
+		$objTheme = $this->Database->execute("SELECT * FROM tl_theme ORDER BY name");
+		while ($objTheme->next())
 		{
-			if (preg_match('#^(.+?) \- (.+)$#', $objModules->name, $m)) {
-				if (!isset($modules[$m[1]]))
-					$modules[$m[1]] = array('label' => $m[1], 'items' => array());
-				$modules[$m[1]]['items'][] = array(
-					'id' => $objModules->id,
-					'name' => $m[0]
+			$arrThemeModules = array();
+			$objModules = $this->Database->prepare("SELECT id, name FROM tl_module WHERE pid=? AND id!=? ORDER BY name")->execute($objTheme->id, $this->currentRecord);
+			while ($objModules->next())
+			{
+				$arrThemeModules[] = $objModules->row();
+			}
+			if (count($arrThemeModules))
+			{
+				$modules[] = array(
+					'label' => $objTheme->name,
+					'items' => $arrThemeModules
 				);
-			} else {
-				$modules['default']['items'][] = $objModules->row();
 			}
 		}
 		

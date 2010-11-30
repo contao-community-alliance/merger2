@@ -55,6 +55,5 @@ $GLOBALS['TL_LANG']['merger2']['inherit_all_articles_fallback'] = 'Artikel der S
 $GLOBALS['TL_LANG']['merger2']['legend_inherit_module']         = 'Vererbte Module';
 $GLOBALS['TL_LANG']['merger2']['inherit_modules']               = 'Module von Elternseite erben';
 $GLOBALS['TL_LANG']['merger2']['inherit_all_modules']           = 'Module von Elternseite bis zur Wurzel erben';
-$GLOBALS['TL_LANG']['merger2']['legend_module']                 = 'Module';
 
 ?>

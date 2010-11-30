@@ -54,6 +54,5 @@ $GLOBALS['TL_LANG']['merger2']['inherit_all_articles_fallback'] = 'Article of th
 $GLOBALS['TL_LANG']['merger2']['legend_inherit_module']         = 'Inherited modules';
 $GLOBALS['TL_LANG']['merger2']['inherit_modules']               = 'Module from parent page';
 $GLOBALS['TL_LANG']['merger2']['inherit_all_modules']           = 'Module from parent pages';
-$GLOBALS['TL_LANG']['merger2']['legend_module']                 = 'Module';
 
 ?>
