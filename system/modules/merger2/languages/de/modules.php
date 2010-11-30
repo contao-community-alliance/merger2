@@ -33,6 +33,7 @@
  */
 $GLOBALS['TL_LANG']['MOD']['merger2'] = 'Merger - second generation';
 
+
 /**
  * Front end modules
  */

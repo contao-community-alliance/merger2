@@ -29,14 +29,8 @@
 
 
 /**
- * Front end modules
+ * Fields
  */
-$GLOBALS['FE_MOD']['miscellaneous']['Merger2'] = 'ModuleMerger2';
-
-
-/**
- * Form fields
- */
-$GLOBALS['BE_FFL']['mergerModuleWizard'] = 'MergerModuleWizard';
+$GLOBALS['TL_LANG']['tl_article']['inheritable'] = array('Inheritable', 'This article can be inherited by the <em>Merger - second generation</em> module.');
 
 ?>

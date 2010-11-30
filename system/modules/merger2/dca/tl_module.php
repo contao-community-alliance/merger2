@@ -37,7 +37,6 @@ $GLOBALS['TL_DCA']['tl_module']['palettes']['Merger2'] = '{title_legend},name,he
 /**
  * Add fields to tl_module
  */
-
 $GLOBALS['TL_DCA']['tl_module']['fields']['merger_mode'] = array
 (
 	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['merger_mode'],

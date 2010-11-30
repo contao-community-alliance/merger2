@@ -29,15 +29,16 @@
 
 
 /**
- * Add palettes to tl_module
+ * Add palettes to tl_article
  */
 $GLOBALS['TL_DCA']['tl_article']['palettes']['default'] = preg_replace(
 	'#(\{expert_legend:hide\}.*?);#',
 	'$1,inheritable;',
 	$GLOBALS['TL_DCA']['tl_article']['palettes']['default']);
 
+
 /**
- * Add fields to tl_module
+ * Add fields to tl_article
  */
 $GLOBALS['TL_DCA']['tl_article']['fields']['inheritable'] = array
 (

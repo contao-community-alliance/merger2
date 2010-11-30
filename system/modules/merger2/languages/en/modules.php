@@ -29,14 +29,14 @@
 
 
 /**
- * Front end modules
+ * Back end modules
  */
-$GLOBALS['FE_MOD']['miscellaneous']['Merger2'] = 'ModuleMerger2';
+$GLOBALS['TL_LANG']['MOD']['merger2'] = 'Merger - second generation';
 
 
 /**
- * Form fields
+ * Front end modules
  */
-$GLOBALS['BE_FFL']['mergerModuleWizard'] = 'MergerModuleWizard';
+$GLOBALS['TL_LANG']['FMD']['Merger2'] = array('Merger - second generation', 'Combine and control output of various modules and articles.');
 
 ?>

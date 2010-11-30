@@ -36,6 +36,7 @@ $GLOBALS['TL_LANG']['tl_module']['merger_template']  = array('Template', '');
 $GLOBALS['TL_LANG']['tl_module']['merger_container'] = array('Container einfügen', 'Inhalte in Container einpacken. Der Container ist erforderlich, wenn CSS-Id/Klasse oder Abstände gesetzt werden.');
 $GLOBALS['TL_LANG']['tl_module']['merger_data']      = array('Inhalte', 'Bitte wählen Sie die einzufügenden Inhalte aus.');
 
+
 /**
  * References
  */
