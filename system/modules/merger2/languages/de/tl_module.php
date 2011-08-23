@@ -1,6 +1,10 @@
 <?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
 
 /**
+ * Merger² - Module Merger
+ * Copyright (C) 2011 Tristan Lins
+ *
+ * Extension for:
  * Contao Open Source CMS
  * Copyright (C) 2005-2010 Leo Feyer
  *
@@ -21,10 +25,11 @@
  * Software Foundation website at <http://www.gnu.org/licenses/>.
  *
  * PHP version 5
- * @copyright  InfinitySoft 2010
+ * @copyright  InfinitySoft 2011
  * @author     Tristan Lins <tristan.lins@infinitysoft.de>
- * @package    Merger2
- * @license    http://opensource.org/licenses/lgpl-3.0.html
+ * @package    Merger²
+ * @license    LGPL
+ * @filesource
  */
 
 
@@ -55,5 +60,3 @@ $GLOBALS['TL_LANG']['merger2']['inherit_all_articles_fallback'] = 'Artikel der S
 $GLOBALS['TL_LANG']['merger2']['legend_inherit_module']         = 'Vererbte Module';
 $GLOBALS['TL_LANG']['merger2']['inherit_modules']               = 'Module von Elternseite erben';
 $GLOBALS['TL_LANG']['merger2']['inherit_all_modules']           = 'Module von Elternseite bis zur Wurzel erben';
-
-?>

@@ -1,6 +1,10 @@
 <?php if (!defined('TL_ROOT')) die('You can not access this file directly!');
 
 /**
+ * Merger² - Module Merger
+ * Copyright (C) 2011 Tristan Lins
+ *
+ * Extension for:
  * Contao Open Source CMS
  * Copyright (C) 2005-2010 Leo Feyer
  *
@@ -21,30 +25,27 @@
  * Software Foundation website at <http://www.gnu.org/licenses/>.
  *
  * PHP version 5
- * @copyright  InfinitySoft 2010
+ * @copyright  InfinitySoft 2011
  * @author     Tristan Lins <tristan.lins@infinitysoft.de>
- * @package    Merger2
- * @license    http://opensource.org/licenses/lgpl-3.0.html
+ * @package    Merger²
+ * @license    LGPL
+ * @filesource
  */
 
 
 /**
  * Class ModuleMerger2
- *
- * @copyright  InfinitySoft 2010
- * @author     Tristan Lins <tristan.lins@infinitysoft.de>
- * @package    Merger2
  */
 class ModuleMerger2 extends Module
 {
-	
+
 	/**
 	 * Template
 	 * @var string
 	 */
 	protected $strTemplate = 'mod_merger2';
-	
-	
+
+
 	/**
 	 * function: language(..)
 	 * Test the page language.
@@ -55,8 +56,8 @@ class ModuleMerger2 extends Module
 		global $objPage;
 		return (strtolower($objPage->language) == strtolower($strLanguage));
 	}
-	
-	
+
+
 	/**
 	 * function: page(..)
 	 * Test the page id or alias.
@@ -67,8 +68,20 @@ class ModuleMerger2 extends Module
 		global $objPage;
 		return (intval($strId) == $objPage->id || $strId == $objPage->alias) ? true : false;
 	}
-	
-	
+
+
+	/**
+	 * function: root(..)
+	 * Test the root page id or alias.
+	 * @param mixed $strId
+	 * @return boolean
+	 */
+	private function root($strId) {
+		global $objPage;
+		return (intval($strId) == $objPage->rootId || $strId == $this->getPageDetails($objPage->rootId)->alias) ? true : false;
+	}
+
+
 	/**
 	 * function: pageInPath(..)
 	 * Test if page id or alias is in path.
@@ -89,7 +102,7 @@ class ModuleMerger2 extends Module
 			}
 		}
 	}
-	
+
 	/**
 	 * Evaluate value to bool.
 	 * @param string $strValue
@@ -102,7 +115,7 @@ class ModuleMerger2 extends Module
 		default: throw new Exception('Illegal boolean value: "' . $strValue . '"');
 		}
 	}
-	
+
 	/**
 	 * function: depth(..)
 	 * Test the page depth.
@@ -113,14 +126,14 @@ class ModuleMerger2 extends Module
 		if (preg_match('#^(<|>|<=|>=|=|!=)?\\s*(\\d+)$#', $strValue, $m)) {
 			$cmp = $m[1] ? $m[1] : '=';
 			$i = intval($m[2]);
-			
+
 			$n = 0;
 			$page = $this->getPageDetails($GLOBALS['objPage']->id);
 			while ($page->pid > 0 && $page->type != 'root') {
 				$n ++;
 				$page = $this->getPageDetails($page->pid);
 			}
-			
+
 			switch ($cmp) {
 			case '<': return $n < $i;
 			case '>': return $n > $i;
@@ -133,7 +146,7 @@ class ModuleMerger2 extends Module
 			throw new Exception('Illegal depth value: "' . $strValue . '"');
 		}
 	}
-	
+
 	/**
 	 * function: articleExists(..)
 	 * Test if an article exists in the column.
@@ -153,7 +166,7 @@ class ModuleMerger2 extends Module
 		else
 			return false;
 	}
-	
+
 	/**
 	 * function: children(..)
 	 * Test if the page have the specific count of children.
@@ -172,7 +185,7 @@ class ModuleMerger2 extends Module
 			return $objChildren->count >= $intCount;
 		return false;
 	}
-	
+
 	/**
 	 * Evaluate a function to bool result.
 	 * @param array $matches
@@ -183,6 +196,7 @@ class ModuleMerger2 extends Module
 		switch ($matches[1]) {
 			case 'language': return $this->language(trim($args[0]));
 			case 'page': return $this->page(trim($args[0]));
+			case 'root': return $this->root(trim($args[0]));
 			case 'pageInPath': return $this->pageInPath(trim($args[0]));
 			case 'depth': return $this->depth(trim($args[0]));
 			case 'articleExists': return $this->articleExists(isset($args[0]) ? trim($args[0]) : 'main');
@@ -192,7 +206,7 @@ class ModuleMerger2 extends Module
 			default: throw new Exception('Illegal function: ' . trim($matches[0]));
 		}
 	}
-	
+
 	/**
 	 * Evaluate a function to string result.
 	 * @param array $matches
@@ -201,7 +215,7 @@ class ModuleMerger2 extends Module
 	public function evaluateFunction($matches) {
 		return $this->evaluateFunctionBool($matches) ? 'true' : 'false';
 	}
-	
+
 	/**
 	 * Evaluate AND concatenation.
 	 * @param array $matches
@@ -212,7 +226,7 @@ class ModuleMerger2 extends Module
 		$right = $this->boolean($matches[3]);
 		return $left && $right ? 'true' : 'false';
 	}
-	
+
 	/**
 	 * Evaluate OR concatenation.
 	 * @param array $matches
@@ -223,7 +237,7 @@ class ModuleMerger2 extends Module
 		$right = $this->boolean($matches[3]);
 		return $left || $right ? 'true' : 'false';
 	}
-	
+
 	/**
 	 * Evaluate a block.
 	 * @param array $matches
@@ -232,7 +246,7 @@ class ModuleMerger2 extends Module
 	public function evaluateBlock($matches) {
 		return $this->evaluate(trim($matches[1])) ? 'true' : 'false';
 	}
-	
+
 	/**
 	 * Evaluate an expression.
 	 * @param string $expression
@@ -287,7 +301,7 @@ class ModuleMerger2 extends Module
 		// return a boolean result
 		return $this->boolean($expression);
 	}
-	
+
 	/**
 	 * Generate a front end module and return it as HTML string
 	 * @param integer
@@ -376,7 +390,7 @@ class ModuleMerger2 extends Module
 
 			$this->import('FrontendUser', 'User');
 			$arrGroups = deserialize($objModule->groups);
-	
+
 			if (is_array($arrGroups) && count(array_intersect($this->User->groups, $arrGroups)) < 1)
 			{
 				return '';
@@ -409,7 +423,7 @@ class ModuleMerger2 extends Module
 
 	/**
 	 * Generate an article and return it as string
-	 * 
+	 *
 	 * @param integer
 	 * @param boolean
 	 * @param boolean
@@ -446,7 +460,7 @@ class ModuleMerger2 extends Module
 		{
 			$this->printArticleAsPdf($objArticle);
 		}
-		
+
 		$objArticle->headline = $objArticle->title;
 		$objArticle->multiMode = $boolMultiMode;
 
@@ -454,7 +468,7 @@ class ModuleMerger2 extends Module
 		return $objArticle->generate($boolIsInsertTag);
 	}
 
-	
+
 	/**
 	 * Inherit article from parent page
 	 */
@@ -476,32 +490,32 @@ class ModuleMerger2 extends Module
 		}
 		return '';
 	}
-	
-	
+
+
 	/**
 	 * Mode is "all"
 	 */
 	protected function isModeAll() {
 		return $this->merger_mode == 'all';
 	}
-	
-	
+
+
 	/**
 	 * Mode is "up first false"
 	 */
 	protected function isModeUpFirstFalse() {
 		return $this->merger_mode == 'upFirstFalse';
 	}
-	
-	
+
+
 	/**
 	 * Mode is "up first true"
 	 */
 	protected function isModeUpFirstTrue() {
 		return $this->merger_mode == 'upFirstTrue';
 	}
-	
-	
+
+
 	/**
 	 * Display a wildcard in the back end
 	 * @return string
@@ -519,21 +533,21 @@ class ModuleMerger2 extends Module
 
 			return $objTemplate->parse();
 		}
-		
+
 		// generate the merger container
 		if ($this->merger_container)
 		{
 			return parent::generate();
 		}
-		
+
 		// or only the content
 		else
 		{
 			return $this->generateContent();
 		}
 	}
-	
-	
+
+
 	/**
 	 * Generate module
 	 */
@@ -541,14 +555,14 @@ class ModuleMerger2 extends Module
 	{
 		$this->Template->content = $this->generateContent();
 	}
-	
-	
+
+
 	/**
 	 * Generate content
 	 */
 	protected function generateContent() {
 		$tpl = new FrontendTemplate($this->merger_template);
-		
+
 		$modules = deserialize($this->merger_data);
 		$tpl->content = '';
 		foreach ($modules as $module) {
@@ -562,37 +576,37 @@ class ModuleMerger2 extends Module
 				switch ($module['content']) {
 				case '-':
 					break;
-					
+
 				case 'article':
 					$content = $this->getPageFrontendModule($GLOBALS['objPage'], 0, $this->strColumn);
 					break;
-					
+
 				case 'inherit_articles':
 					$content = $this->inheritArticle($GLOBALS['objPage'], 1);
 					break;
-					
+
 				case 'inherit_all_articles':
 					$content = $this->inheritArticle($GLOBALS['objPage']);
 					break;
-					
+
 				case 'inherit_articles_fallback':
 					$content = $this->getPageFrontendModule($GLOBALS['objPage'], 0, $this->strColumn);
 					if (!strlen($content)) {
 						$content = $this->inheritArticle($GLOBALS['objPage'], 1);
 					}
 					break;
-					
+
 				case 'inherit_all_articles_fallback':
 					$content = $this->getPageFrontendModule($GLOBALS['objPage'], 0, $this->strColumn);
 					if (!strlen($content)) {
 						$content = $this->inheritArticle($GLOBALS['objPage']);
 					}
 					break;
-					
+
 				default:
 					$content = $this->getPageFrontendModule($GLOBALS['objPage'], $module['content'], $this->strColumn);
 				}
-				
+
 				$tpl->content .= $content;
 				if ($result === null) {
 					$result = strlen($content) > 0;
@@ -602,10 +616,8 @@ class ModuleMerger2 extends Module
 				break;
 			}
 		}
-		
+
 		return $tpl->parse();
 	}
-	
-}
 
-?>
+}
