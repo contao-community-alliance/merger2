@@ -68,7 +68,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['merger_template'] = array
 $GLOBALS['TL_DCA']['tl_module']['fields']['merger_container'] = array(
 	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['merger_container'],
 	'inputType'               => 'checkbox',
-	'eval'                    => array('tl_class'=>'w50')
+	'eval'                    => array('tl_class'=>'w50 m12')
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['merger_data'] = array(
