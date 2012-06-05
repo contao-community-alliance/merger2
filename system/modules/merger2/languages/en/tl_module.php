@@ -37,9 +37,9 @@
  * Fields
  */
 $GLOBALS['TL_LANG']['tl_module']['merger_mode']      = array('Mode', 'The evaluation mode.');
-$GLOBALS['TL_LANG']['tl_module']['merger_template']  = array('Template', 'The ');
-$GLOBALS['TL_LANG']['tl_module']['merger_container'] = array('Use Container', 'Use a container and wrap it around the modules and articles of this module.');
 $GLOBALS['TL_LANG']['tl_module']['merger_data']      = array('Contents', 'Choose the included contents.');
+$GLOBALS['TL_LANG']['tl_module']['merger_template']  = array('Template', 'Choose your template for this merger.');
+$GLOBALS['TL_LANG']['tl_module']['merger_container'] = array('Use Container', 'Use a container and wrap it around the modules and articles of this module.');
 
 /**
  * References
