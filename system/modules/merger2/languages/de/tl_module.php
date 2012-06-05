@@ -45,8 +45,9 @@ $GLOBALS['TL_LANG']['tl_module']['merger_data']      = array('Inhalte', 'Bitte w
 /**
  * References
  */
-$GLOBALS['TL_LANG']['tl_module']['label_content']   = 'Inhalt';
-$GLOBALS['TL_LANG']['tl_module']['label_condition'] = 'Bedingung';
+$GLOBALS['TL_LANG']['tl_module']['merger_data_content']   = array('Inhalt');
+$GLOBALS['TL_LANG']['tl_module']['merger_data_condition'] = array('Bedingung');
+$GLOBALS['TL_LANG']['tl_module']['merger_data_edit'] = array('&nbsp;');
 
 $GLOBALS['TL_LANG']['merger2']['mode']['all']                   = 'Alle auswerten';
 $GLOBALS['TL_LANG']['merger2']['mode']['upFirstFalse']          = 'Bis zum Ersten, dessen Bedingung als "falsch" ausgewerted wird.';

@@ -34,6 +34,12 @@
 
 
 /**
+ * Table tl_module
+ */
+$GLOBALS['TL_DCA']['tl_module']['config']['onload_callback'][] = array('tl_module_merger2', 'onload');
+
+
+/**
  * Add palettes to tl_module
  */
 $GLOBALS['TL_DCA']['tl_module']['palettes']['Merger2'] = '{title_legend},name,headline,type;{config_legend},merger_mode,merger_template,merger_container,merger_data;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space';
@@ -67,8 +73,99 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['merger_container'] = array(
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['merger_data'] = array(
 	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['merger_data'],
-	'inputType'               => 'mergerModuleWizard',
-	'eval'                    => array('tl_class'=>'clr')
+	'inputType'               => 'multiColumnWizard',
+	'eval'                    => array(
+		'tl_class'=>'clr',
+		'columnFields' => array
+		(
+			'content' => array
+			(
+				'label'                 => &$GLOBALS['TL_LANG']['tl_module']['merger_data_content'],
+				'inputType'             => 'select',
+				'options_callback'     	=> array('tl_module_merger2', 'getModules'),
+				'eval' 			=> array('style' => 'width:320px', 'includeBlankOption'=>true)
+			),
+			'condition' => array
+			(
+				'label'                 => &$GLOBALS['TL_LANG']['tl_module']['merger_data_condition'],
+				'exclude'               => true,
+				'inputType'             => 'text',
+				'eval' 			=> array('style'=>'width:260px')
+			),
+			'edit' => array
+			(
+				'label' => &$GLOBALS['TL_LANG']['tl_module']['merger_data_edit'],
+				'input_field_callback' => array('tl_module_merger2', 'getEditButton')
+			)
+		)
+	)
 );
 
-?>
+class tl_module_merger2 extends Backend
+{
+	public function onload(DataContainer $dc)
+	{
+		if ($this->Input->get('table') == 'tl_module' && $this->Input->get('act') == 'edit')
+		{
+			$objModule = $this->Database
+				->prepare('SELECT * FROM tl_module WHERE id=?')
+				->execute($dc->id);
+			if ($objModule->next() && $objModule->type == 'Merger2')
+			{
+				$GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/merger2/html/merger2.js';
+
+				if ($this->Input->post('FORM_SUBMIT') == 'tl_module') {
+					$blnDisabled = !$this->Input->post('merger_container');
+				}
+				else {
+					$blnDisabled = !$objModule->merger_container;
+				}
+
+				$GLOBALS['TL_DCA']['tl_module']['fields']['cssID']['eval']['disabled'] = $blnDisabled;
+				$GLOBALS['TL_DCA']['tl_module']['fields']['space']['eval']['disabled'] = $blnDisabled;
+			}
+		}
+	}
+
+	public function getModules($mcw)
+	{
+		// Get all modules from DB
+		$modules = array(
+			$GLOBALS['TL_LANG']['merger2']['legend_article'] => array(
+				'article' => $GLOBALS['TL_LANG']['merger2']['article'],
+				'inherit_articles' => $GLOBALS['TL_LANG']['merger2']['inherit_articles'],
+				'inherit_all_articles' => $GLOBALS['TL_LANG']['merger2']['inherit_all_articles'],
+				'inherit_articles_fallback' => $GLOBALS['TL_LANG']['merger2']['inherit_articles_fallback'],
+				'inherit_all_articles_fallback' => $GLOBALS['TL_LANG']['merger2']['inherit_all_articles_fallback']
+			),
+			$GLOBALS['TL_LANG']['merger2']['legend_inherit_module'] => array(
+				'inherit_modules' => $GLOBALS['TL_LANG']['merger2']['inherit_modules'],
+				'inherit_all_modules' => $GLOBALS['TL_LANG']['merger2']['inherit_all_modules']
+			)
+		);
+
+		$objTheme = $this->Database
+			->execute("SELECT * FROM tl_theme ORDER BY name");
+		while ($objTheme->next())
+		{
+			$modules[$objTheme->name] = array();
+
+			$objModules = $this->Database
+				->prepare("SELECT id, name FROM tl_module WHERE pid=? AND id!=? ORDER BY name")
+				->execute($objTheme->id, $mcw->currentRecord);
+			while ($objModules->next())
+			{
+				$modules[$objTheme->name][$objModules->id] = $objModules->name;
+			}
+		}
+
+		return $modules;
+	}
+
+	public function getEditButton($dc, $label)
+	{
+		$icon = $this->generateImage('edit.gif', '');
+
+		return sprintf('<a href="javascript:void(0);" class="edit_module">%s</a>', $icon);
+	}
+}
