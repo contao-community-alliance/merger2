@@ -43,5 +43,3 @@ $GLOBALS['FE_MOD']['miscellaneous']['Merger2'] = 'ModuleMerger2';
  * Form fields
  */
 $GLOBALS['BE_FFL']['mergerModuleWizard'] = 'MergerModuleWizard';
-
-?>

@@ -52,5 +52,3 @@ $GLOBALS['TL_DCA']['tl_article']['fields']['inheritable'] = array
 	'default'                 => 1,
 	'inputType'               => 'checkbox'
 );
-
-?>
