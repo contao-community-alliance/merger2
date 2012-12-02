@@ -53,7 +53,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['merger_mode'] = array
 	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['merger_mode'],
 	'inputType'               => 'select',
 	'options'                 => &$GLOBALS['TL_LANG']['merger2']['mode'],
-	'eval'                    => array('tl_class'=>'w50')
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['merger_template'] = array
@@ -75,7 +74,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['merger_data'] = array(
 	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['merger_data'],
 	'inputType'               => 'multiColumnWizard',
 	'eval'                    => array(
-		'tl_class'=>'clr',
 		'columnFields' => array
 		(
 			'content' => array
@@ -83,7 +81,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['merger_data'] = array(
 				'label'                 => &$GLOBALS['TL_LANG']['tl_module']['merger_data_content'],
 				'inputType'             => 'select',
 				'options_callback'     	=> array('tl_module_merger2', 'getModules'),
-				'eval' 			=> array('style' => 'width:320px', 'includeBlankOption'=>true)
+				'eval' 			        => array('style' => 'width:320px', 'includeBlankOption'=>true, 'chosen'=>true)
 			),
 			'condition' => array
 			(
