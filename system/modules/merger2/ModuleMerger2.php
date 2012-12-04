@@ -449,7 +449,8 @@ class ModuleMerger2 extends Module
 			return '';
 		}
 
-		if (!file_exists(TL_ROOT . '/system/modules/frontend/ModuleArticle.php'))
+		if (version_compare(VERSION, '3', '<') &&
+            !file_exists(TL_ROOT . '/system/modules/frontend/ModuleArticle.php'))
 		{
 			$this->log('Class ModuleArticle does not exist', 'Controller getArticle()', TL_ERROR);
 			return '';
