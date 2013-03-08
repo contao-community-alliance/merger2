@@ -23,7 +23,7 @@
 	},
 	"require":{
 		"php":">=5.3",
-		"contao/core":"3.*"
+		"contao/core":">=2.11,<4"
 	},
 	"require-dev":{
 		"squizlabs/php_codesniffer":"1.*",
