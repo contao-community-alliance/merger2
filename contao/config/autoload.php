@@ -12,15 +12,6 @@
 
 
 /**
- * Register the classes
- */
-ClassLoader::addClasses(array
-(
-	'ModuleMerger2' => 'system/modules/merger2/ModuleMerger2.php',
-));
-
-
-/**
  * Register the templates
  */
 TemplateLoader::addFiles(array
