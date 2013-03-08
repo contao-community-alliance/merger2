@@ -401,7 +401,7 @@ class ModuleMerger2 extends Module
 
 		if (!$this->classFileExists($strClass))
 		{
-			$this->log('Module class "'.$GLOBALS['FE_MOD'][$objModule->type].'" (module "'.$objModule->type.'") does not exist', 'Controller getFrontendModule()', TL_ERROR);
+			$this->log('Module class "'.$strClass.'" (module "'.$objModule->type.'") does not exist', 'Controller getFrontendModule()', TL_ERROR);
 			return '';
 		}
 
