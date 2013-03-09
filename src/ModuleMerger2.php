@@ -365,13 +365,23 @@ class ModuleMerger2 extends Module
 		}
 
 		// Other modules
-		$objModule = $this->Database->prepare("SELECT * FROM tl_module WHERE id=?")
-									->limit(1)
-									->execute($intId);
+		if (version_compare(VERSION, '3', '<')) {
+			$objModule = $this->Database->prepare("SELECT * FROM tl_module WHERE id=?")
+										->limit(1)
+										->execute($intId);
 
-		if ($objModule->numRows < 1)
-		{
-			return '';
+			if ($objModule->numRows < 1)
+			{
+				return '';
+			}
+		}
+		else {
+			$objModule = \ModuleModel::findByPK($intId);
+
+			if ($objModule === null)
+			{
+				return '';
+			}
 		}
 
 		// Show to guests only
