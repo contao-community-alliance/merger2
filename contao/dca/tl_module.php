@@ -150,7 +150,7 @@ class tl_module_merger2 extends Backend
 
 			$objModules = $this->Database
 				->prepare("SELECT id, name FROM tl_module WHERE pid=? AND id!=? ORDER BY name")
-				->execute($objTheme->id, $mcw->currentRecord);
+				->execute((int) $objTheme->id, $mcw ? $mcw->currentRecord : 0);
 			while ($objModules->next())
 			{
 				$modules[$objTheme->name][$objModules->id] = $objModules->name;
