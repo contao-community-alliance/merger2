@@ -23,7 +23,8 @@ function merger2updateEditButton(button) {
 
 function merger2buttonClick() {
 	if (this.moduleID) {
-		location.href = 'contao/main.php?do=themes&table=tl_module&act=edit&id=' + this.moduleID;
+		var rt = /[&\?](rt=[\d\w]+)/.exec(document.location.search);
+		location.href = 'contao/main.php?do=themes&table=tl_module&act=edit&id=' + this.moduleID + (rt ? '&' + rt[1] : '');
 	}
 }
 
