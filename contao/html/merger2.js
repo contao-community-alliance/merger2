@@ -1,7 +1,5 @@
 
 function merger2updateEditButton(button) {
-	console.log('merger2updateEditButton');
-	console.log(button);
 	if (button) {
 		button = $(button);
 		var image = button.getElement('img');
