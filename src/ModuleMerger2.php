@@ -203,7 +203,7 @@ class ModuleMerger2 extends Module
 			case 'articleExistsReal': return $this->articleExists(isset($args[0]) ? trim($args[0]) : 'main', true);
 			case 'children': return $this->children(isset($args[0]) && is_numeric($args[0]) ? trim($args[0]) : 1);
 			case 'childrenReal': return $this->children(isset($args[0]) && is_numeric($args[0]) ? trim($args[0]) : 1, true);
-			default: throw new Exception('Illegal function: ' . trim($matches[0]));
+			default: return call_user_func_array(trim($matches[1]), $args);
 		}
 	}
 
@@ -258,7 +258,7 @@ class ModuleMerger2 extends Module
 		do
 		{
 			$expression = preg_replace_callback(
-				'#(\\w+)\\(([^\\)]*)\\)#',
+				'#([\\w\\\\:]+)\\(([^\\)]*)\\)#',
 				array(&$this, 'evaluateFunction'),
 				$expression,
 				-1,
