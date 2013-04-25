@@ -2,7 +2,6 @@
 	"name":"bit3/contao-merger2",
 	"description":"Module merger V2 for Contao OpenSource CMS",
 	"keywords":["contao", "theme", "layout", "module"],
-	"version":"2.2.0",
 	"type":"contao-module",
 	"homepage":"http://bit3.de",
 	"license":"LGPL-3.0+",
