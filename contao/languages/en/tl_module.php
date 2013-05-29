@@ -46,7 +46,8 @@ $GLOBALS['TL_LANG']['tl_module']['merger_container'] = array('Use Container', 'U
  */
 $GLOBALS['TL_LANG']['tl_module']['merger_data_content']   = 'Content';
 $GLOBALS['TL_LANG']['tl_module']['merger_data_condition'] = 'Condition';
-$GLOBALS['TL_LANG']['tl_module']['merger_data_edit'] = array('&nbsp;');
+$GLOBALS['TL_LANG']['tl_module']['merger_data_disabled']  = array('<img src="system/themes/default/images/unpublished.gif" width="15" height="15" alt="Disabled" title="Disabled">');
+$GLOBALS['TL_LANG']['tl_module']['merger_data_edit']      = array('&nbsp;');
 
 $GLOBALS['TL_LANG']['merger2']['mode']['all']                   = 'Evaluate all';
 $GLOBALS['TL_LANG']['merger2']['mode']['upFirstFalse']          = 'Evaluate up to the first "false" item.';

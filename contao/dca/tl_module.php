@@ -88,7 +88,14 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['merger_data'] = array(
 				'label'                 => &$GLOBALS['TL_LANG']['tl_module']['merger_data_condition'],
 				'exclude'               => true,
 				'inputType'             => 'text',
-				'eval' 			=> array('style'=>'width:260px')
+				'eval' 			=> array('style'=>'width:240px')
+			),
+			'disabled' => array
+			(
+				'label'                 => &$GLOBALS['TL_LANG']['tl_module']['merger_data_disabled'],
+				'exclude'               => true,
+				'inputType'             => 'checkbox',
+				'eval' 			=> array('style'=>'width:20px')
 			),
 			'edit' => array
 			(

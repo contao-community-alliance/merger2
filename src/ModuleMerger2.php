@@ -577,11 +577,16 @@ class ModuleMerger2 extends Module
 		$modules = deserialize($this->merger_data);
 		$tpl->content = '';
 		foreach ($modules as $module) {
+			if ($module['disabled']) {
+				continue;
+			}
+
 			$result = null;
 			$condition = trim(html_entity_decode($module['condition']));
 			if (strlen($condition)) {
 				$result = $this->evaluate($condition);
 			}
+
 			if ($result || $result === null) {
 				$content = '';
 				switch ($module['content']) {
