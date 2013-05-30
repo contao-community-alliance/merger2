@@ -22,7 +22,8 @@
 	},
 	"require":{
 		"php":">=5.3",
-		"contao/core":">=2.11,<4"
+		"contao/core":">=2.11,<4",
+		"menatwork/contao-multicolumnwizard": "~3"
 	},
 	"require-dev":{
 		"squizlabs/php_codesniffer":"1.*",
