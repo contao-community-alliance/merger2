@@ -23,6 +23,7 @@
 	"require":{
 		"php":">=5.3",
 		"contao/core":">=2.11,<4",
+		"contao-community-alliance/composer-installer": "*",
 		"menatwork/contao-multicolumnwizard": "~3"
 	},
 	"require-dev":{
@@ -34,9 +35,12 @@
 	},
 	"extra":{
 		"contao": {
-			"symlinks":{
+			"sources":{
 				"contao":"system/modules/merger2"
 			}
+		},
+		"branch-alias": {
+			"dev-master": "2.x-dev"
 		}
 	}
 }
