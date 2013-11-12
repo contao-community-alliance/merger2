@@ -31,7 +31,7 @@
 		"bit3/php-coding-standard":"@dev"
 	},
 	"replace":{
-		"contao-legacy/merger2":"*"
+		"contao-legacy/merger2":"self.version"
 	},
 	"autoload":{
 		"classmap": ["src/"]
