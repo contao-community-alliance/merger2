@@ -166,6 +166,40 @@ class ModuleMerger2 extends Module
 	}
 
 	/**
+	 * function: platform(..)
+	 * @param integer $intCount
+	 * @param boolean $boolIncludeUnpublished
+	 * @return boolean
+	 */
+	function platform($platform) {
+		if (in_array('theme_plus', \Config::getInstance()->getActiveModules())) {
+			return \ThemePlus\ThemePlus::checkFilter(
+				null,
+				null,
+				null,
+				null,
+				$platform
+			);
+		}
+		else {
+			$mobileDetect = new \Mobile_Detect();
+
+			switch ($platform) {
+				case 'desktop':
+					return !$mobileDetect->isMobile();
+				case 'tablet':
+					return $mobileDetect->isTablet();
+				case 'smartphone':
+					return !$mobileDetect->isTablet() && $mobileDetect->isMobile();
+				case 'mobile':
+					return $mobileDetect->isMobile();
+				default:
+					return false;
+			}
+		}
+	}
+
+	/**
 	 * Evaluate a function to bool result.
 	 * @param array $matches
 	 * @return boolean
@@ -182,6 +216,7 @@ class ModuleMerger2 extends Module
 			case 'articleExistsReal': return $this->articleExists(isset($args[0]) ? trim($args[0]) : 'main', true);
 			case 'children': return $this->children(isset($args[0]) && is_numeric($args[0]) ? trim($args[0]) : 1);
 			case 'childrenReal': return $this->children(isset($args[0]) && is_numeric($args[0]) ? trim($args[0]) : 1, true);
+			case 'platform': return $this->platform($args[0]);
 			default: return call_user_func_array(trim($matches[1]), $args);
 		}
 	}
