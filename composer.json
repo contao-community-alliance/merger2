@@ -37,7 +37,9 @@
 		"contao-legacy/merger2":"self.version"
 	},
 	"autoload":{
-		"classmap": ["src/"]
+		"psr-0": {
+			"Bit3\\Contao\\Merger2": "src"
+		}
 	},
 	"extra":{
 		"contao": {
