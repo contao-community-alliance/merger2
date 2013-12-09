@@ -27,14 +27,19 @@
 		"menatwork/contao-multicolumnwizard": "~3"
 	},
 	"require-dev":{
+		"bit3/php-coding-standard":"*",
 		"squizlabs/php_codesniffer":"1.*",
-		"bit3/php-coding-standard":"@dev"
+		"phpunit/phpunit": ">=3.7.10,<4-dev"
 	},
+	"minimum-stability": "dev",
+	"prefer-stable": true,
 	"replace":{
 		"contao-legacy/merger2":"self.version"
 	},
 	"autoload":{
-		"classmap": ["src/"]
+		"psr-0": {
+			"Bit3\\Contao\\Merger2": "src"
+		}
 	},
 	"extra":{
 		"contao": {
@@ -43,7 +48,7 @@
 			}
 		},
 		"branch-alias": {
-			"dev-master": "2.x-dev"
+			"dev-master": "3.0.x-dev"
 		}
 	}
 }

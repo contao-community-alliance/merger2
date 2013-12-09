@@ -1,13 +1,14 @@
 <?php
 
 /**
- * Contao Open Source CMS
- * 
- * Copyright (C) 2005-2012 Leo Feyer
- * 
- * @package Merger2
- * @link    http://contao.org
- * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
+ * Merger² - Module Merger for Contao Open Source CMS
+ *
+ * Copyright (C) 2013 bit3 UG
+ *
+ * @package merger2
+ * @author  Tristan Lins <tristan.lins@bit3.de>
+ * @link    http://bit3.de
+ * @license LGPL-3.0+
  */
 
 

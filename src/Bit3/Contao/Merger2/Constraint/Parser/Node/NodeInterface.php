@@ -11,14 +11,14 @@
  * @license LGPL-3.0+
  */
 
+namespace Bit3\Contao\Merger2\Constraint\Node;
 
-/**
- * Front end modules
- */
-$GLOBALS['FE_MOD']['miscellaneous']['Merger2'] = 'ModuleMerger2';
-
-
-/**
- * Form fields
- */
-$GLOBALS['BE_FFL']['mergerModuleWizard'] = 'MergerModuleWizard';
+interface NodeInterface
+{
+	/**
+	 * Evaluate the node and return the next result.
+	 * 
+	 * @return mixed
+	 */
+	public function evaluate();
+}

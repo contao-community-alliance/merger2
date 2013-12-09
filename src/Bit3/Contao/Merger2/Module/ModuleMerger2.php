@@ -172,30 +172,19 @@ class ModuleMerger2 extends Module
 	 * @return boolean
 	 */
 	function platform($platform) {
-		if (in_array('theme_plus', \Config::getInstance()->getActiveModules())) {
-			return \ThemePlus\ThemePlus::checkFilter(
-				null,
-				null,
-				null,
-				null,
-				$platform
-			);
-		}
-		else {
-			$mobileDetect = new \Mobile_Detect();
+		$mobileDetect = new \Mobile_Detect();
 
-			switch ($platform) {
-				case 'desktop':
-					return !$mobileDetect->isMobile();
-				case 'tablet':
-					return $mobileDetect->isTablet();
-				case 'smartphone':
-					return !$mobileDetect->isTablet() && $mobileDetect->isMobile();
-				case 'mobile':
-					return $mobileDetect->isMobile();
-				default:
-					return false;
-			}
+		switch ($platform) {
+			case 'desktop':
+				return !$mobileDetect->isMobile();
+			case 'tablet':
+				return $mobileDetect->isTablet();
+			case 'smartphone':
+				return !$mobileDetect->isTablet() && $mobileDetect->isMobile();
+			case 'mobile':
+				return $mobileDetect->isMobile();
+			default:
+				return false;
 		}
 	}
 

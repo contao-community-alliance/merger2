@@ -11,14 +11,15 @@
  * @license LGPL-3.0+
  */
 
+namespace Bit3\Contao\Merger2\Constraint\Node;
 
-/**
- * Front end modules
- */
-$GLOBALS['FE_MOD']['miscellaneous']['Merger2'] = 'ModuleMerger2';
-
-
-/**
- * Form fields
- */
-$GLOBALS['BE_FFL']['mergerModuleWizard'] = 'MergerModuleWizard';
+class OrNode extends ConjunctionNode
+{
+	/**
+	 * {@inheritdoc}
+	 */
+	public function evaluate()
+	{
+		return $this->left->evaluate() || $this->right->evaluate();
+	}
+}
