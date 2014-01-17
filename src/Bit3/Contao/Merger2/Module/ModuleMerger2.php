@@ -172,19 +172,30 @@ class ModuleMerger2 extends Module
 	 * @return boolean
 	 */
 	function platform($platform) {
-		$mobileDetect = new \Mobile_Detect();
+		if (in_array('theme-plus', \Config::getInstance()->getActiveModules())) {
+			return \Bit3\Contao\ThemePlus\ThemePlus::checkFilter(
+				null,
+				null,
+				null,
+				null,
+				$platform
+			);
+		}
+		else {
+			$mobileDetect = new \Mobile_Detect();
 
-		switch ($platform) {
-			case 'desktop':
-				return !$mobileDetect->isMobile();
-			case 'tablet':
-				return $mobileDetect->isTablet();
-			case 'smartphone':
-				return !$mobileDetect->isTablet() && $mobileDetect->isMobile();
-			case 'mobile':
-				return $mobileDetect->isMobile();
-			default:
-				return false;
+			switch ($platform) {
+				case 'desktop':
+					return !$mobileDetect->isMobile();
+				case 'tablet':
+					return $mobileDetect->isTablet();
+				case 'smartphone':
+					return !$mobileDetect->isTablet() && $mobileDetect->isMobile();
+				case 'mobile':
+					return $mobileDetect->isMobile();
+				default:
+					return false;
+			}
 		}
 	}
 
