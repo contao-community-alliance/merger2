@@ -456,41 +456,18 @@ class ModuleMerger2 extends Module
 	 */
 	protected function getPageArticle(&$objPage, $varId, $boolMultiMode=false, $boolIsInsertTag=false, $strColumn='main')
 	{
-		if (!$varId)
-		{
-			return '';
-		}
-
-		$this->import('Database');
-
 		// Get article
-		$objArticle = $this->Database->prepare("SELECT *, author AS authorId, (SELECT name FROM tl_user WHERE id=author) AS author FROM tl_article WHERE (id=? OR alias=?)" . (!$boolIsInsertTag ? " AND pid=?" : ""))
-									 ->limit(1)
-									 ->execute((is_numeric($varId) ? $varId : 0), $varId, $objPage->id);
+		$objArticle = \Database::getInstance()
+			->prepare("SELECT * FROM tl_article WHERE (id=? OR alias=?)" . (!$boolIsInsertTag ? " AND pid=?" : ""))
+			->limit(1)
+			->execute((is_numeric($varId) ? $varId : 0), $varId, $objPage->id);
 
 		if ($objArticle->numRows < 1)
 		{
 			return '';
 		}
 
-		if (version_compare(VERSION, '3', '<') &&
-            !file_exists(TL_ROOT . '/system/modules/frontend/ModuleArticle.php'))
-		{
-			$this->log('Class ModuleArticle does not exist', 'Controller getArticle()', TL_ERROR);
-			return '';
-		}
-
-		// Print article as PDF
-		if ($this->Input->get('pdf') == $objArticle->id)
-		{
-			$this->printArticleAsPdf($objArticle);
-		}
-
-		$objArticle->headline = $objArticle->title;
-		$objArticle->multiMode = $boolMultiMode;
-
-		$objArticle = new ModuleArticle($objArticle, $strColumn);
-		return $objArticle->generate($boolIsInsertTag);
+		return $this->getArticle($objArticle->id, $boolMultiMode, $boolIsInsertTag, $strColumn);
 	}
 
 
