@@ -3,12 +3,11 @@
 /**
  * Merger² - Module Merger for Contao Open Source CMS
  *
- * Copyright (C) 2013 bit3 UG
- *
- * @package merger2
- * @author  Tristan Lins <tristan.lins@bit3.de>
- * @link    http://bit3.de
- * @license LGPL-3.0+
+ * @copyright 2013,2014 bit3 UG
+ * @author    Tristan Lins <tristan.lins@bit3.de>
+ * @link      http://bit3.de
+ * @package   bit3/contao-merger2
+ * @license   LGPL-3.0+
  */
 
 
@@ -37,6 +36,3 @@ $GLOBALS['TL_LANG']['merger2']['inherit_articles']              = 'Article from 
 $GLOBALS['TL_LANG']['merger2']['inherit_all_articles']          = 'Article from parent pages';
 $GLOBALS['TL_LANG']['merger2']['inherit_articles_fallback']     = 'Article of this site <em>or</em> from parent page';
 $GLOBALS['TL_LANG']['merger2']['inherit_all_articles_fallback'] = 'Article of this site <em>or</em> from parent pages';
-$GLOBALS['TL_LANG']['merger2']['legend_inherit_module']         = 'Inherited modules';
-$GLOBALS['TL_LANG']['merger2']['inherit_modules']               = 'Module from parent page';
-$GLOBALS['TL_LANG']['merger2']['inherit_all_modules']           = 'Module from parent pages';

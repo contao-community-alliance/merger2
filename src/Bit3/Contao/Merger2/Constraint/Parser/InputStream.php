@@ -3,12 +3,11 @@
 /**
  * Merger² - Module Merger for Contao Open Source CMS
  *
- * Copyright (C) 2013 bit3 UG
- *
- * @package merger2
- * @author  Tristan Lins <tristan.lins@bit3.de>
- * @link    http://bit3.de
- * @license LGPL-3.0+
+ * @copyright 2013,2014 bit3 UG
+ * @author    Tristan Lins <tristan.lins@bit3.de>
+ * @link      http://bit3.de
+ * @package   bit3/contao-merger2
+ * @license   LGPL-3.0+
  */
 
 namespace Bit3\Contao\Merger2\Constraint\Parser;
@@ -125,6 +124,12 @@ class InputStream
 			return new InputToken(InputToken::VARIABLE, $name);
 		}
 
+		if ($char == '"' || $char == "'") {
+			$this->skip();
+			$sequence = $this->readQuotedSequence();
+			return new InputToken(InputToken::STRING, $sequence);
+		}
+
 		$this->expectWordCharacter($char);
 
 		$sequence = $this->readWordSequence();
@@ -156,6 +161,32 @@ class InputStream
 		}
 
 		return new InputToken(InputToken::STRING, $sequence);
+	}
+
+	protected function readQuotedSequence()
+	{
+		$buffer = '';
+		$escape = false;
+
+		while (strlen($this->input)) {
+			$char = $this->read();
+
+			if ($escape) {
+				$buffer .= $char;
+				$escape = false;
+			}
+			else if ($char == '\\') {
+				$escape = true;
+			}
+			else if ($char == '"' || $char == "'") {
+				return $buffer;
+			}
+			else {
+				$buffer .= $char;
+			}
+		}
+
+		throw new InputStreamException('Unexpected end of quoted sequence');
 	}
 
 	protected function readWordSequence()

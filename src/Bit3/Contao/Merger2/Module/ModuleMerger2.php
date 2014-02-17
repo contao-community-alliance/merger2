@@ -3,447 +3,182 @@
 /**
  * Merger² - Module Merger for Contao Open Source CMS
  *
- * Copyright (C) 2013 bit3 UG
- *
- * @package merger2
- * @author  Tristan Lins <tristan.lins@bit3.de>
- * @link    http://bit3.de
- * @license LGPL-3.0+
+ * @copyright 2013,2014 bit3 UG
+ * @author    Tristan Lins <tristan.lins@bit3.de>
+ * @link      http://bit3.de
+ * @package   bit3/contao-merger2
+ * @license   LGPL-3.0+
  */
 
+namespace Bit3\Contao\Merger2\Module;
+
+use Bit3\Contao\Merger2\Constraint\Parser\InputStream;
+use Bit3\Contao\Merger2\Constraint\Parser\Parser;
 
 /**
  * Class ModuleMerger2
  */
-class ModuleMerger2 extends Module
+class ModuleMerger2 extends \Module
 {
-
 	/**
 	 * Template
+	 *
 	 * @var string
 	 */
 	protected $strTemplate = 'mod_merger2';
 
-
-	/**
-	 * function: language(..)
-	 * Test the page language.
-	 * @param mixed $strLanguage
-	 * @return boolean
-	 */
-	private function language($strLanguage) {
-		global $objPage;
-		return (strtolower($objPage->language) == strtolower($strLanguage));
-	}
-
-
-	/**
-	 * function: page(..)
-	 * Test the page id or alias.
-	 * @param mixed $strId
-	 * @return boolean
-	 */
-	private function page($strId) {
-		global $objPage;
-		return (intval($strId) == $objPage->id || $strId == $objPage->alias) ? true : false;
-	}
-
-
-	/**
-	 * function: root(..)
-	 * Test the root page id or alias.
-	 * @param mixed $strId
-	 * @return boolean
-	 */
-	private function root($strId) {
-		global $objPage;
-		return (intval($strId) == $objPage->rootId || $strId == $this->getPageDetails($objPage->rootId)->alias) ? true : false;
-	}
-
-
-	/**
-	 * function: pageInPath(..)
-	 * Test if page id or alias is in path.
-	 * @param mixed $strId
-	 * @return boolean
-	 */
-	private function pageInPath($strId) {
-		$page = $GLOBALS['objPage'];
-		while (true) {
-			if (intval($strId) == $page->id || $strId == $page->alias)
-			{
-				return true;
-			}
-			if ($page->pid > 0) {
-				$page = $this->getPageDetails($page->pid);
-			} else {
-				return false;
-			}
-		}
-	}
-
-	/**
-	 * Evaluate value to bool.
-	 * @param string $strValue
-	 * @return boolean
-	 */
-	private function boolean($strValue) {
-		switch (strtolower($strValue)) {
-		case 'true': case '1': case '!false': case '!0': return true;
-		case 'false': case '0': case '!true': case '!1': return false;
-		default: throw new Exception('Illegal boolean value: "' . $strValue . '"');
-		}
-	}
-
-	/**
-	 * function: depth(..)
-	 * Test the page depth.
-	 * @param mixed $strValue
-	 * @return boolean
-	 */
-	private function depth($strValue) {
-		if (preg_match('#^(<|>|<=|>=|=|!=)?\\s*(\\d+)$#', $strValue, $m)) {
-			$cmp = $m[1] ? $m[1] : '=';
-			$i = intval($m[2]);
-
-			$n = 0;
-			$page = $this->getPageDetails($GLOBALS['objPage']->id);
-			while ($page->pid > 0 && $page->type != 'root') {
-				$n ++;
-				$page = $this->getPageDetails($page->pid);
-			}
-
-			switch ($cmp) {
-			case '<': return $n < $i;
-			case '>': return $n > $i;
-			case '<=': return $n <= $i;
-			case '>=': return $n >= $i;
-			case '=': return $n == $i;
-			case '!=': return $n != $i;
-			}
-		} else {
-			throw new Exception('Illegal depth value: "' . $strValue . '"');
-		}
-	}
-
-	/**
-	 * function: articleExists(..)
-	 * Test if an article exists in the column.
-	 * @param string $strColumn
-	 * @param boolean $boolIncludeUnpublished
-	 * @return boolean;
-	 */
-	function articleExists($strColumn, $boolIncludeUnpublished = false) {
-		global $objPage;
-		$time = time();
-		$objArticle = $this->Database->prepare("SELECT COUNT(id) as count FROM tl_article WHERE pid=? AND inColumn=?" .
-										($boolIncludeUnpublished ? '' : " AND (start='' OR start<?) AND (stop='' OR stop>?) AND published=1"))
-									 ->limit(1)
-									 ->execute($objPage->id, $strColumn, $time, $time);
-		if ($objArticle->next())
-			return $objArticle->count > 0;
-		else
-			return false;
-	}
-
-	/**
-	 * function: children(..)
-	 * Test if the page have the specific count of children.
-	 * @param integer $intCount
-	 * @param boolean $boolIncludeUnpublished
-	 * @return boolean
-	 */
-	function children($intCount, $boolIncludeUnpublished = false) {
-		global $objPage;
-		$time = time();
-		$objChildren = $this->Database->prepare("SELECT COUNT(id) as count FROM tl_page WHERE pid=?" .
-										($boolIncludeUnpublished ? '' : " AND (start='' OR start<?) AND (stop='' OR stop>?) AND published=1"))
-									 ->limit(1)
-									 ->execute($objPage->id, $time, $time);
-		if ($objChildren->next())
-			return $objChildren->count >= $intCount;
-		return false;
-	}
-
-	/**
-	 * function: platform(..)
-	 * @param integer $intCount
-	 * @param boolean $boolIncludeUnpublished
-	 * @return boolean
-	 */
-	function platform($platform) {
-		if (in_array('theme-plus', \Config::getInstance()->getActiveModules())) {
-			return \Bit3\Contao\ThemePlus\ThemePlus::checkFilter(
-				null,
-				null,
-				null,
-				null,
-				$platform
-			);
-		}
-		else {
-			$mobileDetect = new \Mobile_Detect();
-
-			switch ($platform) {
-				case 'desktop':
-					return !$mobileDetect->isMobile();
-				case 'tablet':
-					return $mobileDetect->isTablet();
-				case 'smartphone':
-					return !$mobileDetect->isTablet() && $mobileDetect->isMobile();
-				case 'mobile':
-					return $mobileDetect->isMobile();
-				default:
-					return false;
-			}
-		}
-	}
-
-	/**
-	 * Evaluate a function to bool result.
-	 * @param array $matches
-	 * @return boolean
-	 */
-	public function evaluateFunctionBool($matches) {
-		$args = explode(',', $matches[2]);
-		switch ($matches[1]) {
-			case 'language': return $this->language(trim($args[0]));
-			case 'page': return $this->page(trim($args[0]));
-			case 'root': return $this->root(trim($args[0]));
-			case 'pageInPath': return $this->pageInPath(trim($args[0]));
-			case 'depth': return $this->depth(trim($args[0]));
-			case 'articleExists': return $this->articleExists(isset($args[0]) ? trim($args[0]) : 'main');
-			case 'articleExistsReal': return $this->articleExists(isset($args[0]) ? trim($args[0]) : 'main', true);
-			case 'children': return $this->children(isset($args[0]) && is_numeric($args[0]) ? trim($args[0]) : 1);
-			case 'childrenReal': return $this->children(isset($args[0]) && is_numeric($args[0]) ? trim($args[0]) : 1, true);
-			case 'platform': return $this->platform($args[0]);
-			default: return call_user_func_array(trim($matches[1]), $args);
-		}
-	}
-
-	/**
-	 * Evaluate a function to string result.
-	 * @param array $matches
-	 * @return string
-	 */
-	public function evaluateFunction($matches) {
-		return $this->evaluateFunctionBool($matches) ? 'true' : 'false';
-	}
-
-	/**
-	 * Evaluate AND concatenation.
-	 * @param array $matches
-	 * @return string
-	 */
-	public function evaluateAnd($matches) {
-		$left = $this->boolean($matches[1]);
-		$right = $this->boolean($matches[3]);
-		return $left && $right ? 'true' : 'false';
-	}
-
-	/**
-	 * Evaluate OR concatenation.
-	 * @param array $matches
-	 * @return string
-	 */
-	public function evaluateOr($matches) {
-		$left = $this->boolean($matches[1]);
-		$right = $this->boolean($matches[3]);
-		return $left || $right ? 'true' : 'false';
-	}
-
-	/**
-	 * Evaluate a block.
-	 * @param array $matches
-	 * @return string
-	 */
-	public function evaluateBlock($matches) {
-		return $this->evaluate(trim($matches[1])) ? 'true' : 'false';
-	}
-
-	/**
-	 * Evaluate an expression.
-	 * @param string $expression
-	 * @return boolean
-	 */
-	private function evaluate($expression) {
-		$intCount = 0;
-		// evaluate all functions
-		do
-		{
-			$expression = preg_replace_callback(
-				'#([\\w\\\\:]+)\\(([^\\)]*)\\)#',
-				array(&$this, 'evaluateFunction'),
-				$expression,
-				-1,
-				$intCount);
-		}
-		while($intCount > 0);
-		// evaluate blocks
-		do
-		{
-			$expression = preg_replace_callback(
-				'#\\(([^\\)]+)\\)#',
-				array(&$this, 'evaluateBlock'),
-				$expression,
-				-1,
-				$intCount);
-		}
-		while ($intCount > 0);
-		// evaluate 'and'-concatenations
-		do
-		{
-			$expression = preg_replace_callback(
-				'#(!?true|!?false|!?0|!?1)\\s+(and|&)\\s+(!?true|!?false|!?0|!?1)#i',
-				array(&$this, 'evaluateAnd'),
-				$expression,
-				-1,
-				$intCount);
-		}
-		while($intCount > 0);
-		// evaluate 'or'-concatenations
-		do
-		{
-			$expression = preg_replace_callback(
-				'#(!?true|!?false|!?0|!?1)\\s+(or|\\|)\\s+(!?true|!?false|!?0|!?1)#i',
-				array(&$this, 'evaluateOr'),
-				$expression,
-				-1,
-				$intCount);
-		}
-		while($intCount > 0);
-		// return a boolean result
-		return $this->boolean($expression);
-	}
-
 	/**
 	 * Generate a front end module and return it as HTML string
+	 *
 	 * @param integer
 	 * @param string
+	 *
 	 * @return string
 	 */
-	protected function getPageFrontendModule(&$objPage, $intId, $strColumn='main', $onlyInheritable = false)
+	protected function getPageFrontendModule($page, $moduleId, $columnName = 'main', $inheritableOnly = false)
 	{
-		$this->import('Database');
-
-		if (!strlen($intId))
-		{
+		if (!is_object($moduleId) && !strlen($moduleId)) {
 			return '';
 		}
 
 		// Articles
-		if ($intId == 0)
-		{
+		if ($moduleId == 0) {
 			// Show a particular article only
-			if ($this->Input->get('articles') && $objPage->type == 'regular')
-			{
-				list($strSection, $strArticle) = explode(':', $this->Input->get('articles'));
+			if ($page->type == 'regular' && \Input::get('articles')) {
+				list($sectionName, $articleName) = explode(':', \Input::get('articles'));
 
-				if (is_null($strArticle))
-				{
-					$strArticle = $strSection;
-					$strSection = 'main';
+				if ($articleName === null) {
+					$articleName = $sectionName;
+					$sectionName = 'main';
 				}
 
-				if ($strSection == $strColumn)
-				{
-					return $this->getPageArticle($objPage, $strArticle);
+				if ($sectionName == $columnName) {
+					$article = \ArticleModel::findByIdOrAliasAndPid($articleName, $page->id);
+
+					// Send a 404 header if the article does not exist
+					if ($article === null) {
+						// Do not index the page
+						$page->noSearch = 1;
+						$page->cache    = 0;
+
+						header('HTTP/1.1 404 Not Found');
+						return '<p class="error">' . sprintf(
+							$GLOBALS['TL_LANG']['MSC']['invalidPage'],
+							$articleName
+						) . '</p>';
+					}
+
+					if (!$inheritableOnly || $article->inheritable) {
+						// Add the "first" and "last" classes (see #2583)
+						$article->classes = array('first', 'last');
+
+						return $this->getArticle($article);
+					}
+
+					return '';
 				}
 			}
 
-			// HOOK: trigger article_raster_designer extension
-			elseif (in_array('article_raster_designer', $this->Config->getActiveModules()))
-			{
-				return RasterDesigner::load($objPage->id, $strColumn);
+			// HOOK: trigger the article_raster_designer extension
+			if (in_array('article_raster_designer', \ModuleLoader::getActive())) {
+				return \RasterDesigner::load($page->id, $columnName);
 			}
 
-			$time = time();
+			// Show all articles (no else block here, see #4740)
+			$articleCollection = \ArticleModel::findPublishedByPidAndColumn($page->id, $columnName);
 
-			// Show all articles of the current column
-			$objArticles = $this->Database->prepare("SELECT id FROM tl_article WHERE pid=? AND inColumn=?" . ($onlyInheritable ? " AND inheritable=1" : "") . (!BE_USER_LOGGED_IN ? " AND (start='' OR start<$time) AND (stop='' OR stop>$time) AND published=1" : "") . " ORDER BY sorting")
-										  ->execute($objPage->id, $strColumn);
-
-			if (($intCount = $objArticles->numRows) < 1)
-			{
+			if ($articleCollection === null) {
 				return '';
 			}
 
-			$return = '';
+			$return       = '';
+			$intCount     = 0;
+			$blnMultiMode = ($articleCollection->count() > 1);
+			$intLast      = $articleCollection->count() - 1;
 
-			while ($objArticles->next())
-			{
-				$return .= $this->getPageArticle($objPage, $objArticles->id, (($intCount > 1) ? true : false), false, $strColumn);
+			while ($articleCollection->next()) {
+				if ($inheritableOnly && !$articleCollection->inheritable) {
+					continue;
+				}
+
+				$articleRow = $articleCollection->current();
+
+				// Add the "first" and "last" classes (see #2583)
+				if ($intCount == 0 || $intCount == $intLast) {
+					$cssClasses = array();
+
+					if ($intCount == 0) {
+						$cssClasses[] = 'first';
+					}
+
+					if ($intCount == $intLast) {
+						$cssClasses[] = 'last';
+					}
+
+					$articleRow->classes = $cssClasses;
+				}
+
+				$return .= $this->getArticle($articleRow, $blnMultiMode, false, $columnName);
+				++$intCount;
 			}
 
 			return $return;
 		}
 
 		// Other modules
-		if (version_compare(VERSION, '3', '<')) {
-			$objModule = $this->Database->prepare("SELECT * FROM tl_module WHERE id=?")
-										->limit(1)
-										->execute($intId);
-
-			if ($objModule->numRows < 1)
-			{
-				return '';
-			}
-		}
 		else {
-			$objModule = \ModuleModel::findByPK($intId);
-
-			if ($objModule === null)
-			{
-				return '';
+			if (is_object($moduleId)) {
+				$articleRow = $moduleId;
 			}
-		}
+			else {
+				$articleRow = \ModuleModel::findByPk($moduleId);
 
-		// Show to guests only
-		if ($objModule->guests && FE_USER_LOGGED_IN && !BE_USER_LOGGED_IN && !$objModule->protected)
-		{
-			return '';
-		}
+				if ($articleRow === null) {
+					return '';
+				}
+			}
 
-		// Protected element
-		if (!BE_USER_LOGGED_IN && $objModule->protected)
-		{
-			if (!FE_USER_LOGGED_IN)
-			{
+			// Check the visibility (see #6311)
+			if (!static::isVisibleElement($articleRow)) {
 				return '';
 			}
 
-			$this->import('FrontendUser', 'User');
-			$arrGroups = deserialize($objModule->groups);
+			$moduleClassName = \Module::findClass($articleRow->type);
 
-			if (is_array($arrGroups) && count(array_intersect($this->User->groups, $arrGroups)) < 1)
-			{
+			// Return if the class does not exist
+			if (!class_exists($moduleClassName)) {
+				$this->log(
+					'Module class "' . $moduleClassName . '" (module "' . $articleRow->type . '") does not exist',
+					__METHOD__,
+					TL_ERROR
+				);
 				return '';
 			}
+
+			$articleRow->typePrefix = 'mod_';
+			/** @var \Module $module */
+			$module = new $moduleClassName($articleRow, $columnName);
+			$buffer = $module->generate();
+
+			// HOOK: add custom logic
+			if (isset($GLOBALS['TL_HOOKS']['getFrontendModule']) && is_array(
+					$GLOBALS['TL_HOOKS']['getFrontendModule']
+				)
+			) {
+				foreach ($GLOBALS['TL_HOOKS']['getFrontendModule'] as $callback) {
+					$this->import($callback[0]);
+					$buffer = $this->$callback[0]->$callback[1]($articleRow, $buffer, $module);
+				}
+			}
+
+			// Disable indexing if protected
+			if ($module->protected && !preg_match('/^\s*<!-- indexer::stop/', $buffer)) {
+				$buffer = "\n<!-- indexer::stop -->" . $buffer . "<!-- indexer::continue -->\n";
+			}
+
+			return $buffer;
 		}
-
-		$strClass = $this->findFrontendModule($objModule->type);
-
-		if (!$this->classFileExists($strClass))
-		{
-			$this->log('Module class "'.$strClass.'" (module "'.$objModule->type.'") does not exist', 'Controller getFrontendModule()', TL_ERROR);
-			return '';
-		}
-
-		$objModule->typePrefix = 'mod_';
-		$objModule = new $strClass($objModule, $strColumn);
-
-
-		$strBuffer = $objModule->generate();
-
-		// Disable indexing if protected
-		if ($objModule->protected && !preg_match('/^\s*<!-- indexer::stop/i', $strBuffer))
-		{
-			$strBuffer = "\n<!-- indexer::stop -->$strBuffer<!-- indexer::continue -->\n";
-		}
-
-		return $strBuffer;
 	}
-
 
 	/**
 	 * Generate an article and return it as string
@@ -452,103 +187,104 @@ class ModuleMerger2 extends Module
 	 * @param boolean
 	 * @param boolean
 	 * @param string
+	 *
 	 * @return string
 	 */
-	protected function getPageArticle(&$objPage, $varId, $boolMultiMode=false, $boolIsInsertTag=false, $strColumn='main')
-	{
-		// Get article
-		$objArticle = \Database::getInstance()
-			->prepare("SELECT * FROM tl_article WHERE (id=? OR alias=?)" . (!$boolIsInsertTag ? " AND pid=?" : ""))
-			->limit(1)
-			->execute((is_numeric($varId) ? $varId : 0), $varId, $objPage->id);
+	protected function getPageArticle(
+		$page,
+		$articleId
+	) {
+		$article = \ArticleModel::findByIdOrAliasAndPid($articleId, $page->id);
 
-		if ($objArticle->numRows < 1)
-		{
+		if ($article === null) {
 			return '';
 		}
 
-		return $this->getArticle($objArticle->id, $boolMultiMode, $boolIsInsertTag, $strColumn);
+		return $this->getArticle($article);
 	}
-
 
 	/**
 	 * Inherit article from parent page
+	 *
+	 * @param \PageModel $page
+	 * @param int        $maxLevel
+	 * @param int        $currentLevel
 	 */
-	protected function inheritArticle(&$objPage, $intMax = 0, $intLevel = 0) {
-		$objParent = $this->Database->prepare('
-				SELECT
-					*
-				FROM
-					tl_page
-				WHERE
-					id = ?')
-			->limit(1)
-			->execute($objPage->pid);
-		if ($objParent->next()) {
-			$html = $this->getPageFrontendModule($objParent, 0, $this->strColumn, true);
-			if ($intMax == 0 || $intMax < ++$intLevel)
-				$html .= $this->inheritArticle($objParent, $intMax, $intLevel);
-			return $html;
-		}
-		return '';
-	}
+	protected function inheritArticle($page, $maxLevel = 0, $currentLevel = 0)
+	{
+		$parentPage = \PageModel::findPublishedById($page->pid);
 
+		if ($parentPage === null) {
+			return '';
+		}
+
+		$html = $this->getPageFrontendModule($parentPage, 0, $this->strColumn, true);
+		if ($maxLevel == 0 || $maxLevel < ++$currentLevel) {
+			$html .= $this->inheritArticle($parentPage, $maxLevel, $currentLevel);
+		}
+		return $html;
+	}
 
 	/**
 	 * Mode is "all"
+	 *
+	 * @return bool
 	 */
-	protected function isModeAll() {
+	protected function isModeAll()
+	{
 		return $this->merger_mode == 'all';
 	}
 
-
 	/**
 	 * Mode is "up first false"
+	 *
+	 * @return bool
 	 */
-	protected function isModeUpFirstFalse() {
+	protected function isModeUpFirstFalse()
+	{
 		return $this->merger_mode == 'upFirstFalse';
 	}
 
-
 	/**
 	 * Mode is "up first true"
+	 *
+	 * @return bool
 	 */
-	protected function isModeUpFirstTrue() {
+	protected function isModeUpFirstTrue()
+	{
 		return $this->merger_mode == 'upFirstTrue';
 	}
 
 
 	/**
 	 * Display a wildcard in the back end
+	 *
 	 * @return string
 	 */
-	public function generate() {
-		if (TL_MODE == 'BE')
-		{
-			$objTemplate = new BackendTemplate('be_wildcard');
+	public function generate()
+	{
+		if (TL_MODE == 'BE') {
+			$objTemplate = new \BackendTemplate('be_wildcard');
 
 			$objTemplate->wildcard = '### MERGER2 ###';
-			$objTemplate->title = $this->headline;
-			$objTemplate->id = $this->id;
-			$objTemplate->link = $this->name;
-			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+			$objTemplate->title    = $this->headline;
+			$objTemplate->id       = $this->id;
+			$objTemplate->link     = $this->name;
+			$objTemplate->href     = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
 
 			return $objTemplate->parse();
 		}
 
 		// generate the merger container
-		if ($this->merger_container)
-		{
+		if ($this->merger_container) {
 			return parent::generate();
 		}
 
 		// or only the content
-		else
-		{
+		else {
 			return $this->generateContent();
 		}
 	}
-
 
 	/**
 	 * Generate module
@@ -558,63 +294,109 @@ class ModuleMerger2 extends Module
 		$this->Template->content = $this->generateContent();
 	}
 
-
 	/**
 	 * Generate content
+	 *
+	 * @SuppressWarnings(PHPMD.Superglobals)
+	 * @SuppressWarnings(PHPMD.CamelCaseVariableName)
 	 */
-	protected function generateContent() {
-		$tpl = new FrontendTemplate($this->merger_template);
-
+	protected function generateContent()
+	{
 		$modules = deserialize($this->merger_data);
-		$tpl->content = '';
+		$buffer  = '';
+
 		foreach ($modules as $module) {
 			if ($module['disabled']) {
 				continue;
 			}
 
-			$result = null;
+			$result    = null;
 			$condition = trim(html_entity_decode($module['condition']));
 			if (strlen($condition)) {
-				$result = $this->evaluate($condition);
+				$input  = new InputStream($condition);
+				$parser = new Parser();
+				$node   = $parser->parse($input);
+				$result = $node->evaluate();
 			}
 
 			if ($result || $result === null) {
 				$content = '';
 				switch ($module['content']) {
-				case '-':
-					break;
+					case '-':
+						break;
 
-				case 'article':
-					$content = $this->getPageFrontendModule($GLOBALS['objPage'], 0, $this->strColumn);
-					break;
+					/**
+					 * Include the articles from current page.
+					 */
+					case 'article':
+						$content = $this->getPageFrontendModule(
+							$GLOBALS['objPage'],
+							0,
+							$this->strColumn
+						);
+						break;
 
-				case 'inherit_articles':
-					$content = $this->inheritArticle($GLOBALS['objPage'], 1);
-					break;
+					/**
+					 * Inherit articles from one upper level that contains articles.
+					 */
+					case 'inherit_articles':
+						$content = $this->inheritArticle(
+							$GLOBALS['objPage'],
+							1
+						);
+						break;
 
-				case 'inherit_all_articles':
-					$content = $this->inheritArticle($GLOBALS['objPage']);
-					break;
+					/**
+					 * Inherit articles from all upper levels.
+					 */
+					case 'inherit_all_articles':
+						$content = $this->inheritArticle(
+							$GLOBALS['objPage']
+						);
+						break;
 
-				case 'inherit_articles_fallback':
-					$content = $this->getPageFrontendModule($GLOBALS['objPage'], 0, $this->strColumn);
-					if (!strlen($content)) {
-						$content = $this->inheritArticle($GLOBALS['objPage'], 1);
-					}
-					break;
+					/**
+					 * Include the articles from current page or inherit from one upper level that contains articles.
+					 */
+					case 'inherit_articles_fallback':
+						$content = $this->getPageFrontendModule(
+							$GLOBALS['objPage'],
+							0,
+							$this->strColumn
+						);
 
-				case 'inherit_all_articles_fallback':
-					$content = $this->getPageFrontendModule($GLOBALS['objPage'], 0, $this->strColumn);
-					if (!strlen($content)) {
-						$content = $this->inheritArticle($GLOBALS['objPage']);
-					}
-					break;
+						if (!strlen($content)) {
+							$content = $this->inheritArticle($GLOBALS['objPage'], 1);
+						}
+						break;
 
-				default:
-					$content = $this->getPageFrontendModule($GLOBALS['objPage'], $module['content'], $this->strColumn);
+					/**
+					 * Include the articles from current page or inherit from upper all upper levels.
+					 */
+					case 'inherit_all_articles_fallback':
+						$content = $this->getPageFrontendModule(
+							$GLOBALS['objPage'],
+							0,
+							$this->strColumn
+						);
+
+						if (!strlen($content)) {
+							$content = $this->inheritArticle($GLOBALS['objPage']);
+						}
+						break;
+
+					/**
+					 * Include a module.
+					 */
+					default:
+						$content = $this->getPageFrontendModule(
+							$GLOBALS['objPage'],
+							$module['content'],
+							$this->strColumn
+						);
 				}
 
-				$tpl->content .= $content;
+				$buffer .= $content;
 				if ($result === null) {
 					$result = strlen($content) > 0;
 				}
@@ -624,7 +406,8 @@ class ModuleMerger2 extends Module
 			}
 		}
 
+		$tpl          = new \FrontendTemplate($this->merger_template);
+		$tpl->content = $buffer;
 		return $tpl->parse();
 	}
-
 }

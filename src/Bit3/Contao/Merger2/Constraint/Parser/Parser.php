@@ -3,12 +3,11 @@
 /**
  * Merger² - Module Merger for Contao Open Source CMS
  *
- * Copyright (C) 2013 bit3 UG
- *
- * @package merger2
- * @author  Tristan Lins <tristan.lins@bit3.de>
- * @link    http://bit3.de
- * @license LGPL-3.0+
+ * @copyright 2013,2014 bit3 UG
+ * @author    Tristan Lins <tristan.lins@bit3.de>
+ * @link      http://bit3.de
+ * @package   bit3/contao-merger2
+ * @license   LGPL-3.0+
  */
 
 namespace Bit3\Contao\Merger2\Constraint\Parser;
@@ -33,12 +32,23 @@ class Parser
 		return $this->parseUntil($stream, InputToken::END_OF_STREAM);
 	}
 
+	/**
+	 * @param InputStream $stream
+	 * @param string $endToken
+	 * @param string $_
+	 *
+	 * @return NodeInterface|null
+	 *
+	 * @SuppressWarnings(PHPMD.CamelCaseParameterName)
+	 * @SuppressWarnings(PHPMD.ShortVariable)
+	 * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+	 */
 	protected function parseUntil(InputStream $stream, $endToken, $_ = null)
 	{
 		$endTokens = func_get_args();
 		array_shift($endTokens);
 
-		$node  = null;
+		$node = null;
 
 		while (true) {
 			$token = $stream->next();
@@ -57,15 +67,14 @@ class Parser
 			}
 
 			if ($node) {
-				$node = $this->parseConjunction($stream, $node);
+				$node = $this->parseConjunction($token, $stream, $node);
 			}
 			else {
-				$node = $this->parseNode($stream);
-				continue;
+				$node = $this->parseNode($token, $stream);
 			}
-
-			$this->unexpected($token);
 		}
+
+		return $node;
 	}
 
 	protected function parseNode(InputToken $token, InputStream $stream)
@@ -96,7 +105,7 @@ class Parser
 
 		if ($token->is(InputToken::STRING)) {
 			$value = $token->getValue();
-			$node = new StringNode($value);
+			$node  = new StringNode($value);
 			return $node;
 		}
 
@@ -133,17 +142,25 @@ class Parser
 			$token = $stream->next();
 		}
 
+		$right = $this->parseUntil(
+			$stream,
+			InputToken::TOKEN_SEPARATOR,
+			InputToken::LIST_SEPARATOR,
+			InputToken::CLOSE_BRACKET,
+			InputToken::END_OF_STREAM
+		);
+
+		if (!$right) {
+			return null;
+		}
+
 		if ($token->is(InputToken::AND_CONJUNCTION)) {
-			$right = $this->parseUntil($stream, InputToken::TOKEN_SEPARATOR);
 			$node = new AndNode($left, $right);
-			$stream->next();
 			return $node;
 		}
 
 		if ($token->is(InputToken::OR_CONJUNCTION)) {
-			$right = $this->parseUntil($stream, InputToken::TOKEN_SEPARATOR);
 			$node = new OrNode($left, $right);
-			$stream->next();
 			return $node;
 		}
 
@@ -170,6 +187,17 @@ class Parser
 		return $items;
 	}
 
+	/**
+	 * @param InputToken $token
+	 * @param string     $expected
+	 * @param string     $_
+	 *
+	 * @throws ParserException
+	 *
+	 * @SuppressWarnings(PHPMD.CamelCaseParameterName)
+	 * @SuppressWarnings(PHPMD.ShortVariable)
+	 * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+	 */
 	protected function unexpected(InputToken $token, $expected = null, $_ = null)
 	{
 		$expected = func_get_args();

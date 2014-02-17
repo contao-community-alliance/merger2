@@ -3,12 +3,11 @@
 /**
  * Merger² - Module Merger for Contao Open Source CMS
  *
- * Copyright (C) 2013 bit3 UG
- *
- * @package merger2
- * @author  Tristan Lins <tristan.lins@bit3.de>
- * @link    http://bit3.de
- * @license LGPL-3.0+
+ * @copyright 2013,2014 bit3 UG
+ * @author    Tristan Lins <tristan.lins@bit3.de>
+ * @link      http://bit3.de
+ * @package   bit3/contao-merger2
+ * @license   LGPL-3.0+
  */
 
 
@@ -29,80 +28,80 @@ $GLOBALS['TL_DCA']['tl_module']['palettes']['Merger2'] = '{title_legend},name,he
  */
 $GLOBALS['TL_DCA']['tl_module']['fields']['merger_mode'] = array
 (
-	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['merger_mode'],
-	'inputType'               => 'select',
-	'options'                 => &$GLOBALS['TL_LANG']['merger2']['mode'],
+	'label'     => &$GLOBALS['TL_LANG']['tl_module']['merger_mode'],
+	'inputType' => 'select',
+	'options'   => &$GLOBALS['TL_LANG']['merger2']['mode'],
+	'sql'       => 'varchar(14) NOT NULL default \'\'',
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['merger_template'] = array
 (
-	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['merger_template'],
-	'default'                 => 'merger_default',
-	'inputType'               => 'select',
-	'options'                 => $this->getTemplateGroup('merger_'),
-	'eval'                    => array('tl_class'=>'clr w50')
+	'label'     => &$GLOBALS['TL_LANG']['tl_module']['merger_template'],
+	'default'   => 'merger_default',
+	'inputType' => 'select',
+	'options'   => $this->getTemplateGroup('merger_'),
+	'eval'      => array('tl_class' => 'clr w50'),
+	'sql'       => 'varchar(64) NOT NULL default \'merger_default\'',
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['merger_container'] = array(
-	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['merger_container'],
-	'inputType'               => 'checkbox',
-	'eval'                    => array('tl_class'=>'w50 m12')
+	'label'     => &$GLOBALS['TL_LANG']['tl_module']['merger_container'],
+	'inputType' => 'checkbox',
+	'eval'      => array('tl_class' => 'w50 m12'),
+	'sql'       => 'char(1) NOT NULL default \'\'',
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['merger_data'] = array(
-	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['merger_data'],
-	'inputType'               => 'multiColumnWizard',
-	'eval'                    => array(
+	'label'     => &$GLOBALS['TL_LANG']['tl_module']['merger_data'],
+	'inputType' => 'multiColumnWizard',
+	'eval'      => array(
 		'columnFields' => array
 		(
-			'content' => array
+			'content'   => array
 			(
-				'label'                 => &$GLOBALS['TL_LANG']['tl_module']['merger_data_content'],
-				'inputType'             => 'select',
-				'options_callback'     	=> array('tl_module_merger2', 'getModules'),
-				'eval' 			        => array('style' => 'width:320px', 'includeBlankOption'=>true, 'chosen'=>true)
+				'label'            => &$GLOBALS['TL_LANG']['tl_module']['merger_data_content'],
+				'inputType'        => 'select',
+				'options_callback' => array('tl_module_merger2', 'getModules'),
+				'eval'             => array('style' => 'width:320px', 'includeBlankOption' => true, 'chosen' => true)
 			),
 			'condition' => array
 			(
-				'label'                 => &$GLOBALS['TL_LANG']['tl_module']['merger_data_condition'],
-				'exclude'               => true,
-				'inputType'             => 'text',
-				'eval' 			=> array('style'=>'width:240px')
+				'label'     => &$GLOBALS['TL_LANG']['tl_module']['merger_data_condition'],
+				'exclude'   => true,
+				'inputType' => 'text',
+				'eval'      => array('style' => 'width:240px')
 			),
-			'disabled' => array
+			'disabled'  => array
 			(
-				'label'                 => &$GLOBALS['TL_LANG']['tl_module']['merger_data_disabled'],
-				'exclude'               => true,
-				'inputType'             => 'checkbox',
-				'eval' 			=> array('style'=>'width:20px')
+				'label'     => &$GLOBALS['TL_LANG']['tl_module']['merger_data_disabled'],
+				'exclude'   => true,
+				'inputType' => 'checkbox',
+				'eval'      => array('style' => 'width:20px')
 			),
-			'edit' => array
+			'edit'      => array
 			(
-				'label' => &$GLOBALS['TL_LANG']['tl_module']['merger_data_edit'],
+				'label'                => &$GLOBALS['TL_LANG']['tl_module']['merger_data_edit'],
 				'input_field_callback' => array('tl_module_merger2', 'getEditButton')
 			)
 		)
-	)
+	),
+	'sql'       => 'text NULL',
 );
 
-class tl_module_merger2 extends Backend
+class tl_module_merger2 extends \Backend
 {
 	public function onload(DataContainer $dc)
 	{
-		if ($this->Input->get('table') == 'tl_module' && $this->Input->get('act') == 'edit')
-		{
-			$objModule = $this->Database
-				->prepare('SELECT * FROM tl_module WHERE id=?')
-				->execute($dc->id);
-			if ($objModule->next() && $objModule->type == 'Merger2')
-			{
+		if (\Input::get('table') == 'tl_module' && \Input::get('act') == 'edit') {
+			$module = \ModuleModel::findByPk($dc->id);
+			if ($module && $module->type == 'Merger2') {
 				$GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/merger2/html/merger2.js';
 
-				if ($this->Input->post('FORM_SUBMIT') == 'tl_module') {
-					$blnDisabled = !$this->Input->post('merger_container');
+				if (\Input::post('FORM_SUBMIT') == 'tl_module') {
+					$blnDisabled = !\Input::post('merger_container');
 				}
 				else {
-					$blnDisabled = !$objModule->merger_container;
+					$blnDisabled = !$module->merger_container;
 				}
 
 				$GLOBALS['TL_DCA']['tl_module']['fields']['cssID']['eval']['disabled'] = $blnDisabled;
@@ -115,31 +114,22 @@ class tl_module_merger2 extends Backend
 	{
 		// Get all modules from DB
 		$modules = array(
-			$GLOBALS['TL_LANG']['merger2']['legend_article'] => array(
-				'article' => $GLOBALS['TL_LANG']['merger2']['article'],
-				'inherit_articles' => $GLOBALS['TL_LANG']['merger2']['inherit_articles'],
-				'inherit_all_articles' => $GLOBALS['TL_LANG']['merger2']['inherit_all_articles'],
-				'inherit_articles_fallback' => $GLOBALS['TL_LANG']['merger2']['inherit_articles_fallback'],
+			$GLOBALS['TL_LANG']['merger2']['legend_article']        => array(
+				'article'                       => $GLOBALS['TL_LANG']['merger2']['article'],
+				'inherit_articles'              => $GLOBALS['TL_LANG']['merger2']['inherit_articles'],
+				'inherit_all_articles'          => $GLOBALS['TL_LANG']['merger2']['inherit_all_articles'],
+				'inherit_articles_fallback'     => $GLOBALS['TL_LANG']['merger2']['inherit_articles_fallback'],
 				'inherit_all_articles_fallback' => $GLOBALS['TL_LANG']['merger2']['inherit_all_articles_fallback']
 			),
-			$GLOBALS['TL_LANG']['merger2']['legend_inherit_module'] => array(
-				'inherit_modules' => $GLOBALS['TL_LANG']['merger2']['inherit_modules'],
-				'inherit_all_modules' => $GLOBALS['TL_LANG']['merger2']['inherit_all_modules']
-			)
 		);
 
-		$objTheme = $this->Database
-			->execute("SELECT * FROM tl_theme ORDER BY name");
-		while ($objTheme->next())
-		{
-			$modules[$objTheme->name] = array();
+		$themeCollection = \ThemeModel::findAll(array('order' => 'name'));
+		while ($themeCollection->next()) {
+			$modules[$themeCollection->name] = array();
 
-			$objModules = $this->Database
-				->prepare("SELECT id, name FROM tl_module WHERE pid=? AND id!=? ORDER BY name")
-				->execute((int) $objTheme->id, $mcw ? $mcw->currentRecord : 0);
-			while ($objModules->next())
-			{
-				$modules[$objTheme->name][$objModules->id] = $objModules->name;
+			$moduleCollection = \ModuleModel::findBy('pid', $themeCollection->id);
+			while ($moduleCollection->next()) {
+				$modules[$themeCollection->name][$moduleCollection->id] = $moduleCollection->name;
 			}
 		}
 
@@ -148,7 +138,7 @@ class tl_module_merger2 extends Backend
 
 	public function getEditButton($dc, $label)
 	{
-		$icon = $this->generateImage('edit.gif', '');
+		$icon = \Image::getHtml('edit.gif');
 
 		return sprintf('<a href="javascript:void(0);" class="edit_module">%s</a>', $icon);
 	}

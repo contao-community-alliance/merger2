@@ -13,16 +13,19 @@
 
 error_reporting(E_ALL);
 
-function includeIfExists($file)
-{
-	return file_exists($file) ? include $file : false;
+// search the initialize.php
+$dir = __DIR__;
+
+while ($dir != '.' && $dir != '/' && !is_file($dir . '/system/initialize.php')) {
+	$dir = dirname($dir);
+
 }
 
-if ((!$loader = includeIfExists(__DIR__.'/../vendor/autoload.php')) && (!$loader = includeIfExists(__DIR__.'/../../../autoload.php'))) {
-	echo 'You must set up the project dependencies, run the following commands:'.PHP_EOL.
-		'curl -sS https://getcomposer.org/installer | php'.PHP_EOL.
-		'php composer.phar install'.PHP_EOL;
+if (!is_file($dir . '/system/initialize.php')) {
+	echo 'Could not find initialize.php!';
 	exit(1);
 }
 
-$loader->add('Bit3\Contao\Merger2\Test', __DIR__);
+// initialize the contao framework
+define('TL_MODE', 'CLI');
+require($dir . '/system/initialize.php');

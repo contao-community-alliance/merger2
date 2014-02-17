@@ -12,12 +12,6 @@
 
 namespace Bit3\Contao\Merger2\Constraint\Parser;
 
-use Bit3\Contao\Merger2\Constraint\Node\GroupNode;
-use Bit3\Contao\Merger2\Constraint\Node\NodeInterface;
-
-class State
+class InputStreamException extends \RuntimeException
 {
-	protected $successor = array();
-
-	
 }

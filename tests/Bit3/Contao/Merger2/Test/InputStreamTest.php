@@ -20,7 +20,7 @@ class InputStreamTest extends \PHPUnit_Framework_TestCase
 {
 	public function testTokens()
 	{
-		$stream = new InputStream('$foo()NOT[]!AND&&OR||name true,false');
+		$stream = new InputStream('$foo()NOT[]!AND&&OR||name true,false"double-quote"\'single-quote\'');
 
 		$this->assertTrue($stream->hasMore());
 		$this->assertFalse($stream->isEmpty());
@@ -88,6 +88,14 @@ class InputStreamTest extends \PHPUnit_Framework_TestCase
 		$token = $stream->next();
 		$this->assertEquals(InputToken::FALSE, $token->getType());
 		$this->assertNull($token->getValue());
+
+		$token = $stream->next();
+		$this->assertEquals(InputToken::STRING, $token->getType());
+		$this->assertEquals('double-quote', $token->getValue());
+
+		$token = $stream->next();
+		$this->assertEquals(InputToken::STRING, $token->getType());
+		$this->assertEquals('single-quote', $token->getValue());
 
 		$this->assertFalse($stream->hasMore());
 		$this->assertTrue($stream->isEmpty());

@@ -1,4 +1,20 @@
-.project
-.settings
+# OS
+.DS_Store
+Thumbs.db
+
+# IDEs
 .buildpath
-.idea
+.project
+.settings/
+.build/
+.idea/
+nbproject/
+
+# runtime files
+.tx/
+contao/.skip
+
+# dependencies
+build
+vendor
+composer.lock

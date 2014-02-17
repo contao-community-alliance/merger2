@@ -3,12 +3,11 @@
 /**
  * Merger² - Module Merger for Contao Open Source CMS
  *
- * Copyright (C) 2013 bit3 UG
- *
- * @package merger2
- * @author  Tristan Lins <tristan.lins@bit3.de>
- * @link    http://bit3.de
- * @license LGPL-3.0+
+ * @copyright 2013,2014 bit3 UG
+ * @author    Tristan Lins <tristan.lins@bit3.de>
+ * @link      http://bit3.de
+ * @package   bit3/contao-merger2
+ * @license   LGPL-3.0+
  */
 
 namespace Bit3\Contao\Merger2\Constraint\Node;
@@ -16,10 +15,13 @@ namespace Bit3\Contao\Merger2\Constraint\Node;
 class CallNode implements NodeInterface
 {
 	/**
-	 * @var NodeInterface
+	 * @var string
 	 */
 	protected $name;
 
+	/**
+	 * @var NodeInterface[]
+	 */
 	protected $parameters;
 
 	function __construct($name, array $parameters)
@@ -46,9 +48,27 @@ class CallNode implements NodeInterface
 
 	/**
 	 * {@inheritdoc}
+	 *
+	 * @SuppressWarnings(PHPMD.Superglobals)
+	 * @SuppressWarnings(PHPMD.CamelCaseVariableName)
 	 */
 	public function evaluate()
 	{
-		return $this->name; // TODO read variable
+		if (!isset($GLOBALS['MERGER2_FUNCTION'][$this->name])) {
+			throw new \RuntimeException('Unknown function ' . $this->name);
+		}
+
+		return call_user_func_array($GLOBALS['MERGER2_FUNCTION'][$this->name], $this->getEvaluatedParameters());
+	}
+
+	protected function getEvaluatedParameters()
+	{
+		$evaluatedParameters = array();
+
+		foreach ($this->parameters as $parameter) {
+			$evaluatedParameters[] = $parameter->evaluate();
+		}
+
+		return $evaluatedParameters;
 	}
 }
