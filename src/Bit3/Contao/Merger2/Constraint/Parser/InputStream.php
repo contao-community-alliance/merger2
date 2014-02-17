@@ -209,7 +209,7 @@ class InputStream
 
 	protected function checkWordCharacter($char)
 	{
-		return preg_match('~^[\w]$~', $char);
+		return preg_match('~^[\w<>=!]$~', $char);
 	}
 
 	protected function expectWordCharacter($char)
