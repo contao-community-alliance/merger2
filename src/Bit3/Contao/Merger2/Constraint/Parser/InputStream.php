@@ -115,6 +115,13 @@ class InputStream
 
 		if ($char == '!') {
 			$this->skip();
+
+			// special sequence behavior
+			if ($this->head() == '=') {
+				$sequence = $char . $this->readWordSequence();
+				return new InputToken(InputToken::STRING, $sequence);
+			}
+
 			return new InputToken(InputToken::NOT);
 		}
 

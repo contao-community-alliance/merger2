@@ -196,7 +196,7 @@ class FunctionsTest extends \PHPUnit_Framework_TestCase
 		$parser = new Parser();
 		$node   = $parser->parse($stream);
 
-		$stream = new InputStream('depth("!=2")');
+		$stream = new InputStream('depth(!=2)');
 		$parser = new Parser();
 		$node   = $parser->parse($stream);
 
