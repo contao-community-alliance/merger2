@@ -56,6 +56,12 @@ class FunctionsTest extends \PHPUnit_Framework_TestCase
 		$node   = $parser->parse($stream);
 
 		$this->assertTrue($node->evaluate());
+
+		$stream = new InputStream('page(impressions)');
+		$parser = new Parser();
+		$node   = $parser->parse($stream);
+
+		$this->assertTrue($node->evaluate());
 	}
 
 	public function testPageFunctionFail()
@@ -65,20 +71,198 @@ class FunctionsTest extends \PHPUnit_Framework_TestCase
 		$node   = $parser->parse($stream);
 
 		$this->assertFalse($node->evaluate());
+
+		$stream = new InputStream('page("your-data-has-been-saved")');
+		$parser = new Parser();
+		$node   = $parser->parse($stream);
+
+		$this->assertFalse($node->evaluate());
 	}
 
-	public function testPageFunctionAliasPass()
+	public function testPageFunctionRootPass()
 	{
-		$stream = new InputStream('page(impressions)');
+		$stream = new InputStream('root(1)');
+		$parser = new Parser();
+		$node   = $parser->parse($stream);
+
+		$this->assertTrue($node->evaluate());
+
+		$stream = new InputStream('root("music-academy")');
 		$parser = new Parser();
 		$node   = $parser->parse($stream);
 
 		$this->assertTrue($node->evaluate());
 	}
 
-	public function testPageFunctionAliasFail()
+	public function testPageFunctionRootFail()
 	{
-		$stream = new InputStream('page("your-data-has-been-saved")');
+		$stream = new InputStream('root(2)');
+		$parser = new Parser();
+		$node   = $parser->parse($stream);
+
+		$this->assertFalse($node->evaluate());
+
+		$stream = new InputStream('root(index)');
+		$parser = new Parser();
+		$node   = $parser->parse($stream);
+
+		$this->assertFalse($node->evaluate());
+	}
+
+	public function testPageFunctionPageInPassPass()
+	{
+		$stream = new InputStream('pageInPath(3)');
+		$parser = new Parser();
+		$node   = $parser->parse($stream);
+
+		$this->assertTrue($node->evaluate());
+
+		$stream = new InputStream('pageInPath(academy)');
+		$parser = new Parser();
+		$node   = $parser->parse($stream);
+
+		$this->assertTrue($node->evaluate());
+	}
+
+	public function testPageFunctionPageInPassFail()
+	{
+		$stream = new InputStream('pageInPath(2)');
+		$parser = new Parser();
+		$node   = $parser->parse($stream);
+
+		$this->assertFalse($node->evaluate());
+
+		$stream = new InputStream('pageInPath(index)');
+		$parser = new Parser();
+		$node   = $parser->parse($stream);
+
+		$this->assertFalse($node->evaluate());
+	}
+
+	public function testPageFunctionDepthPass()
+	{
+		$stream = new InputStream('depth(2)');
+		$parser = new Parser();
+		$node   = $parser->parse($stream);
+
+		$this->assertTrue($node->evaluate());
+
+		$stream = new InputStream('depth(=2)');
+		$parser = new Parser();
+		$node   = $parser->parse($stream);
+
+		$this->assertTrue($node->evaluate());
+
+		$stream = new InputStream('depth(>=2)');
+		$parser = new Parser();
+		$node   = $parser->parse($stream);
+
+		$this->assertTrue($node->evaluate());
+
+		$stream = new InputStream('depth(<=2)');
+		$parser = new Parser();
+		$node   = $parser->parse($stream);
+
+		$this->assertTrue($node->evaluate());
+
+		$stream = new InputStream('depth(<3)');
+		$parser = new Parser();
+		$node   = $parser->parse($stream);
+
+		$this->assertTrue($node->evaluate());
+
+		$stream = new InputStream('depth(>1)');
+		$parser = new Parser();
+		$node   = $parser->parse($stream);
+
+		$this->assertTrue($node->evaluate());
+	}
+
+	public function testPageFunctionDepthFail()
+	{
+		$stream = new InputStream('depth(<2)');
+		$parser = new Parser();
+		$node   = $parser->parse($stream);
+
+		$this->assertFalse($node->evaluate());
+
+		$stream = new InputStream('depth(>2)');
+		$parser = new Parser();
+		$node   = $parser->parse($stream);
+
+		$this->assertFalse($node->evaluate());
+
+		$stream = new InputStream('depth(<>2)');
+		$parser = new Parser();
+		$node   = $parser->parse($stream);
+
+		$stream = new InputStream('depth("!=2")');
+		$parser = new Parser();
+		$node   = $parser->parse($stream);
+
+		$this->assertFalse($node->evaluate());
+
+		$stream = new InputStream('depth(<=1)');
+		$parser = new Parser();
+		$node   = $parser->parse($stream);
+
+		$this->assertFalse($node->evaluate());
+
+		$stream = new InputStream('depth(>=3)');
+		$parser = new Parser();
+		$node   = $parser->parse($stream);
+
+		$this->assertFalse($node->evaluate());
+	}
+
+	public function testPageFunctionArticleExistsPass()
+	{
+		$stream = new InputStream('articleExists(main)');
+		$parser = new Parser();
+		$node   = $parser->parse($stream);
+
+		$this->assertTrue($node->evaluate());
+	}
+
+	public function testPageFunctionArticleExistsFail()
+	{
+		$stream = new InputStream('articleExists(header)');
+		$parser = new Parser();
+		$node   = $parser->parse($stream);
+
+		$this->assertFalse($node->evaluate());
+
+		$stream = new InputStream('articleExists(left)');
+		$parser = new Parser();
+		$node   = $parser->parse($stream);
+
+		$this->assertFalse($node->evaluate());
+
+		$stream = new InputStream('articleExists(right)');
+		$parser = new Parser();
+		$node   = $parser->parse($stream);
+
+		$this->assertFalse($node->evaluate());
+
+		$stream = new InputStream('articleExists(footer)');
+		$parser = new Parser();
+		$node   = $parser->parse($stream);
+
+		$this->assertFalse($node->evaluate());
+	}
+
+	public function testPageFunctionChildrenPass()
+	{
+		$stream = new InputStream('children(0)');
+		$parser = new Parser();
+		$node   = $parser->parse($stream);
+
+		$this->assertTrue($node->evaluate());
+	}
+
+	public function testPageFunctionChildrenFail()
+	{
+		$stream = new InputStream('children(1)');
 		$parser = new Parser();
 		$node   = $parser->parse($stream);
 
