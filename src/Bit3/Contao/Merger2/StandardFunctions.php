@@ -105,7 +105,7 @@ class StandardFunctions
 	 */
 	static public function depth($strValue)
 	{
-		if (preg_match('#^(<|>|<=|>=|=|!=)?\\s*(\\d+)$#', $strValue, $matches)) {
+		if (preg_match('#^(<|>|<=|>=|=|!=|<>)?\\s*(\\d+)$#', $strValue, $matches)) {
 			$cmp = $matches[1] ? $matches[1] : '=';
 			$expectedDepth   = intval($matches[2]);
 
@@ -126,6 +126,7 @@ class StandardFunctions
 				case '>=':
 					return $depth >= $expectedDepth;
 				case '!=':
+				case '<>':
 					return $depth != $expectedDepth;
 				default:
 					return $depth == $expectedDepth;
