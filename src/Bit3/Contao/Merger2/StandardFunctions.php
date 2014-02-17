@@ -125,10 +125,10 @@ class StandardFunctions
 					return $depth <= $expectedDepth;
 				case '>=':
 					return $depth >= $expectedDepth;
-				case '=':
-					return $depth == $expectedDepth;
 				case '!=':
 					return $depth != $expectedDepth;
+				default:
+					return $depth == $expectedDepth;
 			}
 		}
 		else {
