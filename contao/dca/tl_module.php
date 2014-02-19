@@ -127,7 +127,7 @@ class tl_module_merger2 extends \Backend
 		while ($themeCollection->next()) {
 			$modules[$themeCollection->name] = array();
 
-			$moduleCollection = \ModuleModel::findBy('pid', $themeCollection->id);
+			$moduleCollection = \ModuleModel::findBy('pid', $themeCollection->id, array('order' => 'name'));
 			while ($moduleCollection->next()) {
 				$modules[$themeCollection->name][$moduleCollection->id] = $moduleCollection->name;
 			}
