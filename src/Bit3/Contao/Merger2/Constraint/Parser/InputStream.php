@@ -103,13 +103,17 @@ class InputStream
 
 		if ($char == '&') {
 			$this->skip();
-			$this->expect('&');
+			if ($this->head() == '&') {
+				$this->skip();
+			}
 			return new InputToken(InputToken::AND_CONJUNCTION);
 		}
 
 		if ($char == '|') {
 			$this->skip();
-			$this->expect('|');
+			if ($this->head() == '|') {
+				$this->skip();
+			}
 			return new InputToken(InputToken::OR_CONJUNCTION);
 		}
 
