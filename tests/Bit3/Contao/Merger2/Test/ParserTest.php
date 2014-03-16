@@ -125,4 +125,28 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 			$node
 		);
 	}
+
+	public function testIssue9()
+	{
+		$stream = new InputStream('page(6) | page(7) | page(9) | page(10) | depth(>1)');
+		$parser = new Parser();
+		$node   = $parser->parse($stream);
+
+		$this->assertEquals(
+			new OrNode(
+				new CallNode('page', array(new StringNode('6'))),
+				new OrNode(
+					new CallNode('page', array(new StringNode('7'))),
+					new OrNode(
+						new CallNode('page', array(new StringNode('9'))),
+						new OrNode(
+							new CallNode('page', array(new StringNode('10'))),
+							new CallNode('depth', array(new StringNode('>1')))
+						)
+					)
+				)
+			),
+			$node
+		);
+	}
 }
