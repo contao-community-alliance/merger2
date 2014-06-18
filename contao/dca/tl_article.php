@@ -32,3 +32,6 @@ $GLOBALS['TL_DCA']['tl_article']['fields']['inheritable'] = array
 	'inputType' => 'checkbox',
 	'sql'       => 'char(1) NOT NULL default \'1\'',
 );
+
+
+$GLOBALS['TL_DCA']['tl_article']['fields']['inColumn']['options_callback'][0] = 'Bit3\Contao\Merger2\DataContainer\Article';
