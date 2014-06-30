@@ -15,11 +15,20 @@ namespace Bit3\Contao\Merger2\DataContainer;
 /**
  * Class Article
  */
-class Article extends \tl_article
+class Article
 {
 	public function getActiveLayoutSections(\DataContainer $dc)
 	{
-		$sections = parent::getActiveLayoutSections($dc);
+		$callback = $GLOBALS['TL_DCA']['tl_article']['fields']['inColumn']['bit3_merger_original_options_callback'];
+
+		if (is_array($callback)) {
+			$object = \System::importStatic($callback[0]);
+			$methodName = $callback[1];
+			$sections = $object->$methodName($dc);
+		}
+		else {
+			$sections = call_user_func($callback, $dc);
+		}
 
 		if ($dc->activeRecord->pid) {
 			$page = \PageModel::findWithDetails($dc->activeRecord->pid);
