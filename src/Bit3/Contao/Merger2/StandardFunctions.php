@@ -191,45 +191,32 @@ class StandardFunctions
 		return false;
 	}
 
-	/**
-	 * function: platform(..)
-	 *
-	 * @param integer $intCount
-	 * @param boolean $boolIncludeUnpublished
-	 *
-	 * @return boolean
-	 */
-	static public function platform($platform)
-	{
-		if (in_array(
-			'theme-plus',
-			\Config::getInstance()
-				->getActiveModules()
-		)
-		) {
-			return \Bit3\Contao\ThemePlus\ThemePlus::checkFilter(
-				null,
-				null,
-				null,
-				null,
-				$platform
-			);
-		}
-		else {
-			$mobileDetect = new \Mobile_Detect();
+    /**
+     * function: platform(..)
+     *
+     * @param string $platform The platform name, one of 'desktop', 'tablet', 'smartphone' or 'mobile'.
+     *
+     * @return boolean
+     */
+    static public function platform($platform)
+    {
+        /** @var \Pimple $container */
+        global $container;
 
-			switch ($platform) {
-				case 'desktop':
-					return !$mobileDetect->isMobile();
-				case 'tablet':
-					return $mobileDetect->isTablet();
-				case 'smartphone':
-					return !$mobileDetect->isTablet() && $mobileDetect->isMobile();
-				case 'mobile':
-					return $mobileDetect->isMobile();
-				default:
-					return false;
-			}
-		}
-	}
+        /** @var \Mobile_Detect $mobileDetect */
+        $mobileDetect = $container['mobile-detect'];
+
+        switch ($platform) {
+            case 'desktop':
+                return !$mobileDetect->isMobile();
+            case 'tablet':
+                return $mobileDetect->isTablet();
+            case 'smartphone':
+                return !$mobileDetect->isTablet() && $mobileDetect->isMobile();
+            case 'mobile':
+                return $mobileDetect->isMobile();
+            default:
+                return false;
+        }
+    }
 }

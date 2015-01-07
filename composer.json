@@ -24,7 +24,8 @@
 		"php":">=5.3",
 		"contao/core":">=3.2-dev,<4-dev",
 		"contao-community-alliance/composer-installer": "*",
-		"menatwork/contao-multicolumnwizard": "~3"
+		"menatwork/contao-multicolumnwizard": "~3",
+        "bit3/contao-browser-detect-service": "~1.0"
 	},
 	"require-dev":{
 		"bit3/php-coding-standard":"*",
