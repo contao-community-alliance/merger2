@@ -193,41 +193,29 @@ class StandardFunctions
     /**
      * function: platform(..).
      *
-     * @param int  $intCount
-     * @param bool $boolIncludeUnpublished
+     * @param string $platform
      *
      * @return bool
      */
     public static function platform($platform)
     {
-        if (in_array(
-            'theme-plus',
-            \Config::getInstance()
-                ->getActiveModules()
-        )
-        ) {
-            return \Bit3\Contao\ThemePlus\ThemePlus::checkFilter(
-                null,
-                null,
-                null,
-                null,
-                $platform
-            );
-        } else {
-            $mobileDetect = new \Mobile_Detect();
+        /** @var \Pimple $container */
+        global $container;
 
-            switch ($platform) {
-                case 'desktop':
-                    return !$mobileDetect->isMobile();
-                case 'tablet':
-                    return $mobileDetect->isTablet();
-                case 'smartphone':
-                    return !$mobileDetect->isTablet() && $mobileDetect->isMobile();
-                case 'mobile':
-                    return $mobileDetect->isMobile();
-                default:
-                    return false;
-            }
+        /** @var \Mobile_Detect $mobileDetect */
+        $mobileDetect = $container['mobile-detect'];
+
+        switch ($platform) {
+            case 'desktop':
+                return !$mobileDetect->isMobile();
+            case 'tablet':
+                return $mobileDetect->isTablet();
+            case 'smartphone':
+                return !$mobileDetect->isTablet() && $mobileDetect->isMobile();
+            case 'mobile':
+                return $mobileDetect->isMobile();
+            default:
+                return false;
         }
     }
 }
