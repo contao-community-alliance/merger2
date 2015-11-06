@@ -1,12 +1,14 @@
 <?php
 
 /**
- * Merger² - Module Merger for Contao Open Source CMS
+ * Merger² - Module Merger for Contao Open Source CMS.
  *
  * @copyright 2013,2014 bit3 UG
  * @author    Tristan Lins <tristan.lins@bit3.de>
+ * @author    David Molineus <david.molineus@netzmacht.de>
+ *
  * @link      http://bit3.de
- * @package   bit3/contao-merger2
+ *
  * @license   LGPL-3.0+
  */
 
@@ -16,398 +18,400 @@ use Bit3\Contao\Merger2\Constraint\Parser\InputStream;
 use Bit3\Contao\Merger2\Constraint\Parser\Parser;
 
 /**
- * Class ModuleMerger2
+ * Class ModuleMerger2.
  */
 class ModuleMerger2 extends \Module
 {
-	/**
-	 * Template
-	 *
-	 * @var string
-	 */
-	protected $strTemplate = 'mod_merger2';
+    /**
+     * Template.
+     *
+     * @var string
+     */
+    protected $strTemplate = 'mod_merger2';
 
-	/**
-	 * Generate a front end module and return it as HTML string
-	 *
-	 * @param integer
-	 * @param string
-	 *
-	 * @return string
-	 */
-	protected function getPageFrontendModule($page, $moduleId, $columnName = 'main', $inheritableOnly = false)
-	{
-		if (!is_object($moduleId) && !strlen($moduleId)) {
-			return '';
-		}
+    /**
+     * Generate a front end module and return it as HTML string.
+     *
+     * @param int
+     * @param string
+     *
+     * @return string
+     */
+    protected function getPageFrontendModule($page, $moduleId, $columnName = 'main', $inheritableOnly = false)
+    {
+        if (!is_object($moduleId) && !strlen($moduleId)) {
+            return '';
+        }
 
-		// Articles
-		if ($moduleId == 0) {
-			// Show a particular article only
-			if ($page->type == 'regular' && \Input::get('articles')) {
-				list($sectionName, $articleName) = explode(':', \Input::get('articles'));
+        // Articles
+        if ($moduleId == 0) {
+            // Show a particular article only
+            if ($page->type == 'regular' && \Input::get('articles')) {
+                list($sectionName, $articleName) = explode(':', \Input::get('articles'));
 
-				if ($articleName === null) {
-					$articleName = $sectionName;
-					$sectionName = 'main';
-				}
+                if ($articleName === null) {
+                    $articleName = $sectionName;
+                    $sectionName = 'main';
+                }
 
-				if ($sectionName == $columnName) {
-					$article = \ArticleModel::findByIdOrAliasAndPid($articleName, $page->id);
+                if ($sectionName == $columnName) {
+                    $article = \ArticleModel::findByIdOrAliasAndPid($articleName, $page->id);
 
-					// Send a 404 header if the article does not exist
-					if ($article === null) {
-						// Do not index the page
-						$page->noSearch = 1;
-						$page->cache    = 0;
+                    // Send a 404 header if the article does not exist
+                    if ($article === null) {
+                        // Do not index the page
+                        $page->noSearch = 1;
+                        $page->cache = 0;
 
-						header('HTTP/1.1 404 Not Found');
-						return '<p class="error">' . sprintf(
-							$GLOBALS['TL_LANG']['MSC']['invalidPage'],
-							$articleName
-						) . '</p>';
-					}
+                        header('HTTP/1.1 404 Not Found');
 
-					if (!$inheritableOnly || $article->inheritable) {
-						// Add the "first" and "last" classes (see #2583)
-						$article->classes = array('first', 'last');
+                        return '<p class="error">'.sprintf(
+                            $GLOBALS['TL_LANG']['MSC']['invalidPage'],
+                            $articleName
+                        ).'</p>';
+                    }
 
-						return $this->getArticle($article);
-					}
+                    if (!$inheritableOnly || $article->inheritable) {
+                        // Add the "first" and "last" classes (see #2583)
+                        $article->classes = array('first', 'last');
 
-					return '';
-				}
-			}
+                        return $this->getArticle($article);
+                    }
 
-			// HOOK: trigger the article_raster_designer extension
-			if (in_array('article_raster_designer', \ModuleLoader::getActive())) {
-				return \RasterDesigner::load($page->id, $columnName);
-			}
+                    return '';
+                }
+            }
 
-			// Show all articles (no else block here, see #4740)
-			$articleCollection = \ArticleModel::findPublishedByPidAndColumn($page->id, $columnName);
+            // HOOK: trigger the article_raster_designer extension
+            if (in_array('article_raster_designer', \ModuleLoader::getActive())) {
+                return \RasterDesigner::load($page->id, $columnName);
+            }
 
-			if ($articleCollection === null) {
-				return '';
-			}
+            // Show all articles (no else block here, see #4740)
+            $articleCollection = \ArticleModel::findPublishedByPidAndColumn($page->id, $columnName);
 
-			$return       = '';
-			$intCount     = 0;
-			$blnMultiMode = ($articleCollection->count() > 1);
-			$intLast      = $articleCollection->count() - 1;
+            if ($articleCollection === null) {
+                return '';
+            }
 
-			while ($articleCollection->next()) {
-				if ($inheritableOnly && !$articleCollection->inheritable) {
-					continue;
-				}
+            $return = '';
+            $intCount = 0;
+            $blnMultiMode = ($articleCollection->count() > 1);
+            $intLast = $articleCollection->count() - 1;
 
-				$articleRow = $articleCollection->current();
+            while ($articleCollection->next()) {
+                if ($inheritableOnly && !$articleCollection->inheritable) {
+                    continue;
+                }
 
-				// Add the "first" and "last" classes (see #2583)
-				if ($intCount == 0 || $intCount == $intLast) {
-					$cssClasses = array();
+                $articleRow = $articleCollection->current();
 
-					if ($intCount == 0) {
-						$cssClasses[] = 'first';
-					}
+                // Add the "first" and "last" classes (see #2583)
+                if ($intCount == 0 || $intCount == $intLast) {
+                    $cssClasses = array();
 
-					if ($intCount == $intLast) {
-						$cssClasses[] = 'last';
-					}
+                    if ($intCount == 0) {
+                        $cssClasses[] = 'first';
+                    }
 
-					$articleRow->classes = $cssClasses;
-				}
+                    if ($intCount == $intLast) {
+                        $cssClasses[] = 'last';
+                    }
 
-				$return .= $this->getArticle($articleRow, $blnMultiMode, false, $columnName);
-				++$intCount;
-			}
+                    $articleRow->classes = $cssClasses;
+                }
 
-			return $return;
-		}
+                $return .= $this->getArticle($articleRow, $blnMultiMode, false, $columnName);
+                ++$intCount;
+            }
 
-		// Other modules
-		else {
-			if (is_object($moduleId)) {
-				$articleRow = $moduleId;
-			}
-			else {
-				$articleRow = \ModuleModel::findByPk($moduleId);
+            return $return;
+        }
 
-				if ($articleRow === null) {
-					return '';
-				}
-			}
+        // Other modules
+        else {
+            if (is_object($moduleId)) {
+                $articleRow = $moduleId;
+            } else {
+                $articleRow = \ModuleModel::findByPk($moduleId);
 
-			// Check the visibility (see #6311)
-			if (!static::isVisibleElement($articleRow)) {
-				return '';
-			}
+                if ($articleRow === null) {
+                    return '';
+                }
+            }
 
-			$moduleClassName = \Module::findClass($articleRow->type);
+            // Check the visibility (see #6311)
+            if (!static::isVisibleElement($articleRow)) {
+                return '';
+            }
 
-			// Return if the class does not exist
-			if (!class_exists($moduleClassName)) {
-				$this->log(
-					'Module class "' . $moduleClassName . '" (module "' . $articleRow->type . '") does not exist',
-					__METHOD__,
-					TL_ERROR
-				);
-				return '';
-			}
+            $moduleClassName = \Module::findClass($articleRow->type);
 
-			$articleRow->typePrefix = 'mod_';
-			/** @var \Module $module */
-			$module = new $moduleClassName($articleRow, $columnName);
-			$buffer = $module->generate();
+            // Return if the class does not exist
+            if (!class_exists($moduleClassName)) {
+                $this->log(
+                    'Module class "'.$moduleClassName.'" (module "'.$articleRow->type.'") does not exist',
+                    __METHOD__,
+                    TL_ERROR
+                );
 
-			// HOOK: add custom logic
-			if (isset($GLOBALS['TL_HOOKS']['getFrontendModule']) && is_array(
-					$GLOBALS['TL_HOOKS']['getFrontendModule']
-				)
-			) {
-				foreach ($GLOBALS['TL_HOOKS']['getFrontendModule'] as $callback) {
-					$this->import($callback[0]);
-					$buffer = $this->$callback[0]->$callback[1]($articleRow, $buffer, $module);
-				}
-			}
+                return '';
+            }
 
-			// Disable indexing if protected
-			if ($module->protected && !preg_match('/^\s*<!-- indexer::stop/', $buffer)) {
-				$buffer = "\n<!-- indexer::stop -->" . $buffer . "<!-- indexer::continue -->\n";
-			}
+            $articleRow->typePrefix = 'mod_';
+            /** @var \Module $module */
+            $module = new $moduleClassName($articleRow, $columnName);
+            $buffer = $module->generate();
 
-			return $buffer;
-		}
-	}
+            // HOOK: add custom logic
+            if (isset($GLOBALS['TL_HOOKS']['getFrontendModule']) && is_array(
+                    $GLOBALS['TL_HOOKS']['getFrontendModule']
+                )
+            ) {
+                foreach ($GLOBALS['TL_HOOKS']['getFrontendModule'] as $callback) {
+                    $this->import($callback[0]);
+                    $buffer = $this->$callback[0]->$callback[1]($articleRow, $buffer, $module);
+                }
+            }
 
-	/**
-	 * Generate an article and return it as string
-	 *
-	 * @param integer
-	 * @param boolean
-	 * @param boolean
-	 * @param string
-	 *
-	 * @return string
-	 */
-	protected function getPageArticle(
-		$page,
-		$articleId
-	) {
-		$article = \ArticleModel::findByIdOrAliasAndPid($articleId, $page->id);
+            // Disable indexing if protected
+            if ($module->protected && !preg_match('/^\s*<!-- indexer::stop/', $buffer)) {
+                $buffer = "\n<!-- indexer::stop -->".$buffer."<!-- indexer::continue -->\n";
+            }
 
-		if ($article === null) {
-			return '';
-		}
+            return $buffer;
+        }
+    }
 
-		return $this->getArticle($article);
-	}
+    /**
+     * Generate an article and return it as string.
+     *
+     * @param int
+     * @param bool
+     * @param bool
+     * @param string
+     *
+     * @return string
+     */
+    protected function getPageArticle(
+        $page,
+        $articleId
+    ) {
+        $article = \ArticleModel::findByIdOrAliasAndPid($articleId, $page->id);
 
-	/**
-	 * Inherit article from parent page
-	 *
-	 * @param \PageModel $page
-	 * @param int        $maxLevel
-	 * @param int        $currentLevel
-	 */
-	protected function inheritArticle($page, $maxLevel = 0, $currentLevel = 0)
-	{
-		$parentPage = \PageModel::findPublishedById($page->pid);
+        if ($article === null) {
+            return '';
+        }
 
-		if ($parentPage === null) {
-			return '';
-		}
+        return $this->getArticle($article);
+    }
 
-		$html = $this->getPageFrontendModule($parentPage, 0, $this->strColumn, true);
-		if ($maxLevel == 0 || $maxLevel < ++$currentLevel) {
-			$html .= $this->inheritArticle($parentPage, $maxLevel, $currentLevel);
-		}
-		return $html;
-	}
+    /**
+     * Inherit article from parent page.
+     *
+     * @param \PageModel $page
+     * @param int        $maxLevel
+     * @param int        $currentLevel
+     */
+    protected function inheritArticle($page, $maxLevel = 0, $currentLevel = 0)
+    {
+        $parentPage = \PageModel::findPublishedById($page->pid);
 
-	/**
-	 * Mode is "all"
-	 *
-	 * @return bool
-	 */
-	protected function isModeAll()
-	{
-		return $this->merger_mode == 'all';
-	}
+        if ($parentPage === null) {
+            return '';
+        }
 
-	/**
-	 * Mode is "up first false"
-	 *
-	 * @return bool
-	 */
-	protected function isModeUpFirstFalse()
-	{
-		return $this->merger_mode == 'upFirstFalse';
-	}
+        $html = $this->getPageFrontendModule($parentPage, 0, $this->strColumn, true);
+        if ($maxLevel == 0 || $maxLevel < ++$currentLevel) {
+            $html .= $this->inheritArticle($parentPage, $maxLevel, $currentLevel);
+        }
 
-	/**
-	 * Mode is "up first true"
-	 *
-	 * @return bool
-	 */
-	protected function isModeUpFirstTrue()
-	{
-		return $this->merger_mode == 'upFirstTrue';
-	}
+        return $html;
+    }
 
+    /**
+     * Mode is "all".
+     *
+     * @return bool
+     */
+    protected function isModeAll()
+    {
+        return $this->merger_mode == 'all';
+    }
 
-	/**
-	 * Display a wildcard in the back end
-	 *
-	 * @return string
-	 */
-	public function generate()
-	{
-		if (TL_MODE == 'BE') {
-			$objTemplate = new \BackendTemplate('be_wildcard');
+    /**
+     * Mode is "up first false".
+     *
+     * @return bool
+     */
+    protected function isModeUpFirstFalse()
+    {
+        return $this->merger_mode == 'upFirstFalse';
+    }
 
-			$objTemplate->wildcard = '### MERGER2 ###';
-			$objTemplate->title    = $this->headline;
-			$objTemplate->id       = $this->id;
-			$objTemplate->link     = $this->name;
-			$objTemplate->href     = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+    /**
+     * Mode is "up first true".
+     *
+     * @return bool
+     */
+    protected function isModeUpFirstTrue()
+    {
+        return $this->merger_mode == 'upFirstTrue';
+    }
 
-			return $objTemplate->parse();
-		}
+    /**
+     * Display a wildcard in the back end.
+     *
+     * @return string
+     */
+    public function generate()
+    {
+        if (TL_MODE == 'BE') {
+            $objTemplate = new \BackendTemplate('be_wildcard');
 
-		// generate the merger container
-		if ($this->merger_container) {
-			return parent::generate();
-		}
+            $objTemplate->wildcard = '### MERGER2 ###';
+            $objTemplate->title = $this->headline;
+            $objTemplate->id = $this->id;
+            $objTemplate->link = $this->name;
+            $objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id='.$this->id;
 
-		// or only the content
-		else {
-			return $this->generateContent();
-		}
-	}
+            return $objTemplate->parse();
+        }
 
-	/**
-	 * Generate module
-	 */
-	protected function compile()
-	{
-		$this->Template->content = $this->generateContent();
-	}
+        // generate the merger container
+        if ($this->merger_container) {
+            return parent::generate();
+        }
 
-	/**
-	 * Generate content
-	 *
-	 * @SuppressWarnings(PHPMD.Superglobals)
-	 * @SuppressWarnings(PHPMD.CamelCaseVariableName)
-	 */
-	protected function generateContent()
-	{
-		$modules = deserialize($this->merger_data);
-		$buffer  = '';
+        // or only the content
+        else {
+            return $this->generateContent();
+        }
+    }
 
-		foreach ($modules as $module) {
-			if ($module['disabled']) {
-				continue;
-			}
+    /**
+     * Generate module.
+     */
+    protected function compile()
+    {
+        $this->Template->content = $this->generateContent();
+    }
 
-			$result    = null;
-			$condition = trim(html_entity_decode($module['condition']));
-			if (strlen($condition)) {
-				$input  = new InputStream($condition);
-				$parser = new Parser();
-				$node   = $parser->parse($input);
-				$result = $node->evaluate();
-			}
+    /**
+     * Generate content.
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
+     * @SuppressWarnings(PHPMD.CamelCaseVariableName)
+     */
+    protected function generateContent()
+    {
+        $modules = deserialize($this->merger_data);
+        $buffer = '';
 
-			if ($result || $result === null) {
-				$content = '';
-				switch ($module['content']) {
-					case '-':
-						break;
+        foreach ($modules as $module) {
+            if ($module['disabled']) {
+                continue;
+            }
 
-					/**
-					 * Include the articles from current page.
-					 */
-					case 'article':
-						$content = $this->getPageFrontendModule(
-							$GLOBALS['objPage'],
-							0,
-							$this->strColumn
-						);
-						break;
+            $result = null;
+            $condition = trim(html_entity_decode($module['condition']));
+            if (strlen($condition)) {
+                $input = new InputStream($condition);
+                $parser = new Parser();
+                $node = $parser->parse($input);
+                $result = $node->evaluate();
+            }
 
-					/**
-					 * Inherit articles from one upper level that contains articles.
-					 */
-					case 'inherit_articles':
-						$content = $this->inheritArticle(
-							$GLOBALS['objPage'],
-							1
-						);
-						break;
+            if ($result || $result === null) {
+                $content = '';
+                switch ($module['content']) {
+                    case '-':
+                        break;
 
-					/**
-					 * Inherit articles from all upper levels.
-					 */
-					case 'inherit_all_articles':
-						$content = $this->inheritArticle(
-							$GLOBALS['objPage']
-						);
-						break;
+                    /*
+                     * Include the articles from current page.
+                     */
+                    case 'article':
+                        $content = $this->getPageFrontendModule(
+                            $GLOBALS['objPage'],
+                            0,
+                            $this->strColumn
+                        );
+                        break;
 
-					/**
-					 * Include the articles from current page or inherit from one upper level that contains articles.
-					 */
-					case 'inherit_articles_fallback':
-						$content = $this->getPageFrontendModule(
-							$GLOBALS['objPage'],
-							0,
-							$this->strColumn
-						);
+                    /*
+                     * Inherit articles from one upper level that contains articles.
+                     */
+                    case 'inherit_articles':
+                        $content = $this->inheritArticle(
+                            $GLOBALS['objPage'],
+                            1
+                        );
+                        break;
 
-						if (!strlen($content)) {
-							$content = $this->inheritArticle($GLOBALS['objPage'], 1);
-						}
-						break;
+                    /*
+                     * Inherit articles from all upper levels.
+                     */
+                    case 'inherit_all_articles':
+                        $content = $this->inheritArticle(
+                            $GLOBALS['objPage']
+                        );
+                        break;
 
-					/**
-					 * Include the articles from current page or inherit from upper all upper levels.
-					 */
-					case 'inherit_all_articles_fallback':
-						$content = $this->getPageFrontendModule(
-							$GLOBALS['objPage'],
-							0,
-							$this->strColumn
-						);
+                    /*
+                     * Include the articles from current page or inherit from one upper level that contains articles.
+                     */
+                    case 'inherit_articles_fallback':
+                        $content = $this->getPageFrontendModule(
+                            $GLOBALS['objPage'],
+                            0,
+                            $this->strColumn
+                        );
 
-						if (!strlen($content)) {
-							$content = $this->inheritArticle($GLOBALS['objPage']);
-						}
-						break;
+                        if (!strlen($content)) {
+                            $content = $this->inheritArticle($GLOBALS['objPage'], 1);
+                        }
+                        break;
 
-					/**
-					 * Include a module.
-					 */
-					default:
-						$content = $this->getPageFrontendModule(
-							$GLOBALS['objPage'],
-							$module['content'],
-							$this->strColumn
-						);
-				}
+                    /*
+                     * Include the articles from current page or inherit from upper all upper levels.
+                     */
+                    case 'inherit_all_articles_fallback':
+                        $content = $this->getPageFrontendModule(
+                            $GLOBALS['objPage'],
+                            0,
+                            $this->strColumn
+                        );
 
-				$buffer .= $content;
-				if ($result === null) {
-					$result = strlen($content) > 0;
-				}
-			}
-			if ($result && $this->isModeUpFirstTrue() || !$result && $this->isModeUpFirstFalse()) {
-				break;
-			}
-		}
+                        if (!strlen($content)) {
+                            $content = $this->inheritArticle($GLOBALS['objPage']);
+                        }
+                        break;
 
-		$tpl          = new \FrontendTemplate($this->merger_template);
-		$tpl->content = $buffer;
-		return $tpl->parse();
-	}
+                    /*
+                     * Include a module.
+                     */
+                    default:
+                        $content = $this->getPageFrontendModule(
+                            $GLOBALS['objPage'],
+                            $module['content'],
+                            $this->strColumn
+                        );
+                }
+
+                $buffer .= $content;
+                if ($result === null) {
+                    $result = strlen($content) > 0;
+                }
+            }
+            if ($result && $this->isModeUpFirstTrue() || !$result && $this->isModeUpFirstFalse()) {
+                break;
+            }
+        }
+
+        $tpl = new \FrontendTemplate($this->merger_template);
+        $tpl->content = $buffer;
+
+        return $tpl->parse();
+    }
 }
