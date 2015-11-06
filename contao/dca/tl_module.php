@@ -5,6 +5,8 @@
  *
  * @copyright 2013,2014 bit3 UG
  * @author    Tristan Lins <tristan.lins@bit3.de>
+ * @author    Sven Baumann <baumann.sv@googlemail.com>
+ * @author    David Molineus <david.molineus@netzmacht.de>
  * @link      http://bit3.de
  * @package   bit3/contao-merger2
  * @license   LGPL-3.0+
