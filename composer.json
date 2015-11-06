@@ -1,54 +1,63 @@
 {
-	"name":"bit3/contao-merger2",
-	"description":"Module merger V2 for Contao OpenSource CMS",
-	"keywords":["contao", "theme", "layout", "module"],
-	"type":"contao-module",
-	"homepage":"http://bit3.de",
-	"license":"LGPL-3.0+",
-	"authors":[
-		{
-			"name":"Tristan Lins",
-			"email":"tristan.lins@bit3.de",
-			"homepage":"http://bit3.de",
-			"role":"Developer"
-		}
-	],
-	"support":{
-		"email":"info@bit3.de",
-		"issues":"https://github.com/bit3/contao-merger2/issues",
-		"wiki":"https://github.com/bit3/contao-merger2/wiki",
-		"irc":"irc://irc.freenode.org/contao.dev",
-		"source":"https://github.com/bit3/contao-merger2"
-	},
-	"require":{
-		"php":">=5.3",
-		"contao/core":">=3.2-dev,<4-dev",
-		"contao-community-alliance/composer-installer": "*",
-		"menatwork/contao-multicolumnwizard": "~3"
-	},
-	"require-dev":{
-		"bit3/php-coding-standard":"*",
-		"squizlabs/php_codesniffer":"1.*",
-		"phpunit/phpunit": ">=3.7.10,<4-dev"
-	},
-	"minimum-stability": "dev",
-	"prefer-stable": true,
-	"replace":{
-		"contao-legacy/merger2":"self.version"
-	},
-	"autoload":{
-		"psr-0": {
-			"Bit3\\Contao\\Merger2": "src"
-		}
-	},
-	"extra":{
-		"contao": {
-			"sources":{
-				"contao":"system/modules/merger2"
-			}
-		},
-		"branch-alias": {
-			"dev-master": "3.0.x-dev"
-		}
-	}
+  "name": "contao-community-alliance/contao-merger2",
+  "description": "Module merger V2 for Contao OpenSource CMS",
+  "keywords": [
+    "contao",
+    "theme",
+    "layout",
+    "module"
+  ],
+  "type": "contao-module",
+  "homepage": "http://c-c-a.org",
+  "license": "LGPL-3.0+",
+  "authors": [
+    {
+      "name": "David Molineus",
+      "email": "david.molineus@netzmacht.de",
+      "homepage": "http://netzmacht.de",
+      "role": "Developer"
+    },
+    {
+      "name": "Tristan Lins",
+      "email": "tristan.lins@bit3.de",
+      "homepage": "http://bit3.de",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/contao-community-alliance/merger2/issues",
+    "wiki": "https://github.com/contao-community-alliance/merger2/wiki",
+    "irc": "irc://irc.freenode.org/contao.dev",
+    "source": "https://github.com/contao-community-alliance/merger2"
+  },
+  "require": {
+    "php": ">=5.3",
+    "contao/core": ">=3.2-dev,<4-dev",
+    "contao-community-alliance/composer-plugin": "~2",
+    "menatwork/contao-multicolumnwizard": "~3"
+  },
+  "require-dev": {
+    "phpcq/all-tasks": "~1.0"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "replace": {
+    "bi3/contao-merger2": "self.version",
+    "contao-legacy/merger2": "self.version"
+  },
+  "autoload": {
+    "psr-0": {
+      "Bit3\\Contao\\Merger2": "src"
+    }
+  },
+  "extra": {
+    "contao": {
+      "sources": {
+        "contao": "system/modules/merger2"
+      }
+    },
+    "branch-alias": {
+      "dev-master": "3.0.x-dev"
+    }
+  }
 }
