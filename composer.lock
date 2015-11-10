@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ba8fc6dac02bd9ad8e7013ef65a0c07e",
-    "content-hash": "bcf822d6448de782974064efc6370e1b",
+    "hash": "d459722d71201e8bfa1bbd06a42c4e0d",
+    "content-hash": "17f239c221fd59bac2610b9266291f10",
     "packages": [
         {
             "name": "contao-community-alliance/composer-plugin",
@@ -57,6 +57,139 @@
             "description": "Composer plugin that provide contao integration and installer.",
             "homepage": "http://c-c-a.org/",
             "time": "2015-10-28 11:38:10"
+        },
+        {
+            "name": "contao-community-alliance/dependency-container",
+            "version": "1.8.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/contao-community-alliance/dependency-container.git",
+                "reference": "11958f75df6f2e79382924ab138732e9f7c53484"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/contao-community-alliance/dependency-container/zipball/11958f75df6f2e79382924ab138732e9f7c53484",
+                "reference": "11958f75df6f2e79382924ab138732e9f7c53484",
+                "shasum": ""
+            },
+            "require": {
+                "contao-community-alliance/composer-plugin": "~2.0",
+                "contao/core": ">=3.2,<3.6-dev",
+                "php": ">=5.3",
+                "pimple/pimple": "~1.0"
+            },
+            "replace": {
+                "bit3/contao-dependency-container": "self.version",
+                "contao-legacy/dependency-container": "self.version"
+            },
+            "require-dev": {
+                "phpcq/all-tasks": "~1.0"
+            },
+            "type": "contao-module",
+            "extra": {
+                "contao": {
+                    "sources": {
+                        "contao": "system/modules/dependency-container"
+                    }
+                },
+                "branch-alias": {
+                    "dev-master": "1.8.x-dev",
+                    "dev-develop": "1.9.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "DependencyInjection\\Container": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Christian Schiffler",
+                    "email": "c.schiffler@cyberspectrum.de",
+                    "homepage": "http://www.cyberspectrum.de",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Stefan Heimes",
+                    "email": "stefan_heimes@hotmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Dependency container based on pimple for Contao open source cms.",
+            "homepage": "http://c-c-a.org/",
+            "keywords": [
+                "container",
+                "contao",
+                "dependency",
+                "di",
+                "injection"
+            ],
+            "time": "2015-07-07 21:23:46"
+        },
+        {
+            "name": "contao-community-alliance/mobile-detect-service",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/contao-community-alliance/mobile-detect-service.git",
+                "reference": "410c96fc7b35f3745b7121e844aa1cfd1bd09718"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/contao-community-alliance/mobile-detect-service/zipball/410c96fc7b35f3745b7121e844aa1cfd1bd09718",
+                "reference": "410c96fc7b35f3745b7121e844aa1cfd1bd09718",
+                "shasum": ""
+            },
+            "require": {
+                "contao-community-alliance/composer-plugin": "~2.0",
+                "contao-community-alliance/dependency-container": "~1.0",
+                "contao/core": "~3.2",
+                "mobiledetect/mobiledetectlib": "~2.5",
+                "php": ">=5.3.2"
+            },
+            "replace": {
+                "bit3/contao-mobile-detect-service": "self.version"
+            },
+            "require-dev": {
+                "phpcq/all-tasks": "~1.0"
+            },
+            "type": "contao-module",
+            "extra": {
+                "contao": {
+                    "sources": {
+                        "contao": "system/modules/mobile-detect-service"
+                    }
+                },
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev",
+                    "dev-develop": "1.1.x-dev"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tristan Lins",
+                    "email": "tristan.lins@bit3.de",
+                    "homepage": "http://bit3.de",
+                    "role": "Developer"
+                },
+                {
+                    "name": "David Molineus",
+                    "email": "david.molineus@netzmacht.de",
+                    "homepage": "http://netzmacht.de",
+                    "role": "Developer"
+                }
+            ],
+            "description": "MobileDetect as a service.",
+            "homepage": "https://github.com/contao-community-alliance/mobile-detect-service",
+            "time": "2015-11-06 14:41:25"
         },
         {
             "name": "contao-components/compass",
@@ -140,16 +273,16 @@
         },
         {
             "name": "leafo/scssphp",
-            "version": "v0.3.3",
+            "version": "v0.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/leafo/scssphp.git",
-                "reference": "e89391b29b5eb66e211ce4d20ccb2bb519137c08"
+                "reference": "78a6f27aa4eaf70bb3ff4d13b639bab71fdaf47a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/leafo/scssphp/zipball/e89391b29b5eb66e211ce4d20ccb2bb519137c08",
-                "reference": "e89391b29b5eb66e211ce4d20ccb2bb519137c08",
+                "url": "https://api.github.com/repos/leafo/scssphp/zipball/78a6f27aa4eaf70bb3ff4d13b639bab71fdaf47a",
+                "reference": "78a6f27aa4eaf70bb3ff4d13b639bab71fdaf47a",
                 "shasum": ""
             },
             "require": {
@@ -192,7 +325,7 @@
                 "scss",
                 "stylesheet"
             ],
-            "time": "2015-10-23 17:15:30"
+            "time": "2015-11-09 14:44:09"
         },
         {
             "name": "menatwork/contao-multicolumnwizard",
@@ -332,6 +465,60 @@
             "time": "2015-03-01 12:03:08"
         },
         {
+            "name": "mobiledetect/mobiledetectlib",
+            "version": "2.8.17",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/serbanghita/Mobile-Detect.git",
+                "reference": "b87da5f63a76e9615a0c74fcf168657b1ea7e41d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/serbanghita/Mobile-Detect/zipball/b87da5f63a76e9615a0c74fcf168657b1ea7e41d",
+                "reference": "b87da5f63a76e9615a0c74fcf168657b1ea7e41d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.0.0"
+            },
+            "require-dev": {
+                "codeclimate/php-test-reporter": "dev-master",
+                "johnkary/phpunit-speedtrap": "~1.0@dev",
+                "phpunit/phpunit": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "Mobile_Detect.php"
+                ],
+                "psr-0": {
+                    "Detection": "namespaced/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Serban Ghita",
+                    "email": "serbanghita@gmail.com",
+                    "homepage": "http://mobiledetect.net",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Mobile_Detect is a lightweight PHP class for detecting mobile devices. It uses the User-Agent string combined with specific HTTP headers to detect the mobile environment.",
+            "homepage": "https://github.com/serbanghita/Mobile-Detect",
+            "keywords": [
+                "detect mobile devices",
+                "mobile",
+                "mobile detect",
+                "mobile detector",
+                "php mobile detect"
+            ],
+            "time": "2015-09-17 14:45:21"
+        },
+        {
             "name": "oyejorge/less.php",
             "version": "v1.7.0.9",
             "source": {
@@ -423,6 +610,52 @@
             ],
             "description": "A comprehensive library for generating differences between two hashable objects (strings or arrays).",
             "time": "2013-11-01 13:02:21"
+        },
+        {
+            "name": "pimple/pimple",
+            "version": "v1.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/silexphp/Pimple.git",
+                "reference": "2019c145fe393923f3441b23f29bbdfaa5c58c4d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/silexphp/Pimple/zipball/2019c145fe393923f3441b23f29bbdfaa5c58c4d",
+                "reference": "2019c145fe393923f3441b23f29bbdfaa5c58c4d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Pimple": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                }
+            ],
+            "description": "Pimple is a simple Dependency Injection Container for PHP 5.3",
+            "homepage": "http://pimple.sensiolabs.org",
+            "keywords": [
+                "container",
+                "dependency injection"
+            ],
+            "time": "2013-11-22 08:30:29"
         },
         {
             "name": "simplepie/simplepie",
