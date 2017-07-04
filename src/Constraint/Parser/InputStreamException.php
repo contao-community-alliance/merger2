@@ -12,15 +12,8 @@
  * @license   LGPL-3.0+
  */
 
-namespace Bit3\Contao\Merger2\Constraint\Node;
+namespace ContaoCommunityAlliance\Merger2\Constraint\Parser;
 
-class OrNode extends ConjunctionNode
+class InputStreamException extends \RuntimeException
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function evaluate()
-    {
-        return $this->left->evaluate() || $this->right->evaluate();
-    }
 }

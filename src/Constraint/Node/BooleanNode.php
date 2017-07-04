@@ -12,7 +12,7 @@
  * @license   LGPL-3.0+
  */
 
-namespace Bit3\Contao\Merger2\Constraint\Node;
+namespace ContaoCommunityAlliance\Merger2\Constraint\Node;
 
 class BooleanNode implements NodeInterface
 {

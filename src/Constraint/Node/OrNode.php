@@ -12,15 +12,15 @@
  * @license   LGPL-3.0+
  */
 
-namespace Bit3\Contao\Merger2\Constraint\Node;
+namespace ContaoCommunityAlliance\Merger2\Constraint\Node;
 
-class AndNode extends ConjunctionNode
+class OrNode extends ConjunctionNode
 {
     /**
      * {@inheritdoc}
      */
     public function evaluate()
     {
-        return $this->left->evaluate() && $this->right->evaluate();
+        return $this->left->evaluate() || $this->right->evaluate();
     }
 }

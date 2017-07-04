@@ -12,8 +12,15 @@
  * @license   LGPL-3.0+
  */
 
-namespace Bit3\Contao\Merger2\Constraint\Parser;
+namespace ContaoCommunityAlliance\Merger2\Constraint\Node;
 
-class ParserException extends \RuntimeException
+class AndNode extends ConjunctionNode
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function evaluate()
+    {
+        return $this->left->evaluate() && $this->right->evaluate();
+    }
 }

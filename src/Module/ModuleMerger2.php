@@ -12,10 +12,10 @@
  * @license   LGPL-3.0+
  */
 
-namespace Bit3\Contao\Merger2\Module;
+namespace ContaoCommunityAlliance\Merger2\Module;
 
-use Bit3\Contao\Merger2\Constraint\Parser\InputStream;
-use Bit3\Contao\Merger2\Constraint\Parser\Parser;
+use ContaoCommunityAlliance\Merger2\Constraint\Parser\InputStream;
+use ContaoCommunityAlliance\Merger2\Constraint\Parser\Parser;
 
 /**
  * Class ModuleMerger2.

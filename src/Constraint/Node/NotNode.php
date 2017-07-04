@@ -12,9 +12,9 @@
  * @license   LGPL-3.0+
  */
 
-namespace Bit3\Contao\Merger2\Constraint\Node;
+namespace ContaoCommunityAlliance\Merger2\Constraint\Node;
 
-class GroupNode implements NodeInterface
+class NotNode implements NodeInterface
 {
     /**
      * @var NodeInterface
@@ -39,6 +39,6 @@ class GroupNode implements NodeInterface
      */
     public function evaluate()
     {
-        return $this->child && $this->child->evaluate();
+        return !$this->child->evaluate();
     }
 }

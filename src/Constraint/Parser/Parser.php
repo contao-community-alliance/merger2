@@ -12,17 +12,17 @@
  * @license   LGPL-3.0+
  */
 
-namespace Bit3\Contao\Merger2\Constraint\Parser;
+namespace ContaoCommunityAlliance\Merger2\Constraint\Parser;
 
-use Bit3\Contao\Merger2\Constraint\Node\AndNode;
-use Bit3\Contao\Merger2\Constraint\Node\BooleanNode;
-use Bit3\Contao\Merger2\Constraint\Node\CallNode;
-use Bit3\Contao\Merger2\Constraint\Node\GroupNode;
-use Bit3\Contao\Merger2\Constraint\Node\NodeInterface;
-use Bit3\Contao\Merger2\Constraint\Node\NotNode;
-use Bit3\Contao\Merger2\Constraint\Node\OrNode;
-use Bit3\Contao\Merger2\Constraint\Node\StringNode;
-use Bit3\Contao\Merger2\Constraint\Node\VariableNode;
+use ContaoCommunityAlliance\Merger2\Constraint\Node\AndNode;
+use ContaoCommunityAlliance\Merger2\Constraint\Node\BooleanNode;
+use ContaoCommunityAlliance\Merger2\Constraint\Node\CallNode;
+use ContaoCommunityAlliance\Merger2\Constraint\Node\GroupNode;
+use ContaoCommunityAlliance\Merger2\Constraint\Node\NodeInterface;
+use ContaoCommunityAlliance\Merger2\Constraint\Node\NotNode;
+use ContaoCommunityAlliance\Merger2\Constraint\Node\OrNode;
+use ContaoCommunityAlliance\Merger2\Constraint\Node\StringNode;
+use ContaoCommunityAlliance\Merger2\Constraint\Node\VariableNode;
 
 class Parser
 {

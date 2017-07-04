@@ -12,26 +12,26 @@
  * @license   LGPL-3.0+
  */
 
-namespace Bit3\Contao\Merger2\Constraint\Node;
+namespace ContaoCommunityAlliance\Merger2\Constraint\Node;
 
-class NotNode implements NodeInterface
+class VariableNode implements NodeInterface
 {
     /**
-     * @var NodeInterface
+     * @var string
      */
-    protected $child;
+    protected $name;
 
-    public function __construct(NodeInterface $child)
+    public function __construct($name)
     {
-        $this->child = $child;
+        $this->name = $name;
     }
 
     /**
-     * @return NodeInterface
+     * @return string
      */
-    public function getChild()
+    public function getName()
     {
-        return $this->child;
+        return $this->name;
     }
 
     /**
@@ -39,6 +39,8 @@ class NotNode implements NodeInterface
      */
     public function evaluate()
     {
-        return !$this->child->evaluate();
+        throw new \RuntimeException('Incomplete implementation');
+
+        return $this->name; // TODO read variable
     }
 }

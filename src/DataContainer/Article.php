@@ -12,7 +12,7 @@
  * @license   LGPL-3.0+
  */
 
-namespace Bit3\Contao\Merger2\DataContainer;
+namespace ContaoCommunityAlliance\Merger2\DataContainer;
 
 /**
  * Class Article.

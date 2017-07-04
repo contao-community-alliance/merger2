@@ -12,9 +12,14 @@
  * @license   LGPL-3.0+
  */
 
-namespace Bit3\Contao\Merger2\Constraint\Parser;
+namespace ContaoCommunityAlliance\Merger2\Constraint\Node;
 
-class State
+interface NodeInterface
 {
-    protected $successor = array();
+    /**
+     * Evaluate the node and return the next result.
+     * 
+     * @return mixed
+     */
+    public function evaluate();
 }

@@ -12,8 +12,8 @@
  * @license   LGPL-3.0+
  */
 
-namespace Bit3\Contao\Merger2\Constraint\Parser;
+namespace ContaoCommunityAlliance\Merger2\Constraint\Parser;
 
-class InputStreamException extends \RuntimeException
+class ParserException extends \RuntimeException
 {
 }

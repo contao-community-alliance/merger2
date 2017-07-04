@@ -14,7 +14,7 @@
 /**
  * Front end modules
  */
-$GLOBALS['FE_MOD']['miscellaneous']['Merger2'] = 'Bit3\Contao\Merger2\Module\ModuleMerger2';
+$GLOBALS['FE_MOD']['miscellaneous']['Merger2'] = 'ContaoCommunityAlliance\Merger2\Module\ModuleMerger2';
 
 
 /**
