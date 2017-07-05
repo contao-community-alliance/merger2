@@ -3,7 +3,7 @@
 /**
  * Merger² - Module Merger for Contao Open Source CMS.
  *
- * @copyright 2013,2014 bit3 UG
+ * @copyright 2013,2014 bit3 UG. 2015-2017 Contao Community Alliance
  * @author    Tristan Lins <tristan.lins@bit3.de>
  * @author    David Molineus <david.molineus@netzmacht.de>
  *
@@ -15,7 +15,6 @@
 namespace ContaoCommunityAlliance\Merger2\Module;
 
 use ContaoCommunityAlliance\Merger2\Constraint\Parser\InputStream;
-use ContaoCommunityAlliance\Merger2\Constraint\Parser\Parser;
 
 /**
  * Class ModuleMerger2.
@@ -318,9 +317,8 @@ class ModuleMerger2 extends \Module
             $result = null;
             $condition = trim(html_entity_decode($module['condition']));
             if (strlen($condition)) {
-                $input = new InputStream($condition);
-                $parser = new Parser();
-                $node = $parser->parse($input);
+                $input  = new InputStream($condition);
+                $node   = $this->getContainer()->get('cca.merger2.constraint_parser')->parse($input);
                 $result = $node->evaluate();
             }
 

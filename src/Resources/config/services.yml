@@ -1,4 +1,9 @@
 services:
+  cca.merger2.constraint_parser:
+    class: ContaoCommunityAlliance\Merger2\Constraint\Parser\Parser
+    arguments:
+      - "@cca.merger2.function_collection"
+
   cca.merger2.function_collection:
     class: ContaoCommunityAlliance\Merger2\Functions\FunctionCollectionCollection
     arguments:

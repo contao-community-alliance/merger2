@@ -3,7 +3,7 @@
 /**
  * Merger² - Module Merger for Contao Open Source CMS.
  *
- * @copyright 2013,2014 bit3 UG
+ * @copyright 2013,2014 bit3 UG. 2015-2017 Contao Community Alliance
  * @author    Tristan Lins <tristan.lins@bit3.de>
  * @author    David Molineus <david.molineus@netzmacht.de>
  *
@@ -13,6 +13,8 @@
  */
 
 namespace ContaoCommunityAlliance\Merger2\Constraint\Node;
+
+use ContaoCommunityAlliance\Merger2\Functions\FunctionCollectionInterface;
 
 class CallNode implements NodeInterface
 {
@@ -26,10 +28,18 @@ class CallNode implements NodeInterface
      */
     protected $parameters;
 
-    public function __construct($name, array $parameters)
+    /**
+     * Function collection.
+     *
+     * @var FunctionCollectionInterface
+     */
+    private $functionCollection;
+
+    public function __construct($name, array $parameters, FunctionCollectionInterface $functionCollection)
     {
         $this->name = $name;
         $this->parameters = $parameters;
+        $this->functionCollection = $functionCollection;
     }
 
     /**
@@ -56,11 +66,11 @@ class CallNode implements NodeInterface
      */
     public function evaluate()
     {
-        if (!isset($GLOBALS['MERGER2_FUNCTION'][$this->name])) {
-            throw new \RuntimeException('Unknown function '.$this->name);
+        if ($this->functionCollection->supports($this->name)) {
+            return $this->functionCollection->execute($this->name, $this->getEvaluatedParameters());
         }
 
-        return call_user_func_array($GLOBALS['MERGER2_FUNCTION'][$this->name], $this->getEvaluatedParameters());
+        throw new \RuntimeException('Unknown function '.$this->name);
     }
 
     protected function getEvaluatedParameters()

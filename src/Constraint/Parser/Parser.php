@@ -3,7 +3,7 @@
 /**
  * Merger² - Module Merger for Contao Open Source CMS.
  *
- * @copyright 2013,2014 bit3 UG
+ * @copyright 2013,2014 bit3 UG. 2015-2017 Contao Community Alliance
  * @author    Tristan Lins <tristan.lins@bit3.de>
  * @author    David Molineus <david.molineus@netzmacht.de>
  *
@@ -23,9 +23,27 @@ use ContaoCommunityAlliance\Merger2\Constraint\Node\NotNode;
 use ContaoCommunityAlliance\Merger2\Constraint\Node\OrNode;
 use ContaoCommunityAlliance\Merger2\Constraint\Node\StringNode;
 use ContaoCommunityAlliance\Merger2\Constraint\Node\VariableNode;
+use ContaoCommunityAlliance\Merger2\Functions\FunctionCollectionInterface;
 
 class Parser
 {
+    /**
+     * Function collection.
+     *
+     * @var FunctionCollectionInterface
+     */
+    private $functionCollection;
+
+    /**
+     * Parser constructor.
+     *
+     * @param FunctionCollectionInterface $functionCollection Function collection.
+     */
+    public function __construct(FunctionCollectionInterface $functionCollection)
+    {
+        $this->functionCollection = $functionCollection;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -138,7 +156,7 @@ class Parser
 
             $parameters = $this->parseList($stream, InputToken::CLOSE_BRACKET);
 
-            return new CallNode($name, $parameters);
+            return new CallNode($name, $parameters, $this->functionCollection);
         }
 
         $this->unexpected($token);
