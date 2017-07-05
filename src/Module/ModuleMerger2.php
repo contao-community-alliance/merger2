@@ -13,6 +13,9 @@
 
 namespace ContaoCommunityAlliance\Merger2\Module;
 
+use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\PageModel;
 use ContaoCommunityAlliance\Merger2\Constraint\Parser\InputStream;
 
 /**
@@ -30,10 +33,10 @@ class ModuleMerger2 extends \Module
     /**
      * Generate a front end module and return it as HTML string.
      *
-     * @param int    $page            Page id.
-     * @param string $moduleId        Frontend module id.
-     * @param string $columnName      Column or section name.
-     * @param bool   $inheritableOnly If true only inheritable module is found.
+     * @param PageModel $page            Page model.
+     * @param string    $moduleId        Frontend module id.
+     * @param string    $columnName      Column or section name.
+     * @param bool      $inheritableOnly If true only inheritable module is found.
      *
      * @return string
      *
@@ -61,16 +64,13 @@ class ModuleMerger2 extends \Module
 
                     // Send a 404 header if the article does not exist
                     if ($article === null) {
-                        // Do not index the page
-                        $page->noSearch = 1;
-                        $page->cache    = 0;
+                        throw new PageNotFoundException('Page not found: ' . $articleName);
+                    }
 
-                        header('HTTP/1.1 404 Not Found');
-
-                        return '<p class="error">'.sprintf(
-                            $GLOBALS['TL_LANG']['MSC']['invalidPage'],
-                            $articleName
-                        ).'</p>';
+                    // Send a 403 header if the article cannot be accessed
+                    if (!static::isVisibleElement($article))
+                    {
+                        throw new AccessDeniedException('Access denied: ' . $articleName);
                     }
 
                     if (!$inheritableOnly || $article->inheritable) {
@@ -84,9 +84,15 @@ class ModuleMerger2 extends \Module
                 }
             }
 
-            // HOOK: trigger the article_raster_designer extension
-            if (in_array('article_raster_designer', \ModuleLoader::getActive())) {
-                return \RasterDesigner::load($page->id, $columnName);
+            // HOOK: add custom logic
+            if (isset($GLOBALS['TL_HOOKS']['getArticles']) && is_array($GLOBALS['TL_HOOKS']['getArticles'])) {
+                foreach ($GLOBALS['TL_HOOKS']['getArticles'] as $callback) {
+                    $return = static::importStatic($callback[0])->{$callback[1]}($page->id, $columnName);
+
+                    if (is_string($return)) {
+                        return $return;
+                    }
+                }
             }
 
             // Show all articles (no else block here, see #4740)
@@ -169,7 +175,7 @@ class ModuleMerger2 extends \Module
             ) {
                 foreach ($GLOBALS['TL_HOOKS']['getFrontendModule'] as $callback) {
                     $this->import($callback[0]);
-                    $buffer = $this->$callback[0]->$callback[1]($articleRow, $buffer, $module);
+                    $buffer = $this->{$callback[0]}->{$callback[1]}($articleRow, $buffer, $module);
                 }
             }
 
