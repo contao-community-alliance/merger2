@@ -13,6 +13,8 @@
 
 namespace ContaoCommunityAlliance\Merger2;
 
+use ContaoCommunityAlliance\Merger2\DependencyInjection\FunctionCollectionCompilerPass;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
@@ -22,4 +24,11 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class CcaMerger2Bundle extends Bundle
 {
+    /**
+     * {@inheritDoc}
+     */
+    public function build(ContainerBuilder $container)
+    {
+        $container->addCompilerPass(new FunctionCollectionCompilerPass());
+    }
 }

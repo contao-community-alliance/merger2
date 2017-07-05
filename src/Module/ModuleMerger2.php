@@ -212,6 +212,8 @@ class ModuleMerger2 extends \Module
      * @param \PageModel $page
      * @param int        $maxLevel
      * @param int        $currentLevel
+     *
+     * @return string
      */
     protected function inheritArticle($page, $maxLevel = 0, $currentLevel = 0)
     {

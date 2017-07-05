@@ -12,13 +12,74 @@
  * @license   LGPL-3.0+
  */
 
-namespace Bit3\Contao\Merger2;
+namespace ContaoCommunityAlliance\Merger2\Functions;
+
+use Detection\MobileDetect;
+use Doctrine\DBAL\Connection;
 
 /**
  * Class StandardFunctions.
  */
-class StandardFunctions
+class StandardFunctionsCollection implements FunctionCollectionInterface
 {
+    /**
+     * Mobile detect service.
+     *
+     * @var MobileDetect
+     */
+    private $mobileDetect;
+
+    /**
+     * Database connection.
+     *
+     * @var Connection
+     */
+    private $connection;
+
+    /**
+     * StandardFunctionsCollection constructor.
+     *
+     * @param MobileDetect $mobileDetect Mobile detect service.
+     * @param Connection   $connection   Database connection.
+     */
+    public function __construct(MobileDetect $mobileDetect, Connection $connection)
+    {
+        $this->mobileDetect = $mobileDetect;
+        $this->connection   = $connection;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function supports($name)
+    {
+        return in_array(
+            $name,
+            [
+                'articleExists',
+                'children',
+                'depth',
+                'language',
+                'page',
+                'pageInPath',
+                'platform',
+                'root',
+            ]
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function execute($name, array $arguments)
+    {
+        if (method_exists($this, $name)) {
+            return call_user_func_array([$this, $name], $arguments);
+        }
+
+        throw new \RuntimeException(sprintf('Unsupported function "%s"', $name));
+    }
+
     /**
      * function: language(..)
      * Test the page language.
@@ -27,7 +88,7 @@ class StandardFunctions
      *
      * @return bool
      */
-    public static function language($strLanguage)
+    public function language($strLanguage)
     {
         global $objPage;
 
@@ -42,7 +103,7 @@ class StandardFunctions
      *
      * @return bool
      */
-    public static function page($strId)
+    public function page($strId)
     {
         global $objPage;
 
@@ -58,7 +119,7 @@ class StandardFunctions
      *
      * @return bool
      */
-    public static function root($strId)
+    public function root($strId)
     {
         global $objPage;
 
@@ -77,7 +138,7 @@ class StandardFunctions
      * @SuppressWarnings(PHPMD.Superglobals)
      * @SuppressWarnings(PHPMD.CamelCaseVariableName)
      */
-    public static function pageInPath($strId)
+    public function pageInPath($strId)
     {
         $page = $GLOBALS['objPage'];
         while (true) {
@@ -103,7 +164,7 @@ class StandardFunctions
      * @SuppressWarnings(PHPMD.Superglobals)
      * @SuppressWarnings(PHPMD.CamelCaseVariableName)
      */
-    public static function depth($strValue)
+    public function depth($strValue)
     {
         if (preg_match('#^(<|>|<=|>=|=|!=|<>)?\\s*(\\d+)$#', $strValue, $matches)) {
             $cmp = $matches[1] ? $matches[1] : '=';
@@ -131,9 +192,9 @@ class StandardFunctions
                 default:
                     return $depth == $expectedDepth;
             }
-        } else {
-            throw new \RuntimeException('Illegal depth value: "'.$strValue.'"');
         }
+
+        throw new \RuntimeException('Illegal depth value: "'.$strValue.'"');
     }
 
     /**
@@ -145,22 +206,31 @@ class StandardFunctions
      *
      * @return boolean;
      */
-    public static function articleExists($strColumn, $boolIncludeUnpublished = false)
+    public function articleExists($strColumn, $boolIncludeUnpublished = false)
     {
         global $objPage;
-        $time = time();
-        $objArticle = \Database::getInstance()
-            ->prepare(
-                'SELECT COUNT(id) as count FROM tl_article WHERE pid=? AND inColumn=?'.
-                ($boolIncludeUnpublished ? '' : " AND (start='' OR start<?) AND (stop='' OR stop>?) AND published=1")
-            )
-            ->limit(1)
-            ->execute($objPage->id, $strColumn, $time, $time);
-        if ($objArticle->next()) {
-            return $objArticle->count > 0;
+
+        $time  = time();
+        $query = 'SELECT COUNT(id) as count FROM tl_article WHERE pid=? AND inColumn=?';
+
+        if ($boolIncludeUnpublished) {
+            $query    .= ' AND (start=\'\' OR start<?) AND (stop=\'\' OR stop>?) AND published=1 LIMIT 0,1';
+            $statement = $this->connection->prepare($query);
+
+            $statement->bindValue(3, $time);
+            $statement->bindValue(4, $time);
         } else {
-            return false;
+            $statement = $this->connection->prepare($query);
         }
+
+        $statement->bindValue(1, $objPage->id);
+        $statement->bindValue(2, $strColumn);
+
+        if ($statement->execute()) {
+            return $statement->fetchColumn('count') > 0;
+        }
+
+        return false;
     }
 
     /**
@@ -172,19 +242,27 @@ class StandardFunctions
      *
      * @return bool
      */
-    public static function children($intCount, $boolIncludeUnpublished = false)
+    public function children($intCount, $boolIncludeUnpublished = false)
     {
         global $objPage;
-        $time = time();
-        $objChildren = \Database::getInstance()
-            ->prepare(
-                'SELECT COUNT(id) as count FROM tl_page WHERE pid=?'.
-                ($boolIncludeUnpublished ? '' : " AND (start='' OR start<?) AND (stop='' OR stop>?) AND published=1")
-            )
-            ->limit(1)
-            ->execute($objPage->id, $time, $time);
-        if ($objChildren->next()) {
-            return $objChildren->count >= $intCount;
+
+        $time  = time();
+        $query = 'SELECT COUNT(id) as count FROM tl_page WHERE pid=?';
+
+        if ($boolIncludeUnpublished) {
+            $query     .= ' AND (start=\'\' OR start<?) AND (stop=\'\' OR stop>?) AND published=1 LIMIT 0,1';
+            $statement  = $this->connection->prepare($query);
+
+            $statement->bindValue(2, $time);
+            $statement->bindValue(3, $time);
+        } else {
+            $statement  = $this->connection->prepare($query);
+        }
+
+        $statement->bindValue(1, $objPage->id);
+
+        if ($statement->execute()) {
+            return $statement->fetchColumn('count') >= $intCount;
         }
 
         return false;
@@ -197,23 +275,17 @@ class StandardFunctions
      *
      * @return bool
      */
-    public static function platform($platform)
+    public function platform($platform)
     {
-        /** @var \Pimple $container */
-        global $container;
-
-        /** @var \Mobile_Detect $mobileDetect */
-        $mobileDetect = $container['mobile-detect'];
-
         switch ($platform) {
             case 'desktop':
-                return !$mobileDetect->isMobile();
+                return !$this->mobileDetect->isMobile();
             case 'tablet':
-                return $mobileDetect->isTablet();
+                return $this->mobileDetect->isTablet();
             case 'smartphone':
-                return !$mobileDetect->isTablet() && $mobileDetect->isMobile();
+                return !$this->mobileDetect->isTablet() && $this->mobileDetect->isMobile();
             case 'mobile':
-                return $mobileDetect->isMobile();
+                return $this->mobileDetect->isMobile();
             default:
                 return false;
         }
