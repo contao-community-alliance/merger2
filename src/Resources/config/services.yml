@@ -13,6 +13,6 @@ services:
     class: ContaoCommunityAlliance\Merger2\Functions\StandardFunctionsCollection
     arguments:
       - "@mobile_detect.mobile_detector"
-      - "@doctrine.dbal.connection"
+      - "@database_connection"
     tags:
       - { name: cca.merger2.function_collection }
