@@ -30,7 +30,7 @@ $GLOBALS['TL_LANG']['tl_module']['merger_container'] = array(
 $GLOBALS['TL_LANG']['tl_module']['merger_data_content']   = 'Content';
 $GLOBALS['TL_LANG']['tl_module']['merger_data_condition'] = 'Condition';
 $GLOBALS['TL_LANG']['tl_module']['merger_data_disabled']  = array(
-    '<img src="system/themes/default/images/unpublished.gif" width="15" height="15" alt="Disabled" title="Disabled">'
+    '<img src="system/themes/flexible/icons/unpublished.svg" width="15" height="15" alt="Disabled" title="Disabled">'
 );
 $GLOBALS['TL_LANG']['tl_module']['merger_data_edit']      = array('&nbsp;');
 

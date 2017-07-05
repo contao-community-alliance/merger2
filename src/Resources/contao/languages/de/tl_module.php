@@ -37,7 +37,7 @@ $GLOBALS['TL_LANG']['tl_module']['merger_container'] = array(
 
 $GLOBALS['TL_LANG']['tl_module']['merger_data_content']   = array('Inhalt');
 $GLOBALS['TL_LANG']['tl_module']['merger_data_condition'] = array('Bedingung');
-$GLOBALS['TL_LANG']['tl_module']['merger_data_disabled']  = array('<img src="system/themes/default/images/unpublished.gif" width="15" height="15" alt="Deaktiviert" title="Deaktiviert">');
+$GLOBALS['TL_LANG']['tl_module']['merger_data_disabled']  = array('<img src="system/themes/flexible/icons/unpublished.svg" width="15" height="15" alt="Deaktiviert" title="Deaktiviert">');
 $GLOBALS['TL_LANG']['tl_module']['merger_data_edit']      = array('&nbsp;');
 
 $GLOBALS['TL_LANG']['merger2']['mode']['all']                   = 'Alle auswerten';
