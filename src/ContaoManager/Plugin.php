@@ -14,6 +14,7 @@
 namespace ContaoCommunityAlliance\Merger2\ContaoManager;
 
 use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\ManagerBundle\ContaoManagerBundle;
 use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
@@ -36,7 +37,7 @@ class Plugin implements BundlePluginInterface
             BundleConfig::create(MobileDetectBundle::class),
             BundleConfig::create(CcaMerger2Bundle::class)
                 ->setReplace(['merger2'])
-                ->setLoadAfter([ContaoCoreBundle::class, MobileDetectBundle::class])
+                ->setLoadAfter([ContaoCoreBundle::class, ContaoManagerBundle::class,MobileDetectBundle::class])
         ];
     }
 }
