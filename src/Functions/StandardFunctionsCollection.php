@@ -15,7 +15,6 @@ namespace ContaoCommunityAlliance\Merger2\Functions;
 
 use Detection\MobileDetect;
 use Doctrine\DBAL\Connection;
-use Imagine\Exception\RuntimeException;
 
 /**
  * Class StandardFunctions.
