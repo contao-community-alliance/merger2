@@ -170,7 +170,7 @@ class ModuleMerger2 extends \Module
             ) {
                 foreach ($GLOBALS['TL_HOOKS']['getFrontendModule'] as $callback) {
                     $this->import($callback[0]);
-                    $buffer = $this->$callback[0]->$callback[1]($articleRow, $buffer, $module);
+                    $buffer = $this->{$callback[0]}->{$callback[1]}($articleRow, $buffer, $module);
                 }
             }
 
