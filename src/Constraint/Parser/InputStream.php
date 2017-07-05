@@ -3,13 +3,12 @@
 /**
  * Merger² - Module Merger for Contao Open Source CMS.
  *
- * @copyright 2013,2014 bit3 UG
+ * @package   Merger²
  * @author    Tristan Lins <tristan.lins@bit3.de>
  * @author    David Molineus <david.molineus@netzmacht.de>
- *
- * @link      http://bit3.de
- *
- * @license   LGPL-3.0+
+ * @copyright 2013-2014 bit3 UG. 2015-2017 Contao Community Alliance
+ * @license   https://github.com/contao-community-alliance/merger2/blob/master/LICENSE LGPL-3.0+
+ * @link      https://github.com/contao-community-alliance/merger2
  */
 
 namespace ContaoCommunityAlliance\Merger2\Constraint\Parser;
@@ -20,12 +19,24 @@ namespace ContaoCommunityAlliance\Merger2\Constraint\Parser;
 class InputStream
 {
     /**
+     * Raw input.
+     *
      * @var string
      */
     protected $input;
 
+    /**
+     * Stack.
+     *
+     * @var array
+     */
     protected $stack = array();
 
+    /**
+     * InputStream constructor.
+     *
+     * @param string $input Raw input.
+     */
     public function __construct($input)
     {
         $this->input = $input;
@@ -41,16 +52,33 @@ class InputStream
         return mb_strlen($this->input);
     }
 
+    /**
+     * Check if stream has more tokens.
+     *
+     * @return bool
+     */
     public function hasMore()
     {
         return $this->length() > 0;
     }
 
+    /**
+     * Check if stream is empty.
+     *
+     * @return bool
+     */
     public function isEmpty()
     {
         return $this->length() == 0;
     }
 
+    /**
+     * Undo a token removal.
+     *
+     * @param InputToken $token Input token.
+     *
+     * @return void
+     */
     public function undo(InputToken $token)
     {
         array_unshift($this->stack, $token);
@@ -187,17 +215,25 @@ class InputStream
         return new InputToken(InputToken::STRING, $sequence);
     }
 
+    /**
+     * Read a quoted sequence.
+     *
+     * @return string
+     *
+     * @throws InputStreamException When unexpected end of sequence is reached.
+     */
     protected function readQuotedSequence()
     {
         $buffer = '';
         $escape = false;
+        $length = strlen($this->input);
 
-        while (strlen($this->input)) {
+        while ($length) {
             $char = $this->read();
 
             if ($escape) {
                 $buffer .= $char;
-                $escape = false;
+                $escape  = false;
             } elseif ($char == '\\') {
                 $escape = true;
             } elseif ($char == '"' || $char == "'") {
@@ -205,16 +241,24 @@ class InputStream
             } else {
                 $buffer .= $char;
             }
+
+            $length = strlen($this->input);
         }
 
         throw new InputStreamException('Unexpected end of quoted sequence');
     }
 
+    /**
+     * Read a word sequence.
+     *
+     * @return string
+     */
     protected function readWordSequence()
     {
         $buffer = '';
+        $length = strlen($this->input);
 
-        while (strlen($this->input)) {
+        while ($length) {
             $char = $this->head();
 
             if (!$this->checkWordCharacter($char)) {
@@ -223,16 +267,32 @@ class InputStream
 
             $buffer .= $char;
             $this->skip();
+            $length = strlen($this->input);
         }
 
         return $buffer;
     }
 
+    /**
+     * Validate a word character.
+     *
+     * @param string $char Given character.
+     *
+     * @return int
+     */
     protected function checkWordCharacter($char)
     {
         return preg_match('~^[\w<>=!]$~', $char);
     }
 
+    /**
+     * Expect a word character.
+     *
+     * @param string $char Expected word character.
+     *
+     * @return void
+     * @throws ParserException When invalid token is given.
+     */
     protected function expectWordCharacter($char)
     {
         if (!$this->checkWordCharacter($char)) {
@@ -240,6 +300,15 @@ class InputStream
         }
     }
 
+    /**
+     * Expect a specific character at the current position.
+     *
+     * @param string $char Expected character.
+     *
+     * @return void
+     *
+     * @throws ParserException When token is not as expected.
+     */
     protected function expect($char)
     {
         $readChar = $this->read();
@@ -249,16 +318,31 @@ class InputStream
         }
     }
 
+    /**
+     * Get the head character.
+     *
+     * @return string
+     */
     protected function head()
     {
         return mb_substr($this->input, 0, 1);
     }
 
+    /**
+     * Skip a character.
+     *
+     * @return void
+     */
     protected function skip()
     {
         $this->input = mb_substr($this->input, 1);
     }
 
+    /**
+     * Read a character and skip to the next.
+     *
+     * @return string
+     */
     protected function read()
     {
         $char = $this->head();

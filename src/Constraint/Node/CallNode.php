@@ -3,28 +3,34 @@
 /**
  * Merger² - Module Merger for Contao Open Source CMS.
  *
- * @copyright 2013,2014 bit3 UG. 2015-2017 Contao Community Alliance
+ * @package   Merger²
  * @author    Tristan Lins <tristan.lins@bit3.de>
  * @author    David Molineus <david.molineus@netzmacht.de>
- *
- * @link      http://bit3.de
- *
- * @license   LGPL-3.0+
+ * @copyright 2013-2014 bit3 UG. 2015-2017 Contao Community Alliance
+ * @license   https://github.com/contao-community-alliance/merger2/blob/master/LICENSE LGPL-3.0+
+ * @link      https://github.com/contao-community-alliance/merger2
  */
 
 namespace ContaoCommunityAlliance\Merger2\Constraint\Node;
 
 use ContaoCommunityAlliance\Merger2\Functions\FunctionCollectionInterface;
 
+/**
+ * Class CallNode.
+ */
 class CallNode implements NodeInterface
 {
     /**
+     * Function call name.
+     *
      * @var string
      */
     protected $name;
 
     /**
-     * @var NodeInterface[]
+     * Parameters.
+     *
+     * @var NodeInterface[]|array
      */
     protected $parameters;
 
@@ -35,15 +41,24 @@ class CallNode implements NodeInterface
      */
     private $functionCollection;
 
+    /**
+     * CallNode constructor.
+     *
+     * @param string                      $name               Function call name.
+     * @param NodeInterface[]|array       $parameters         Parameters.
+     * @param FunctionCollectionInterface $functionCollection Function collection.
+     */
     public function __construct($name, array $parameters, FunctionCollectionInterface $functionCollection)
     {
-        $this->name = $name;
-        $this->parameters = $parameters;
+        $this->name               = $name;
+        $this->parameters         = $parameters;
         $this->functionCollection = $functionCollection;
     }
 
     /**
-     * @return NodeInterface
+     * Get the name.
+     *
+     * @return string
      */
     public function getName()
     {
@@ -51,7 +66,9 @@ class CallNode implements NodeInterface
     }
 
     /**
-     * @return array
+     * Get the parameters.
+     *
+     * @return NodeInterface[]|array
      */
     public function getParameters()
     {
@@ -60,6 +77,8 @@ class CallNode implements NodeInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @throws \RuntimeException When unknown function is called.
      *
      * @SuppressWarnings(PHPMD.Superglobals)
      * @SuppressWarnings(PHPMD.CamelCaseVariableName)
@@ -73,6 +92,11 @@ class CallNode implements NodeInterface
         throw new \RuntimeException('Unknown function '.$this->name);
     }
 
+    /**
+     * Evaluate all parameters.
+     *
+     * @return array
+     */
     protected function getEvaluatedParameters()
     {
         $evaluatedParameters = array();

@@ -3,19 +3,19 @@
 /**
  * Merger² - Module Merger for Contao Open Source CMS.
  *
- * @copyright 2013,2014 bit3 UG
+ * @package   Merger²
  * @author    Tristan Lins <tristan.lins@bit3.de>
  * @author    David Molineus <david.molineus@netzmacht.de>
- *
- * @link      http://bit3.de
- *
- * @license   LGPL-3.0+
+ * @copyright 2013-2014 bit3 UG. 2015-2017 Contao Community Alliance
+ * @license   https://github.com/contao-community-alliance/merger2/blob/master/LICENSE LGPL-3.0+
+ * @link      https://github.com/contao-community-alliance/merger2
  */
 
 namespace ContaoCommunityAlliance\Merger2\Functions;
 
 use Detection\MobileDetect;
 use Doctrine\DBAL\Connection;
+use Imagine\Exception\RuntimeException;
 
 /**
  * Class StandardFunctions.
@@ -70,6 +70,8 @@ class StandardFunctionsCollection implements FunctionCollectionInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @throws \RuntimeException When function is not supported.
      */
     public function execute($name, array $arguments)
     {
@@ -81,68 +83,70 @@ class StandardFunctionsCollection implements FunctionCollectionInterface
     }
 
     /**
-     * function: language(..)
+     * Function: language(..).
+     *
      * Test the page language.
      *
-     * @param mixed $strLanguage
+     * @param string $language Page language.
      *
      * @return bool
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
      */
-    public function language($strLanguage)
+    public function language($language)
     {
-        global $objPage;
-
-        return (strtolower($objPage->language) == strtolower($strLanguage));
+        return (strtolower($GLOBALS['objPage']->language) == strtolower($language));
     }
 
     /**
-     * function: page(..)
+     * Function: page(..).
+     *
      * Test the page id or alias.
      *
-     * @param mixed $strId
+     * @param mixed $pageId Page id or alias.
      *
      * @return bool
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
      */
-    public function page($strId)
+    public function page($pageId)
     {
-        global $objPage;
-
-        return is_numeric($strId) && intval($strId) == $objPage->id ||
-            $strId == $objPage->alias;
+        return is_numeric($pageId) && intval($pageId) == $GLOBALS['objPage']->id ||
+            $pageId == $GLOBALS['objPage']->alias;
     }
 
     /**
-     * function: root(..)
+     * Function: root(..).
+     *
      * Test the root page id or alias.
      *
-     * @param mixed $strId
+     * @param mixed $pageId Page id or alias.
      *
      * @return bool
      */
-    public function root($strId)
+    public function root($pageId)
     {
-        global $objPage;
-
-        return is_numeric($strId) && intval($strId) == $objPage->rootId ||
-        $strId == \PageModel::findByPk($objPage->rootId)->alias;
+        return is_numeric($pageId) && intval($pageId) == $GLOBALS['objPage']->rootId
+            || $pageId == \PageModel::findByPk($GLOBALS['objPage']->rootId)->alias;
     }
 
     /**
-     * function: pageInPath(..)
+     * Function: pageInPath(..).
+     *
      * Test if page id or alias is in path.
      *
-     * @param mixed $strId
+     * @param mixed $pageId Page id or alias.
      *
      * @return bool
      *
      * @SuppressWarnings(PHPMD.Superglobals)
      * @SuppressWarnings(PHPMD.CamelCaseVariableName)
      */
-    public function pageInPath($strId)
+    public function pageInPath($pageId)
     {
         $page = $GLOBALS['objPage'];
         while (true) {
-            if (intval($strId) == $page->id || $strId == $page->alias) {
+            if (intval($pageId) == $page->id || $pageId == $page->alias) {
                 return true;
             }
             if ($page->pid > 0) {
@@ -154,24 +158,27 @@ class StandardFunctionsCollection implements FunctionCollectionInterface
     }
 
     /**
-     * function: depth(..)
+     * Function: depth(..).
+     *
      * Test the page depth.
      *
-     * @param mixed $strValue
+     * @param string $value Depth with comparing operator.
      *
      * @return bool
+     *
+     * @throws \RuntimeException When illegal depth value is given.
      *
      * @SuppressWarnings(PHPMD.Superglobals)
      * @SuppressWarnings(PHPMD.CamelCaseVariableName)
      */
-    public function depth($strValue)
+    public function depth($value)
     {
-        if (preg_match('#^(<|>|<=|>=|=|!=|<>)?\\s*(\\d+)$#', $strValue, $matches)) {
-            $cmp = $matches[1] ? $matches[1] : '=';
+        if (preg_match('#^(<|>|<=|>=|=|!=|<>)?\\s*(\\d+)$#', $value, $matches)) {
+            $cmp           = $matches[1] ? $matches[1] : '=';
             $expectedDepth = intval($matches[2]);
 
             $depth = 0;
-            $page = \PageModel::findByPk($GLOBALS['objPage']->id);
+            $page  = \PageModel::findByPk($GLOBALS['objPage']->id);
             while ($page->pid > 0 && $page->type != 'root') {
                 ++$depth;
                 $page = \PageModel::findByPk($page->pid);
@@ -194,26 +201,25 @@ class StandardFunctionsCollection implements FunctionCollectionInterface
             }
         }
 
-        throw new \RuntimeException('Illegal depth value: "'.$strValue.'"');
+        throw new \RuntimeException('Illegal depth value: "'.$value.'"');
     }
 
     /**
-     * function: articleExists(..)
+     * Function: articleExists(..).
+     *
      * Test if an article exists in the column.
      *
-     * @param string $strColumn
-     * @param bool   $boolIncludeUnpublished
+     * @param string $column             Column or section name.
+     * @param bool   $includeUnpublished If true also unpublished articles are recognized.
      *
      * @return boolean;
      */
-    public function articleExists($strColumn, $boolIncludeUnpublished = false)
+    public function articleExists($column, $includeUnpublished = false)
     {
-        global $objPage;
-
         $time  = time();
         $query = 'SELECT COUNT(id) as count FROM tl_article WHERE pid=? AND inColumn=?';
 
-        if ($boolIncludeUnpublished) {
+        if ($includeUnpublished) {
             $query    .= ' AND (start=\'\' OR start<?) AND (stop=\'\' OR stop>?) AND published=1 LIMIT 0,1';
             $statement = $this->connection->prepare($query);
 
@@ -223,8 +229,8 @@ class StandardFunctionsCollection implements FunctionCollectionInterface
             $statement = $this->connection->prepare($query);
         }
 
-        $statement->bindValue(1, $objPage->id);
-        $statement->bindValue(2, $strColumn);
+        $statement->bindValue(1, $GLOBALS['objPage']->id);
+        $statement->bindValue(2, $column);
 
         if ($statement->execute()) {
             return $statement->fetchColumn('count') > 0;
@@ -234,44 +240,45 @@ class StandardFunctionsCollection implements FunctionCollectionInterface
     }
 
     /**
-     * function: children(..)
+     * Function: children(..).
+     *
      * Test if the page have the specific count of children.
      *
-     * @param int  $intCount
-     * @param bool $boolIncludeUnpublished
+     * @param int  $count              Count of children.
+     * @param bool $includeUnpublished Include unpublished pages.
      *
      * @return bool
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
      */
-    public function children($intCount, $boolIncludeUnpublished = false)
+    public function children($count, $includeUnpublished = false)
     {
-        global $objPage;
-
         $time  = time();
         $query = 'SELECT COUNT(id) as count FROM tl_page WHERE pid=?';
 
-        if ($boolIncludeUnpublished) {
-            $query     .= ' AND (start=\'\' OR start<?) AND (stop=\'\' OR stop>?) AND published=1 LIMIT 0,1';
-            $statement  = $this->connection->prepare($query);
+        if ($includeUnpublished) {
+            $query    .= ' AND (start=\'\' OR start<?) AND (stop=\'\' OR stop>?) AND published=1 LIMIT 0,1';
+            $statement = $this->connection->prepare($query);
 
             $statement->bindValue(2, $time);
             $statement->bindValue(3, $time);
         } else {
-            $statement  = $this->connection->prepare($query);
+            $statement = $this->connection->prepare($query);
         }
 
-        $statement->bindValue(1, $objPage->id);
+        $statement->bindValue(1, $GLOBALS['objPage']->id);
 
         if ($statement->execute()) {
-            return $statement->fetchColumn('count') >= $intCount;
+            return $statement->fetchColumn('count') >= $count;
         }
 
         return false;
     }
 
     /**
-     * function: platform(..).
+     * Function: platform(..).
      *
-     * @param string $platform
+     * @param string $platform Platform value.
      *
      * @return bool
      */

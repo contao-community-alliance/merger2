@@ -1,11 +1,13 @@
 <?php
 
 /**
- * @package    merger2
- * @author     David Molineus <david.molineus@netzmacht.de>
- * @copyright  2017 netzmacht David Molineus. All rights reserved.
- * @filesource
+ * Merger² - Module Merger for Contao Open Source CMS.
  *
+ * @package   Merger²
+ * @author    David Molineus <david.molineus@netzmacht.de>
+ * @copyright 2013-2014 bit3 UG. 2015-2017 Contao Community Alliance
+ * @license   https://github.com/contao-community-alliance/merger2/blob/master/LICENSE LGPL-3.0+
+ * @link      https://github.com/contao-community-alliance/merger2
  */
 
 namespace ContaoCommunityAlliance\Merger2\DataContainer;
@@ -13,29 +15,40 @@ namespace ContaoCommunityAlliance\Merger2\DataContainer;
 use Contao\Backend;
 use Contao\DataContainer;
 
+/**
+ * Module data container helper class.
+ *
+ * @package ContaoCommunityAlliance\Merger2\DataContainer
+ */
 class Module extends Backend
 {
-    public function onload(DataContainer $dc)
+    /**
+     * Onload callback.
+     *
+     * @param DataContainer $dataContainer Data container driver.
+     *
+     * @return void
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
+     */
+    public function onload(DataContainer $dataContainer)
     {
         if (\Input::get('table') == 'tl_module' && \Input::get('act') == 'edit') {
-            $module = \ModuleModel::findByPk($dc->id);
+            $module = \ModuleModel::findByPk($dataContainer->id);
             if ($module && $module->type == 'Merger2') {
                 $GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/merger2/html/merger2.js';
-
-                if (\Input::post('FORM_SUBMIT') == 'tl_module') {
-                    $blnDisabled = !\Input::post('merger_container');
-                }
-                else {
-                    $blnDisabled = !$module->merger_container;
-                }
-
-                $GLOBALS['TL_DCA']['tl_module']['fields']['cssID']['eval']['disabled'] = $blnDisabled;
-                $GLOBALS['TL_DCA']['tl_module']['fields']['space']['eval']['disabled'] = $blnDisabled;
             }
         }
     }
 
-    public function getModules($mcw)
+    /**
+     * Get all available modules.
+     *
+     * @return array
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
+     */
+    public function getModules()
     {
         // Get all modules from DB
         $modules = array(
@@ -63,7 +76,12 @@ class Module extends Backend
         return $modules;
     }
 
-    public function getEditButton($dc, $label)
+    /**
+     * Get the edit button.
+     *
+     * @return string
+     */
+    public function getEditButton()
     {
         $icon = \Image::getHtml('edit.gif');
 

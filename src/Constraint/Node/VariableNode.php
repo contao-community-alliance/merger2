@@ -3,30 +3,41 @@
 /**
  * Merger² - Module Merger for Contao Open Source CMS.
  *
- * @copyright 2013,2014 bit3 UG
+ * @package   Merger²
  * @author    Tristan Lins <tristan.lins@bit3.de>
  * @author    David Molineus <david.molineus@netzmacht.de>
- *
- * @link      http://bit3.de
- *
- * @license   LGPL-3.0+
+ * @copyright 2013-2014 bit3 UG. 2015-2017 Contao Community Alliance
+ * @license   https://github.com/contao-community-alliance/merger2/blob/master/LICENSE LGPL-3.0+
+ * @link      https://github.com/contao-community-alliance/merger2
  */
 
 namespace ContaoCommunityAlliance\Merger2\Constraint\Node;
 
+/**
+ * Class VariableNode.
+ */
 class VariableNode implements NodeInterface
 {
     /**
+     * Variable name.
+     *
      * @var string
      */
     protected $name;
 
+    /**
+     * VariableNode constructor.
+     *
+     * @param string $name Variable name.
+     */
     public function __construct($name)
     {
         $this->name = $name;
     }
 
     /**
+     * Get the name.
+     *
      * @return string
      */
     public function getName()
@@ -39,8 +50,7 @@ class VariableNode implements NodeInterface
      */
     public function evaluate()
     {
+        // TODO read variable
         throw new \RuntimeException('Incomplete implementation');
-
-        return $this->name; // TODO read variable
     }
 }

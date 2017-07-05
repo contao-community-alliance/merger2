@@ -3,13 +3,12 @@
 /**
  * Merger² - Module Merger for Contao Open Source CMS.
  *
- * @copyright 2013,2014 bit3 UG
+ * @package   Merger²
  * @author    Tristan Lins <tristan.lins@bit3.de>
  * @author    David Molineus <david.molineus@netzmacht.de>
- *
- * @link      http://bit3.de
- *
- * @license   LGPL-3.0+
+ * @copyright 2013-2014 bit3 UG. 2015-2017 Contao Community Alliance
+ * @license   https://github.com/contao-community-alliance/merger2/blob/master/LICENSE LGPL-3.0+
+ * @link      https://github.com/contao-community-alliance/merger2
  */
 
 namespace ContaoCommunityAlliance\Merger2\DataContainer;
@@ -19,20 +18,29 @@ namespace ContaoCommunityAlliance\Merger2\DataContainer;
  */
 class Article
 {
-    public function getActiveLayoutSections(\DataContainer $dc)
+    /**
+     * Get active layout section.
+     *
+     * @param \DataContainer $dataContainer Data container.
+     *
+     * @return array
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
+     */
+    public function getActiveLayoutSections(\DataContainer $dataContainer)
     {
         $callback = $GLOBALS['TL_DCA']['tl_article']['fields']['inColumn']['bit3_merger_original_options_callback'];
 
         if (is_array($callback)) {
-            $object = \System::importStatic($callback[0]);
+            $object     = \System::importStatic($callback[0]);
             $methodName = $callback[1];
-            $sections = $object->$methodName($dc);
+            $sections   = $object->$methodName($dataContainer);
         } else {
-            $sections = call_user_func($callback, $dc);
+            $sections = call_user_func($callback, $dataContainer);
         }
 
-        if ($dc->activeRecord->pid) {
-            $page = \PageModel::findWithDetails($dc->activeRecord->pid);
+        if ($dataContainer->activeRecord->pid) {
+            $page = \PageModel::findWithDetails($dataContainer->activeRecord->pid);
 
             // Get the layout sections
             foreach (array('layout', 'mobileLayout') as $key) {
@@ -64,6 +72,15 @@ class Article
         return array_values(array_unique($sections));
     }
 
+    /**
+     * Join modules.
+     *
+     * @param string $column   Column or section name.
+     * @param int    $moduleId Module id.
+     * @param array  $sections Sections.
+     *
+     * @return void
+     */
     protected function joinModule($column, $moduleId, &$sections)
     {
         $module = \ModuleModel::findByPk($moduleId);
@@ -76,7 +93,16 @@ class Article
 
         foreach ($data as $row) {
             if (!$row['disabled']) {
-                if (in_array($row['content'], array('article', 'inherit_articles', 'inherit_all_articles', 'inherit_articles_fallback', 'inherit_all_articles_fallback'))) {
+                if (in_array(
+                    $row['content'],
+                    array(
+                        'article',
+                        'inherit_articles',
+                        'inherit_all_articles',
+                        'inherit_articles_fallback',
+                        'inherit_all_articles_fallback'
+                    )
+                )) {
                     $sections[] = $column;
                 } elseif ($row['content']) {
                     $this->joinModule($column, $row['content'], $sections);

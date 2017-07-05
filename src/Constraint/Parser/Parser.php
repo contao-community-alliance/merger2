@@ -3,13 +3,12 @@
 /**
  * Merger² - Module Merger for Contao Open Source CMS.
  *
- * @copyright 2013,2014 bit3 UG. 2015-2017 Contao Community Alliance
+ * @package   Merger²
  * @author    Tristan Lins <tristan.lins@bit3.de>
  * @author    David Molineus <david.molineus@netzmacht.de>
- *
- * @link      http://bit3.de
- *
- * @license   LGPL-3.0+
+ * @copyright 2013-2014 bit3 UG. 2015-2017 Contao Community Alliance
+ * @license   https://github.com/contao-community-alliance/merger2/blob/master/LICENSE LGPL-3.0+
+ * @link      https://github.com/contao-community-alliance/merger2
  */
 
 namespace ContaoCommunityAlliance\Merger2\Constraint\Parser;
@@ -25,6 +24,9 @@ use ContaoCommunityAlliance\Merger2\Constraint\Node\StringNode;
 use ContaoCommunityAlliance\Merger2\Constraint\Node\VariableNode;
 use ContaoCommunityAlliance\Merger2\Functions\FunctionCollectionInterface;
 
+/**
+ * Class Parser.
+ */
 class Parser
 {
     /**
@@ -53,9 +55,11 @@ class Parser
     }
 
     /**
-     * @param InputStream $stream
-     * @param string      $endToken
-     * @param string      $_
+     * Parse until end token is given.
+     *
+     * @param InputStream $stream   Input stream.
+     * @param string      $endToken Type of the end token.
+     * @param string      $_        Arguments.
      *
      * @return NodeInterface|null
      *
@@ -97,6 +101,14 @@ class Parser
         return $node;
     }
 
+    /**
+     * Parse a node.
+     *
+     * @param InputToken  $token  Input token.
+     * @param InputStream $stream Input stream.
+     *
+     * @return NodeInterface
+     */
     protected function parseNode(InputToken $token, InputStream $stream)
     {
         if ($token->is(InputToken::TOKEN_SEPARATOR)) {
@@ -128,7 +140,7 @@ class Parser
 
         if ($token->is(InputToken::STRING)) {
             $value = $token->getValue();
-            $node = new StringNode($value);
+            $node  = new StringNode($value);
 
             return $node;
         }
@@ -162,6 +174,15 @@ class Parser
         $this->unexpected($token);
     }
 
+    /**
+     * Parse a conjunction.
+     *
+     * @param InputToken    $token  Input token.
+     * @param InputStream   $stream Input stream.
+     * @param NodeInterface $left   Left node.
+     *
+     * @return AndNode|OrNode|void
+     */
     protected function parseConjunction(InputToken $token, InputStream $stream, NodeInterface $left)
     {
         if ($token->is(InputToken::TOKEN_SEPARATOR)) {
@@ -177,7 +198,7 @@ class Parser
         );
 
         if (!$right) {
-            return;
+            return null;
         }
 
         if ($token->is(InputToken::AND_CONJUNCTION)) {
@@ -195,6 +216,14 @@ class Parser
         $this->unexpected($token);
     }
 
+    /**
+     * Parse a list.
+     *
+     * @param InputStream $stream   Input stream being parsed.
+     * @param string      $endToken Type of end token.
+     *
+     * @return array
+     */
     protected function parseList(InputStream $stream, $endToken)
     {
         $items = array();
@@ -216,11 +245,15 @@ class Parser
     }
 
     /**
-     * @param InputToken $token
-     * @param string     $expected
-     * @param string     $_
+     * Create the unexpected exception.
      *
-     * @throws ParserException
+     * @param InputToken $token    Unexpected input token.
+     * @param string     $expected Optional pass an expected value.
+     * @param string     $_        List of arguments.
+     *
+     * @return void
+     *
+     * @throws ParserException Is always thrown.
      *
      * @SuppressWarnings(PHPMD.CamelCaseParameterName)
      * @SuppressWarnings(PHPMD.ShortVariable)

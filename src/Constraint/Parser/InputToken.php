@@ -3,13 +3,12 @@
 /**
  * Merger² - Module Merger for Contao Open Source CMS.
  *
- * @copyright 2013,2014 bit3 UG
+ * @package   Merger²
  * @author    Tristan Lins <tristan.lins@bit3.de>
  * @author    David Molineus <david.molineus@netzmacht.de>
- *
- * @link      http://bit3.de
- *
- * @license   LGPL-3.0+
+ * @copyright 2013-2014 bit3 UG. 2015-2017 Contao Community Alliance
+ * @license   https://github.com/contao-community-alliance/merger2/blob/master/LICENSE LGPL-3.0+
+ * @link      https://github.com/contao-community-alliance/merger2
  */
 
 namespace ContaoCommunityAlliance\Merger2\Constraint\Parser;
@@ -52,23 +51,35 @@ class InputToken
     const END_OF_STREAM = 'end_of_stream';
 
     /**
+     * Input token type.
+     *
      * @var string
      */
     protected $type;
 
     /**
+     * Input token value.
+     *
      * @var string
      */
     protected $value;
 
+    /**
+     * InputToken constructor.
+     *
+     * @param string $type  Input token type.
+     * @param string $value Input token value.
+     */
     public function __construct($type, $value = null)
     {
-        $this->type = $type;
+        $this->type  = $type;
         $this->value = $value;
     }
 
     /**
-     * @param string $type
+     * Check if input token is a specific type.
+     *
+     * @param string $type Type to compare with.
      *
      * @return bool
      *
@@ -76,10 +87,12 @@ class InputToken
      */
     public function is($type)
     {
-        return $this->type == $type;
+        return $this->type === $type;
     }
 
     /**
+     * Get the type.
+     *
      * @return string
      */
     public function getType()
@@ -88,6 +101,8 @@ class InputToken
     }
 
     /**
+     * Get the value.
+     *
      * @return string
      */
     public function getValue()

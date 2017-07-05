@@ -3,13 +3,12 @@
 /**
  * Merger² - Module Merger for Contao Open Source CMS.
  *
- * @copyright 2013,2014 bit3 UG. 2015-2017 Contao Community Alliance
+ * @package   Merger²
  * @author    Tristan Lins <tristan.lins@bit3.de>
  * @author    David Molineus <david.molineus@netzmacht.de>
- *
- * @link      http://bit3.de
- *
- * @license   LGPL-3.0+
+ * @copyright 2013-2014 bit3 UG. 2015-2017 Contao Community Alliance
+ * @license   https://github.com/contao-community-alliance/merger2/blob/master/LICENSE LGPL-3.0+
+ * @link      https://github.com/contao-community-alliance/merger2
  */
 
 namespace ContaoCommunityAlliance\Merger2\Module;
@@ -31,10 +30,14 @@ class ModuleMerger2 extends \Module
     /**
      * Generate a front end module and return it as HTML string.
      *
-     * @param int
-     * @param string
+     * @param int    $page            Page id.
+     * @param string $moduleId        Frontend module id.
+     * @param string $columnName      Column or section name.
+     * @param bool   $inheritableOnly If true only inheritable module is found.
      *
      * @return string
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
      */
     protected function getPageFrontendModule($page, $moduleId, $columnName = 'main', $inheritableOnly = false)
     {
@@ -60,7 +63,7 @@ class ModuleMerger2 extends \Module
                     if ($article === null) {
                         // Do not index the page
                         $page->noSearch = 1;
-                        $page->cache = 0;
+                        $page->cache    = 0;
 
                         header('HTTP/1.1 404 Not Found');
 
@@ -93,10 +96,10 @@ class ModuleMerger2 extends \Module
                 return '';
             }
 
-            $return = '';
-            $intCount = 0;
+            $return       = '';
+            $intCount     = 0;
             $blnMultiMode = ($articleCollection->count() > 1);
-            $intLast = $articleCollection->count() - 1;
+            $intLast      = ($articleCollection->count() - 1);
 
             while ($articleCollection->next()) {
                 if ($inheritableOnly && !$articleCollection->inheritable) {
@@ -125,10 +128,8 @@ class ModuleMerger2 extends \Module
             }
 
             return $return;
-        }
-
-        // Other modules
-        else {
+        } else {
+            // Other modules
             if (is_object($moduleId)) {
                 $articleRow = $moduleId;
             } else {
@@ -163,9 +164,8 @@ class ModuleMerger2 extends \Module
             $buffer = $module->generate();
 
             // HOOK: add custom logic
-            if (isset($GLOBALS['TL_HOOKS']['getFrontendModule']) && is_array(
-                    $GLOBALS['TL_HOOKS']['getFrontendModule']
-                )
+            if (isset($GLOBALS['TL_HOOKS']['getFrontendModule'])
+                && is_array($GLOBALS['TL_HOOKS']['getFrontendModule'])
             ) {
                 foreach ($GLOBALS['TL_HOOKS']['getFrontendModule'] as $callback) {
                     $this->import($callback[0]);
@@ -271,10 +271,10 @@ class ModuleMerger2 extends \Module
             $objTemplate = new \BackendTemplate('be_wildcard');
 
             $objTemplate->wildcard = '### MERGER2 ###';
-            $objTemplate->title = $this->headline;
-            $objTemplate->id = $this->id;
-            $objTemplate->link = $this->name;
-            $objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id='.$this->id;
+            $objTemplate->title    = $this->headline;
+            $objTemplate->id       = $this->id;
+            $objTemplate->link     = $this->name;
+            $objTemplate->href     = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
 
             return $objTemplate->parse();
         }
@@ -282,16 +282,14 @@ class ModuleMerger2 extends \Module
         // generate the merger container
         if ($this->merger_container) {
             return parent::generate();
-        }
-
-        // or only the content
-        else {
+        } else {
+            // or only the content
             return $this->generateContent();
         }
     }
 
     /**
-     * Generate module.
+     * {@inheritdoc}
      */
     protected function compile()
     {
@@ -303,19 +301,22 @@ class ModuleMerger2 extends \Module
      *
      * @SuppressWarnings(PHPMD.Superglobals)
      * @SuppressWarnings(PHPMD.CamelCaseVariableName)
+     *
+     * @return string
      */
     protected function generateContent()
     {
         $modules = deserialize($this->merger_data);
-        $buffer = '';
+        $buffer  = '';
 
         foreach ($modules as $module) {
             if ($module['disabled']) {
                 continue;
             }
 
-            $result = null;
+            $result    = null;
             $condition = trim(html_entity_decode($module['condition']));
+
             if (strlen($condition)) {
                 $input  = new InputStream($condition);
                 $node   = $this->getContainer()->get('cca.merger2.constraint_parser')->parse($input);
@@ -331,6 +332,7 @@ class ModuleMerger2 extends \Module
                     /*
                      * Include the articles from current page.
                      */
+
                     case 'article':
                         $content = $this->getPageFrontendModule(
                             $GLOBALS['objPage'],
@@ -342,6 +344,7 @@ class ModuleMerger2 extends \Module
                     /*
                      * Inherit articles from one upper level that contains articles.
                      */
+
                     case 'inherit_articles':
                         $content = $this->inheritArticle(
                             $GLOBALS['objPage'],
@@ -352,6 +355,7 @@ class ModuleMerger2 extends \Module
                     /*
                      * Inherit articles from all upper levels.
                      */
+
                     case 'inherit_all_articles':
                         $content = $this->inheritArticle(
                             $GLOBALS['objPage']
@@ -361,6 +365,7 @@ class ModuleMerger2 extends \Module
                     /*
                      * Include the articles from current page or inherit from one upper level that contains articles.
                      */
+
                     case 'inherit_articles_fallback':
                         $content = $this->getPageFrontendModule(
                             $GLOBALS['objPage'],
@@ -376,6 +381,7 @@ class ModuleMerger2 extends \Module
                     /*
                      * Include the articles from current page or inherit from upper all upper levels.
                      */
+
                     case 'inherit_all_articles_fallback':
                         $content = $this->getPageFrontendModule(
                             $GLOBALS['objPage'],
@@ -391,6 +397,7 @@ class ModuleMerger2 extends \Module
                     /*
                      * Include a module.
                      */
+
                     default:
                         $content = $this->getPageFrontendModule(
                             $GLOBALS['objPage'],
@@ -409,7 +416,7 @@ class ModuleMerger2 extends \Module
             }
         }
 
-        $tpl = new \FrontendTemplate($this->merger_template);
+        $tpl          = new \FrontendTemplate($this->merger_template);
         $tpl->content = $buffer;
 
         return $tpl->parse();
