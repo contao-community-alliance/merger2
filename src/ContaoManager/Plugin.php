@@ -35,7 +35,7 @@ class Plugin implements BundlePluginInterface
         return [
             BundleConfig::create(MobileDetectBundle::class),
             BundleConfig::create(CcaMerger2Bundle::class)
-                ->setReplace('merger2')
+                ->setReplace(['merger2'])
                 ->setLoadAfter([ContaoCoreBundle::class, MobileDetectBundle::class])
         ];
     }

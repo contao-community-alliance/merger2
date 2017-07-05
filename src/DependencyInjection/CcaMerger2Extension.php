@@ -24,7 +24,7 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
  *
  * @package ContaoCommunityAlliance\Merger2\DependencyInjection
  */
-class CcaMergerExtension extends Extension
+class CcaMerger2Extension extends Extension
 {
     /**
      * {@inheritdoc}
