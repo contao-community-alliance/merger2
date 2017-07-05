@@ -17,4 +17,3 @@ contao/.skip
 # dependencies
 build
 vendor
-composer.lock
