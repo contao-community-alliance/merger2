@@ -211,7 +211,7 @@ class InputStream
      */
     protected function checkWordCharacter($char)
     {
-        return preg_match('~^[\w<>=!]$~', $char);
+        return preg_match('~^[\w<>=!\.]$~', $char);
     }
 
     /**
@@ -225,7 +225,7 @@ class InputStream
     protected function expectWordCharacter($char)
     {
         if (!$this->checkWordCharacter($char)) {
-            throw new ParserException('Invalid token, expect a "word" character got '.$char);
+            throw new ParserException('Invalid token, expect a "word" character got ' . $char);
         }
     }
 
@@ -243,7 +243,7 @@ class InputStream
         $readChar = $this->read();
 
         if ($char != $readChar) {
-            throw new ParserException('Invalid token, expect '.$char.' got '.$readChar);
+            throw new ParserException('Invalid token, expect ' . $char . ' got ' . $readChar);
         }
     }
 
