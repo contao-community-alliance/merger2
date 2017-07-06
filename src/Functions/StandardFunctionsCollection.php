@@ -18,6 +18,8 @@ use Doctrine\DBAL\Connection;
 
 /**
  * Class StandardFunctions.
+ *
+ * @SuppressWarnings(TooManyPublicMethods)
  */
 class StandardFunctionsCollection implements FunctionCollectionInterface
 {
@@ -122,6 +124,8 @@ class StandardFunctionsCollection implements FunctionCollectionInterface
      * @param mixed $pageId Page id or alias.
      *
      * @return bool
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
      */
     public function root($pageId)
     {
