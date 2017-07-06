@@ -11,28 +11,24 @@
  * @license LGPL-3.0+
  */
 
-define('TL_MODE', 'CLI');
 error_reporting(E_ALL);
 
-// search the initialize.php
-$dir = __DIR__;
+$include = function ($file) {
+    return file_exists($file) ? include $file : false;
+};
 
-while (
-	$dir != '.'
-	&& $dir != '/'
-	&& !is_file($dir . '/system/initialize.php')
-	&& !is_file($dir . '/vendor/contao/core/system/initialize.php')
+// PhpStorm fix (see https://www.drupal.org/node/2597814)
+if (!defined('PHPUNIT_COMPOSER_INSTALL')) {
+    define('PHPUNIT_COMPOSER_INSTALL', __DIR__.'/../vendor/autoload.php');
+}
+
+if (
+    false === ($loader = $include(__DIR__.'/../vendor/autoload.php'))
+    && false === ($loader = $include(__DIR__.'/../../../autoload.php'))
 ) {
-	$dir = dirname($dir);
-}
+    echo 'You must set up the project dependencies, run the following commands:'.PHP_EOL
+        .'curl -sS https://getcomposer.org/installer | php'.PHP_EOL
+        .'php composer.phar install'.PHP_EOL;
 
-if (is_file($dir . '/system/initialize.php')) {
-	require($dir . '/system/initialize.php');
-}
-else if (is_file($dir . '/vendor/contao/core/system/initialize.php')) {
-	require($dir . '/vendor/contao/core/system/initialize.php');
-}
-else {
-	echo 'Could not find initialize.php!';
-	exit(1);
+    exit(1);
 }

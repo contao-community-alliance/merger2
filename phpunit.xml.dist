@@ -13,7 +13,7 @@
 >
     <testsuites>
         <testsuite name="Merger² Test Suite">
-            <directory>./tests/Bit3/Contao/Merger2/Test/</directory>
+            <directory>./tests/</directory>
         </testsuite>
     </testsuites>
 </phpunit>

@@ -335,8 +335,11 @@ class InputStream
     {
         if (isset($this->conjunctionMapping[$char])) {
             $this->skip();
+
             if ($this->head() === $char) {
                 $this->skip();
+            } elseif ($this->head() !== ' ') {
+                throw new ParserException('Invalid token, expect ' . $char . ' got ' . $this->head());
             }
 
             return new InputToken($this->conjunctionMapping[$char]);
