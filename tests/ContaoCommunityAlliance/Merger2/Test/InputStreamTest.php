@@ -1,14 +1,13 @@
 <?php
 
 /**
- * Merger² - Module Merger for Contao Open Source CMS
+ * Merger² - Module Merger for Contao Open Source CMS.
  *
- * Copyright (C) 2013 bit3 UG
- *
- * @package merger2
- * @author  Tristan Lins <tristan.lins@bit3.de>
- * @link    http://bit3.de
- * @license LGPL-3.0+
+ * @package   Merger²
+ * @author    David Molineus <david.molineus@netzmacht.de>
+ * @copyright 2013-2014 bit3 UG. 2015-2017 Contao Community Alliance
+ * @license   https://github.com/contao-community-alliance/merger2/blob/master/LICENSE LGPL-3.0+
+ * @link      https://github.com/contao-community-alliance/merger2
  */
 
 namespace ContaoCommunityAlliance\Merger2\Test;
