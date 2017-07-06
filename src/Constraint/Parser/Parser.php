@@ -108,6 +108,9 @@ class Parser
      * @param InputStream $stream Input stream.
      *
      * @return NodeInterface
+     *
+     * @SuppressWarnings(CyclomaticComplexity)
+     * @SuppressWarnings(NPathComplexity)
      */
     protected function parseNode(InputToken $token, InputStream $stream)
     {
