@@ -13,10 +13,9 @@
 
 namespace ContaoCommunityAlliance\Merger2\Module;
 
-use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\PageModel;
 use ContaoCommunityAlliance\Merger2\Constraint\Parser\InputStream;
+use ContaoCommunityAlliance\Merger2\Renderer\PageModuleRenderer;
 
 /**
  * Class ModuleMerger2.
@@ -44,164 +43,22 @@ class ModuleMerger2 extends \Module
      */
     protected function getPageFrontendModule($page, $moduleId, $columnName = 'main', $inheritableOnly = false)
     {
-        if (!is_object($moduleId) && !strlen($moduleId)) {
-            return '';
-        }
+        // TODO: Make it a service?
+        $renderer = new PageModuleRenderer();
 
-        // Articles
-        if ($moduleId == 0) {
-            // Show a particular article only
-            if ($page->type == 'regular' && \Input::get('articles')) {
-                list($sectionName, $articleName) = explode(':', \Input::get('articles'));
-
-                if ($articleName === null) {
-                    $articleName = $sectionName;
-                    $sectionName = 'main';
-                }
-
-                if ($sectionName == $columnName) {
-                    $article = \ArticleModel::findByIdOrAliasAndPid($articleName, $page->id);
-
-                    // Send a 404 header if the article does not exist
-                    if ($article === null) {
-                        throw new PageNotFoundException('Page not found: ' . $articleName);
-                    }
-
-                    // Send a 403 header if the article cannot be accessed
-                    if (!static::isVisibleElement($article))
-                    {
-                        throw new AccessDeniedException('Access denied: ' . $articleName);
-                    }
-
-                    if (!$inheritableOnly || $article->inheritable) {
-                        // Add the "first" and "last" classes (see #2583)
-                        $article->classes = array('first', 'last');
-
-                        return $this->getArticle($article);
-                    }
-
-                    return '';
-                }
-            }
-
-            // HOOK: add custom logic
-            if (isset($GLOBALS['TL_HOOKS']['getArticles']) && is_array($GLOBALS['TL_HOOKS']['getArticles'])) {
-                foreach ($GLOBALS['TL_HOOKS']['getArticles'] as $callback) {
-                    $return = static::importStatic($callback[0])->{$callback[1]}($page->id, $columnName);
-
-                    if (is_string($return)) {
-                        return $return;
-                    }
-                }
-            }
-
-            // Show all articles (no else block here, see #4740)
-            $articleCollection = \ArticleModel::findPublishedByPidAndColumn($page->id, $columnName);
-
-            if ($articleCollection === null) {
-                return '';
-            }
-
-            $return       = '';
-            $intCount     = 0;
-            $blnMultiMode = ($articleCollection->count() > 1);
-            $intLast      = ($articleCollection->count() - 1);
-
-            while ($articleCollection->next()) {
-                if ($inheritableOnly && !$articleCollection->inheritable) {
-                    continue;
-                }
-
-                $articleRow = $articleCollection->current();
-
-                // Add the "first" and "last" classes (see #2583)
-                if ($intCount == 0 || $intCount == $intLast) {
-                    $cssClasses = array();
-
-                    if ($intCount == 0) {
-                        $cssClasses[] = 'first';
-                    }
-
-                    if ($intCount == $intLast) {
-                        $cssClasses[] = 'last';
-                    }
-
-                    $articleRow->classes = $cssClasses;
-                }
-
-                $return .= $this->getArticle($articleRow, $blnMultiMode, false, $columnName);
-                ++$intCount;
-            }
-
-            return $return;
-        } else {
-            // Other modules
-            if (is_object($moduleId)) {
-                $articleRow = $moduleId;
-            } else {
-                $articleRow = \ModuleModel::findByPk($moduleId);
-
-                if ($articleRow === null) {
-                    return '';
-                }
-            }
-
-            // Check the visibility (see #6311)
-            if (!static::isVisibleElement($articleRow)) {
-                return '';
-            }
-
-            $moduleClassName = \Module::findClass($articleRow->type);
-
-            // Return if the class does not exist
-            if (!class_exists($moduleClassName)) {
-                $this->log(
-                    'Module class "'.$moduleClassName.'" (module "'.$articleRow->type.'") does not exist',
-                    __METHOD__,
-                    TL_ERROR
-                );
-
-                return '';
-            }
-
-            $articleRow->typePrefix = 'mod_';
-            /** @var \Module $module */
-            $module = new $moduleClassName($articleRow, $columnName);
-            $buffer = $module->generate();
-
-            // HOOK: add custom logic
-            if (isset($GLOBALS['TL_HOOKS']['getFrontendModule'])
-                && is_array($GLOBALS['TL_HOOKS']['getFrontendModule'])
-            ) {
-                foreach ($GLOBALS['TL_HOOKS']['getFrontendModule'] as $callback) {
-                    $this->import($callback[0]);
-                    $buffer = $this->{$callback[0]}->{$callback[1]}($articleRow, $buffer, $module);
-                }
-            }
-
-            // Disable indexing if protected
-            if ($module->protected && !preg_match('/^\s*<!-- indexer::stop/', $buffer)) {
-                $buffer = "\n<!-- indexer::stop -->".$buffer."<!-- indexer::continue -->\n";
-            }
-
-            return $buffer;
-        }
+        return $renderer->render($page, $moduleId, $columnName, $inheritableOnly);
     }
 
     /**
      * Generate an article and return it as string.
      *
-     * @param int
-     * @param bool
-     * @param bool
-     * @param string
+     * @param PageModel $page      Page model.
+     * @param int       $articleId Article id.
      *
      * @return string
      */
-    protected function getPageArticle(
-        $page,
-        $articleId
-    ) {
+    protected function getPageArticle($page, $articleId)
+    {
         $article = \ArticleModel::findByIdOrAliasAndPid($articleId, $page->id);
 
         if ($article === null) {
@@ -214,9 +71,9 @@ class ModuleMerger2 extends \Module
     /**
      * Inherit article from parent page.
      *
-     * @param \PageModel $page
-     * @param int        $maxLevel
-     * @param int        $currentLevel
+     * @param PageModel $page         Page model.
+     * @param int       $maxLevel     Max level.
+     * @param int       $currentLevel Current level.
      *
      * @return string
      */
@@ -366,7 +223,7 @@ class ModuleMerger2 extends \Module
     /**
      * Generate module content.
      *
-     * @param array $module Module configuration
+     * @param array $module Module configuration.
      *
      * @return string
      *
