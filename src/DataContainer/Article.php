@@ -13,6 +13,8 @@
 
 namespace ContaoCommunityAlliance\Merger2\DataContainer;
 
+use Contao\LayoutModel;
+
 /**
  * Class Article.
  */
@@ -29,51 +31,83 @@ class Article
      */
     public function getActiveLayoutSections(\DataContainer $dataContainer)
     {
-        $callback = $GLOBALS['TL_DCA']['tl_article']['fields']['inColumn']['bit3_merger_original_options_callback'];
+        $sections = $this->callOriginalActiveLayoutSectionsCallback($dataContainer);
 
-        if (is_array($callback)) {
-            $object     = \System::importStatic($callback[0]);
-            $methodName = $callback[1];
-            $sections   = $object->$methodName($dataContainer);
-        } else {
-            $sections = call_user_func($callback, $dataContainer);
+        if (!$dataContainer->activeRecord->pid) {
+            return $sections;
         }
 
-        if ($dataContainer->activeRecord->pid) {
-            $page = \PageModel::findWithDetails($dataContainer->activeRecord->pid);
+        $page = \PageModel::findWithDetails($dataContainer->activeRecord->pid);
 
-            // Get the layout sections
-            foreach (array('layout', 'mobileLayout') as $key) {
-                if (!$page->$key) {
-                    continue;
-                }
-
-                $layout = \LayoutModel::findByPk($page->$key);
-
-                if ($layout === null) {
-                    continue;
-                }
-
-                $modules = deserialize($layout->modules);
-
-                if (empty($modules) || !is_array($modules)) {
-                    continue;
-                }
-
-                // Find all sections with an article module (see #6094)
-                foreach ($modules as $module) {
-                    if ($module['mod'] != 0 && $module['enable']) {
-                        $this->joinModule($module['col'], $module['mod'], $sections);
-                    }
-                }
+        // Get the layout sections
+        foreach (array('layout', 'mobileLayout') as $key) {
+            if (!$page->$key) {
+                continue;
             }
+
+            $layout = LayoutModel::findByPk($page->$key);
+            $this->joinLayoutModules($layout, $sections);
         }
 
         return array_values(array_unique($sections));
     }
 
     /**
-     * Join modules.
+     * Call the original active layout sections callback.
+     *
+     * @param \DataContainer $dataContainer Data container driver.
+     *
+     * @return mixed
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
+     */
+    private function callOriginalActiveLayoutSectionsCallback(\DataContainer $dataContainer)
+    {
+        $callback = $GLOBALS['TL_DCA']['tl_article']['fields']['inColumn']['merger_original_options_callback'];
+
+        if (is_array($callback)) {
+            $object     = \System::importStatic($callback[0]);
+            $methodName = $callback[1];
+            $sections   = $object->$methodName($dataContainer);
+        } elseif (is_callable($callback)) {
+            $sections = call_user_func($callback, $dataContainer);
+        } else {
+            $sections = [];
+        }
+
+        return $sections;
+    }
+
+    /**
+     * Joint modules of a layout.
+     *
+     * @param LayoutModel $layout   Layout model.
+     * @param array       $sections Sections.
+     *
+     * @return void
+     */
+    private function joinLayoutModules($layout, &$sections)
+    {
+        if ($layout === null) {
+            return;
+        }
+
+        $modules = deserialize($layout->modules);
+
+        if (empty($modules) || !is_array($modules)) {
+            return;
+        }
+
+        // Find all sections with an article module (see #6094)
+        foreach ($modules as $module) {
+            if ($module['mod'] != 0 && $module['enable']) {
+                $this->joinModule($module['col'], $module['mod'], $sections);
+            }
+        }
+    }
+
+    /**
+     * Join module.
      *
      * @param string $column   Column or section name.
      * @param int    $moduleId Module id.

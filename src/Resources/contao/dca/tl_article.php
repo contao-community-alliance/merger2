@@ -41,7 +41,7 @@ $GLOBALS['TL_DCA']['tl_article']['fields']['inheritable'] = array
  * Overwrite inColumn options callback
  */
 
-$GLOBALS['TL_DCA']['tl_article']['fields']['inColumn']['bit3_merger_original_options_callback'] =
+$GLOBALS['TL_DCA']['tl_article']['fields']['inColumn']['merger_original_options_callback'] =
     $GLOBALS['TL_DCA']['tl_article']['fields']['inColumn']['options_callback'];
 
 $GLOBALS['TL_DCA']['tl_article']['fields']['inColumn']['options_callback'] = array(
