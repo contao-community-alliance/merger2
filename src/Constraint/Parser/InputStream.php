@@ -330,6 +330,7 @@ class InputStream
      * @param string $char Given char.
      *
      * @return InputToken|null
+     * @throws ParserException When invalid token given.
      */
     private function createTokenFromCombinedChars($char)
     {
