@@ -320,104 +320,18 @@ class ModuleMerger2 extends \Module
                 continue;
             }
 
-            $result    = null;
-            $condition = trim(html_entity_decode($module['condition']));
-
-            if (strlen($condition)) {
-                $input  = new InputStream($condition);
-                $node   = $this->getContainer()->get('cca.merger2.constraint_parser')->parse($input);
-                $result = $node->evaluate();
-            }
+            $result = $this->evaluateCondition($module);
 
             if ($result || $result === null) {
-                $content = '';
-                switch ($module['content']) {
-                    case '-':
-                        break;
-
-                    /*
-                     * Include the articles from current page.
-                     */
-
-                    case 'article':
-                        $content = $this->getPageFrontendModule(
-                            $GLOBALS['objPage'],
-                            0,
-                            $this->strColumn
-                        );
-                        break;
-
-                    /*
-                     * Inherit articles from one upper level that contains articles.
-                     */
-
-                    case 'inherit_articles':
-                        $content = $this->inheritArticle(
-                            $GLOBALS['objPage'],
-                            1
-                        );
-                        break;
-
-                    /*
-                     * Inherit articles from all upper levels.
-                     */
-
-                    case 'inherit_all_articles':
-                        $content = $this->inheritArticle(
-                            $GLOBALS['objPage']
-                        );
-                        break;
-
-                    /*
-                     * Include the articles from current page or inherit from one upper level that contains articles.
-                     */
-
-                    case 'inherit_articles_fallback':
-                        $content = $this->getPageFrontendModule(
-                            $GLOBALS['objPage'],
-                            0,
-                            $this->strColumn
-                        );
-
-                        if (!strlen($content)) {
-                            $content = $this->inheritArticle($GLOBALS['objPage'], 1);
-                        }
-                        break;
-
-                    /*
-                     * Include the articles from current page or inherit from upper all upper levels.
-                     */
-
-                    case 'inherit_all_articles_fallback':
-                        $content = $this->getPageFrontendModule(
-                            $GLOBALS['objPage'],
-                            0,
-                            $this->strColumn
-                        );
-
-                        if (!strlen($content)) {
-                            $content = $this->inheritArticle($GLOBALS['objPage']);
-                        }
-                        break;
-
-                    /*
-                     * Include a module.
-                     */
-
-                    default:
-                        $content = $this->getPageFrontendModule(
-                            $GLOBALS['objPage'],
-                            $module['content'],
-                            $this->strColumn
-                        );
-                }
-
+                $content = $this->generateModuleContent($module);
                 $buffer .= $content;
+
                 if ($result === null) {
                     $result = strlen($content) > 0;
                 }
             }
-            if ($result && $this->isModeUpFirstTrue() || !$result && $this->isModeUpFirstFalse()) {
+
+            if ($this->validateModeUpCondition($result)) {
                 break;
             }
         }
@@ -426,5 +340,117 @@ class ModuleMerger2 extends \Module
         $tpl->content = $buffer;
 
         return $tpl->parse();
+    }
+
+    /**
+     * Evaluate the condition.
+     *
+     * @param array $module Module configuration.
+     *
+     * @return mixed
+     */
+    protected function evaluateCondition($module)
+    {
+        $result    = null;
+        $condition = trim(html_entity_decode($module['condition']));
+
+        if (strlen($condition)) {
+            $input  = new InputStream($condition);
+            $node   = $this->getContainer()->get('cca.merger2.constraint_parser')->parse($input);
+            $result = $node->evaluate();
+        }
+
+        return $result;
+    }
+
+    /**
+     * Generate module content.
+     *
+     * @param array $module Module configuration
+     *
+     * @return string
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
+     */
+    protected function generateModuleContent($module)
+    {
+        $content = '';
+        switch ($module['content']) {
+            case '-':
+                break;
+
+            /*
+             * Include the articles from current page.
+             */
+
+            case 'article':
+                $content = $this->getPageFrontendModule($GLOBALS['objPage'], 0, $this->strColumn);
+                break;
+
+            /*
+             * Inherit articles from one upper level that contains articles.
+             */
+
+            case 'inherit_articles':
+                $content = $this->inheritArticle($GLOBALS['objPage'], 1);
+                break;
+
+            /*
+             * Inherit articles from all upper levels.
+             */
+
+            case 'inherit_all_articles':
+                $content = $this->inheritArticle($GLOBALS['objPage']);
+                break;
+
+            /*
+             * Include the articles from current page or inherit from one upper level that contains articles.
+             */
+
+            case 'inherit_articles_fallback':
+                $content = $this->getPageFrontendModule($GLOBALS['objPage'], 0, $this->strColumn);
+
+                if (!strlen($content)) {
+                    $content = $this->inheritArticle($GLOBALS['objPage'], 1);
+                }
+                break;
+
+            /*
+             * Include the articles from current page or inherit from upper all upper levels.
+             */
+
+            case 'inherit_all_articles_fallback':
+                $content = $this->getPageFrontendModule($GLOBALS['objPage'], 0, $this->strColumn);
+
+                if (!strlen($content)) {
+                    $content = $this->inheritArticle($GLOBALS['objPage']);
+                }
+                break;
+
+            /*
+             * Include a module.
+             */
+
+            default:
+                $content = $this->getPageFrontendModule(
+                    $GLOBALS['objPage'],
+                    $module['content'],
+                    $this->strColumn
+                );
+        }
+
+        return $content;
+    }
+
+    /**
+     * Validate the mode up condition for the given result.
+     *
+     * @param string $result Result of module generation.
+     *
+     * @return bool
+     */
+    private function validateModeUpCondition($result)
+    {
+        return $result && $this->isModeUpFirstTrue() || !$result && $this->isModeUpFirstFalse();
     }
 }
