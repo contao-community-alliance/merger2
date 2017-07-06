@@ -172,35 +172,21 @@ class StandardFunctionsCollection implements FunctionCollectionInterface
      */
     public function depth($value)
     {
-        if (preg_match('#^(<|>|<=|>=|=|!=|<>)?\\s*(\\d+)$#', $value, $matches)) {
-            $cmp           = $matches[1] ? $matches[1] : '=';
-            $expectedDepth = intval($matches[2]);
-
-            $depth = 0;
-            $page  = \PageModel::findByPk($GLOBALS['objPage']->id);
-            while ($page->pid > 0 && $page->type != 'root') {
-                ++$depth;
-                $page = \PageModel::findByPk($page->pid);
-            }
-
-            switch ($cmp) {
-                case '<':
-                    return $depth < $expectedDepth;
-                case '>':
-                    return $depth > $expectedDepth;
-                case '<=':
-                    return $depth <= $expectedDepth;
-                case '>=':
-                    return $depth >= $expectedDepth;
-                case '!=':
-                case '<>':
-                    return $depth != $expectedDepth;
-                default:
-                    return $depth == $expectedDepth;
-            }
+        if (!preg_match('#^(<|>|<=|>=|=|!=|<>)?\\s*(\\d+)$#', $value, $matches)) {
+            throw new \RuntimeException('Illegal depth value: "'.$value.'"');
         }
 
-        throw new \RuntimeException('Illegal depth value: "'.$value.'"');
+        $cmp           = $matches[1] ? $matches[1] : '=';
+        $expectedDepth = intval($matches[2]);
+
+        $depth = 0;
+        $page  = \PageModel::findByPk($GLOBALS['objPage']->id);
+        while ($page->pid > 0 && $page->type != 'root') {
+            ++$depth;
+            $page = \PageModel::findByPk($page->pid);
+        }
+
+        return $this->compareDepth($cmp, $depth, $expectedDepth);
     }
 
     /**
@@ -211,7 +197,9 @@ class StandardFunctionsCollection implements FunctionCollectionInterface
      * @param string $column             Column or section name.
      * @param bool   $includeUnpublished If true also unpublished articles are recognized.
      *
-     * @return boolean;
+     * @return bool
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
      */
     public function articleExists($column, $includeUnpublished = false)
     {
@@ -294,6 +282,34 @@ class StandardFunctionsCollection implements FunctionCollectionInterface
                 return $this->mobileDetect->isMobile();
             default:
                 return false;
+        }
+    }
+
+    /**
+     * Compare the depth
+     *
+     * @param string $cmp           Compare operator.
+     * @param string $depth         Given depth.
+     * @param string $expectedDepth Expected depth.
+     *
+     * @return bool
+     */
+    private function compareDepth($cmp, $depth, $expectedDepth)
+    {
+        switch ($cmp) {
+            case '<':
+                return $depth < $expectedDepth;
+            case '>':
+                return $depth > $expectedDepth;
+            case '<=':
+                return $depth <= $expectedDepth;
+            case '>=':
+                return $depth >= $expectedDepth;
+            case '!=':
+            case '<>':
+                return $depth != $expectedDepth;
+            default:
+                return $depth == $expectedDepth;
         }
     }
 }
