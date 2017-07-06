@@ -33,6 +33,29 @@ class InputStream
     protected $stack = array();
 
     /**
+     * Simple char mapping to token type.
+     *
+     * @var array
+     */
+    private $charMapping = [
+        ',' => InputToken::LIST_SEPARATOR,
+        '(' => InputToken::OPEN_BRACKET,
+        ')' => InputToken::CLOSE_BRACKET,
+        '[' => InputToken::OPEN_SQUARE_BRACKET,
+        ']' => InputToken::CLOSE_SQUARE_BRACKET,
+    ];
+
+    /**
+     * Conjunction char mapping.
+     *
+     * @var array
+     */
+    private $conjunctionMapping = [
+        '&' => InputToken::AND_CONJUNCTION,
+        '|' => InputToken::OR_CONJUNCTION,
+    ];
+
+    /**
      * InputStream constructor.
      *
      * @param string $input Raw input.
@@ -107,112 +130,18 @@ class InputStream
             return new InputToken(InputToken::TOKEN_SEPARATOR);
         }
 
-        if ($char == ',') {
+        if (isset($this->charMapping[$char])) {
             $this->skip();
 
-            return new InputToken(InputToken::LIST_SEPARATOR);
+            return new InputToken($this->charMapping[$char]);
         }
 
-        if ($char == '(') {
-            $this->skip();
-
-            return new InputToken(InputToken::OPEN_BRACKET);
+        $token = $this->createTokenFromCombinedChars($char);
+        if ($token) {
+            return $token;
         }
 
-        if ($char == ')') {
-            $this->skip();
-
-            return new InputToken(InputToken::CLOSE_BRACKET);
-        }
-
-        if ($char == '[') {
-            $this->skip();
-
-            return new InputToken(InputToken::OPEN_SQUARE_BRACKET);
-        }
-
-        if ($char == ']') {
-            $this->skip();
-
-            return new InputToken(InputToken::CLOSE_SQUARE_BRACKET);
-        }
-
-        if ($char == '&') {
-            $this->skip();
-            if ($this->head() == '&') {
-                $this->skip();
-            }
-
-            return new InputToken(InputToken::AND_CONJUNCTION);
-        }
-
-        if ($char == '|') {
-            $this->skip();
-            if ($this->head() == '|') {
-                $this->skip();
-            }
-
-            return new InputToken(InputToken::OR_CONJUNCTION);
-        }
-
-        if ($char == '!') {
-            $this->skip();
-
-            // special sequence behavior
-            if ($this->head() == '=') {
-                $sequence = $char.$this->readWordSequence();
-
-                return new InputToken(InputToken::STRING, $sequence);
-            }
-
-            return new InputToken(InputToken::NOT);
-        }
-
-        if ($char == '$') {
-            $this->skip();
-            $name = $this->readWordSequence();
-
-            return new InputToken(InputToken::VARIABLE, $name);
-        }
-
-        if ($char == '"' || $char == "'") {
-            $this->skip();
-            $sequence = $this->readQuotedSequence();
-
-            return new InputToken(InputToken::STRING, $sequence);
-        }
-
-        $this->expectWordCharacter($char);
-
-        $sequence = $this->readWordSequence();
-
-        $lowerSequence = strtolower($sequence);
-
-        if ($lowerSequence == 'and') {
-            return new InputToken(InputToken::AND_CONJUNCTION);
-        }
-
-        if ($lowerSequence == 'or') {
-            return new InputToken(InputToken::OR_CONJUNCTION);
-        }
-
-        if ($lowerSequence == 'not') {
-            return new InputToken(InputToken::NOT);
-        }
-
-        if ($lowerSequence == 'true') {
-            return new InputToken(InputToken::TRUE);
-        }
-
-        if ($lowerSequence == 'false') {
-            return new InputToken(InputToken::FALSE);
-        }
-
-        if ($this->head() == '(') {
-            return new InputToken(InputToken::CALL, $sequence);
-        }
-
-        return new InputToken(InputToken::STRING, $sequence);
+        return $this->createInputTokenFromWordSequence($char);
     }
 
     /**
@@ -349,5 +278,97 @@ class InputStream
         $this->skip();
 
         return $char;
+    }
+
+    /***
+     * Create input token from a word sequence.
+     *
+     * @param string $key Given input.
+     *
+     * @return InputToken
+     * @throws ParserException When invalid token is given.
+     */
+    private function createInputTokenFromWordSequence($key)
+    {
+        $this->expectWordCharacter($key);
+        $sequence = $this->readWordSequence();
+
+        $lowerSequence = strtolower($sequence);
+
+        if ($lowerSequence == 'and') {
+            return new InputToken(InputToken::AND_CONJUNCTION);
+        }
+
+        if ($lowerSequence == 'or') {
+            return new InputToken(InputToken::OR_CONJUNCTION);
+        }
+
+        if ($lowerSequence == 'not') {
+            return new InputToken(InputToken::NOT);
+        }
+
+        if ($lowerSequence == 'true') {
+            return new InputToken(InputToken::TRUE);
+        }
+
+        if ($lowerSequence == 'false') {
+            return new InputToken(InputToken::FALSE);
+        }
+
+        if ($this->head() == '(') {
+            return new InputToken(InputToken::CALL, $sequence);
+        }
+
+        return new InputToken(InputToken::STRING, $sequence);
+    }
+
+    /**
+     * Create input token for chars which have relations to next characters.
+     *
+     * If no combined char is given null is returned.
+     *
+     * @param string $char Given char.
+     *
+     * @return InputToken|null
+     */
+    private function createTokenFromCombinedChars($char)
+    {
+        if (isset($this->conjunctionMapping[$char])) {
+            $this->skip();
+            if ($this->head() === $char) {
+                $this->skip();
+            }
+
+            return new InputToken($this->conjunctionMapping[$char]);
+        }
+
+        if ($char == '!') {
+            $this->skip();
+
+            // special sequence behavior
+            if ($this->head() == '=') {
+                $sequence = $char.$this->readWordSequence();
+
+                return new InputToken(InputToken::STRING, $sequence);
+            }
+
+            return new InputToken(InputToken::NOT);
+        }
+
+        if ($char == '$') {
+            $this->skip();
+            $name = $this->readWordSequence();
+
+            return new InputToken(InputToken::VARIABLE, $name);
+        }
+
+        if ($char == '"' || $char == "'") {
+            $this->skip();
+            $sequence = $this->readQuotedSequence();
+
+            return new InputToken(InputToken::STRING, $sequence);
+        }
+
+        return null;
     }
 }
