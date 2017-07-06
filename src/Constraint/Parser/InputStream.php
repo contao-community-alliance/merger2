@@ -280,7 +280,7 @@ class InputStream
         return $char;
     }
 
-    /***
+    /**
      * Create input token from a word sequence.
      *
      * @param string $key Given input.

@@ -30,6 +30,13 @@ class ModuleMerger2 extends \Module
     protected $strTemplate = 'mod_merger2';
 
     /**
+     * Page module renderer.
+     *
+     * @var PageModuleRenderer
+     */
+    private $pageModuleRenderer;
+
+    /**
      * Generate a front end module and return it as HTML string.
      *
      * @param PageModel $page            Page model.
@@ -43,10 +50,11 @@ class ModuleMerger2 extends \Module
      */
     protected function getPageFrontendModule($page, $moduleId, $columnName = 'main', $inheritableOnly = false)
     {
-        // TODO: Make it a service?
-        $renderer = new PageModuleRenderer();
+        if (!$this->pageModuleRenderer) {
+            $this->pageModuleRenderer = new PageModuleRenderer();
+        }
 
-        return $renderer->render($page, $moduleId, $columnName, $inheritableOnly);
+        return $this->pageModuleRenderer->render($page, $moduleId, $columnName, $inheritableOnly);
     }
 
     /**
