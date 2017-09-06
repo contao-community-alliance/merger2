@@ -49,7 +49,7 @@ class Article
             $this->joinLayoutModules($layout, $sections);
         }
 
-        return array_values(array_unique($sections));
+        return $sections;
     }
 
     /**
@@ -137,7 +137,9 @@ class Article
                         'inherit_all_articles_fallback'
                     )
                 )) {
-                    $sections[] = $column;
+                    $sections[$column] = isset($GLOBALS['TL_LANG']['COLS'][$column])
+                        ? $GLOBALS['TL_LANG']['COLS'][$column]
+                        : $column;
                 } elseif ($row['content']) {
                     $this->joinModule($column, $row['content'], $sections);
                 }
