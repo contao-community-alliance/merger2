@@ -21,7 +21,7 @@ use ContaoCommunityAlliance\Merger2\Functions\FunctionCollectionInterface;
 class CallNode implements NodeInterface
 {
     /**
-     * Function call name.
+     * Function invoke name.
      *
      * @var string
      */
@@ -44,7 +44,7 @@ class CallNode implements NodeInterface
     /**
      * CallNode constructor.
      *
-     * @param string                      $name               Function call name.
+     * @param string                      $name               Function invoke name.
      * @param NodeInterface[]|array       $parameters         Parameters.
      * @param FunctionCollectionInterface $functionCollection Function collection.
      */
@@ -79,17 +79,10 @@ class CallNode implements NodeInterface
      * {@inheritdoc}
      *
      * @throws \RuntimeException When unknown function is called.
-     *
-     * @SuppressWarnings(PHPMD.Superglobals)
-     * @SuppressWarnings(PHPMD.CamelCaseVariableName)
      */
     public function evaluate()
     {
-        if ($this->functionCollection->supports($this->name)) {
-            return $this->functionCollection->execute($this->name, $this->getEvaluatedParameters());
-        }
-
-        throw new \RuntimeException('Unknown function '.$this->name);
+        return $this->functionCollection->execute($this->name, $this->getEvaluatedParameters());
     }
 
     /**
