@@ -16,35 +16,32 @@ namespace ContaoCommunityAlliance\Merger2\Functions;
 use ContaoCommunityAlliance\Merger2\Functions\Description\Description;
 
 /**
- * Interface MergerFunctionInterface
+ * Interface MergerFunction
  *
  * @package ContaoCommunityAlliance\Merger2\Functions
  */
-interface FunctionCollectionInterface
+interface FunctionInterface
 {
     /**
-     * Check if function is supported.
+     * Get the name of the function.
      *
-     * @param string $name Name of the function being handled.
-     *
-     * @return bool
+     * @return string
      */
-    public function supports($name);
+    public static function getName();
 
     /**
-     * Execute the function
+     * Invoke the function.
      *
-     * @param string $name      Function name.
-     * @param array  $arguments Given attributes.
+     * @param array $arguments List of passed arguments.
      *
      * @return mixed
      */
-    public function execute($name, array $arguments);
+    public function invoke(array $arguments = []);
 
     /**
-     * Describe all supported functions with their arguments.
+     * Describe the function and return
      *
-     * @return Description[]|array
+     * @return Description
      */
-    public function getDescriptions();
+    public function describe();
 }

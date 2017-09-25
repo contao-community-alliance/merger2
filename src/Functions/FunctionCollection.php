@@ -5,7 +5,8 @@
  *
  * @package   Merger²
  * @author    David Molineus <david.molineus@netzmacht.de>
- * @copyright 2013-2014 bit3 UG. 2015-2017 Contao Community Alliance
+ * @copyright 2013-2014 bit3 UG
+ * @copyright 2015-2017 Contao Community Alliance
  * @license   https://github.com/contao-community-alliance/merger2/blob/master/LICENSE LGPL-3.0+
  * @link      https://github.com/contao-community-alliance/merger2
  */
@@ -13,27 +14,27 @@
 namespace ContaoCommunityAlliance\Merger2\Functions;
 
 /**
- * Class FunctionCollectionCollection contains a set of children collection.
+ * Class contains a set of children collection.
  *
  * @package ContaoCommunityAlliance\Merger2\Functions
  */
-class FunctionCollectionCollection implements FunctionCollectionInterface
+class FunctionCollection implements FunctionCollectionInterface
 {
     /**
      * Function collections.
      *
-     * @var FunctionCollectionInterface[]
+     * @var FunctionInterface[]
      */
-    private $collections;
+    private $functions;
 
     /**
-     * FunctionCollectionCollection constructor.
+     * Constructor.
      *
-     * @param FunctionCollectionInterface[]|array $collections Function collections.
+     * @param FunctionInterface[]|array $functions Map of functions.
      */
-    public function __construct(array $collections)
+    public function __construct(array $functions)
     {
-        $this->collections = $collections;
+        $this->functions = $functions;
     }
 
     /**
@@ -41,8 +42,8 @@ class FunctionCollectionCollection implements FunctionCollectionInterface
      */
     public function supports($name)
     {
-        foreach ($this->collections as $collection) {
-            if ($collection->supports($name)) {
+        foreach ($this->functions as $function) {
+            if ($function->getName() === $name) {
                 return true;
             }
         }
@@ -57,12 +58,26 @@ class FunctionCollectionCollection implements FunctionCollectionInterface
      */
     public function execute($name, array $arguments)
     {
-        foreach ($this->collections as $collection) {
-            if ($collection->supports($name)) {
-                return $collection->execute($name, $arguments);
+        foreach ($this->functions as $function) {
+            if ($function->getName() === $name) {
+                return $function->invoke($arguments);
             }
         }
 
         throw new \RuntimeException(sprintf('Unsupported function "%s"', $name));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getDescriptions()
+    {
+        $description = [];
+
+        foreach ($this->functions as $function) {
+            $description[] = $function->describe();
+        }
+
+        return $description;
     }
 }

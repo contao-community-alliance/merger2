@@ -16,35 +16,37 @@ namespace ContaoCommunityAlliance\Merger2\Functions;
 use ContaoCommunityAlliance\Merger2\Functions\Description\Description;
 
 /**
- * Interface MergerFunctionInterface
+ * Class LanguageFunction.
  *
  * @package ContaoCommunityAlliance\Merger2\Functions
  */
-interface FunctionCollectionInterface
+class LanguageFunction extends AbstractPageFunction
 {
     /**
-     * Check if function is supported.
+     * Function: language(..).
      *
-     * @param string $name Name of the function being handled.
+     * Test the page language.
+     *
+     * @param string $language Page language.
      *
      * @return bool
      */
-    public function supports($name);
+    public function __invoke($language)
+    {
+        $page = $this->pageProvider->getPage();
+
+        return (strtolower($page->language) === strtolower($language));
+    }
 
     /**
-     * Execute the function
-     *
-     * @param string $name      Function name.
-     * @param array  $arguments Given attributes.
-     *
-     * @return mixed
+     * {@inheritDoc}
      */
-    public function execute($name, array $arguments);
-
-    /**
-     * Describe all supported functions with their arguments.
-     *
-     * @return Description[]|array
-     */
-    public function getDescriptions();
+    public function describe()
+    {
+        return Description::create(static::getName())
+            ->setDescription('Test the page language.')
+            ->addArgument('language')
+                ->setDescription('Page language')
+            ->end();
+    }
 }

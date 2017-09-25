@@ -34,7 +34,7 @@ class FunctionCollectionCompilerPass implements CompilerPassInterface
         }
 
         $definition       = $container->findDefinition('cca.merger2.function_collection');
-        $taggedServiceIds = $container->findTaggedServiceIds('cca.merger2.function_collection');
+        $taggedServiceIds = $container->findTaggedServiceIds('cca.merger2.function');
         $services         = (array) $definition->getArgument(0);
 
         foreach (array_keys($taggedServiceIds) as $serviceId) {
