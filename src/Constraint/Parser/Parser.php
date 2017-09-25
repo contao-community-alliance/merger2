@@ -184,7 +184,7 @@ class Parser
      * @param InputStream   $stream Input stream.
      * @param NodeInterface $left   Left node.
      *
-     * @return AndNode|OrNode|void
+     * @return AndNode|OrNode|null
      */
     protected function parseConjunction(InputToken $token, InputStream $stream, NodeInterface $left)
     {

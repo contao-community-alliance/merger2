@@ -114,6 +114,8 @@ class Article
      * @param array  $sections Sections.
      *
      * @return void
+     *
+     * @SuppressWarnings(PHPMD.Superglobals)
      */
     protected function joinModule($column, $moduleId, &$sections)
     {
