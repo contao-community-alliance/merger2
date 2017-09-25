@@ -23,7 +23,7 @@ function merger2buttonClick()
 {
     if (this.moduleID) {
         var rt        = /[&\?](rt=[\d\w]+)/.exec(document.location.search);
-        location.href = 'contao/main.php?do=themes&table=tl_module&act=edit&id=' + this.moduleID + (rt ? '&' + rt[1] : '');
+        location.href = 'contao?do=themes&table=tl_module&act=edit&id=' + this.moduleID + (rt ? '&' + rt[1] : '');
     }
 }
 
