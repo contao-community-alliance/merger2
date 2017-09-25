@@ -37,7 +37,8 @@ abstract class AbstractFunction implements FunctionInterface
         $class = get_called_class();
 
         if (!isset(static::$names[$class])) {
-            $className             = array_pop(explode('\\', $class));
+            $parts                 = explode('\\', $class);
+            $className             = array_pop($parts);
             static::$names[$class] = lcfirst(substr($className, 0, -8));
         }
 

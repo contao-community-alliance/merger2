@@ -24,6 +24,7 @@ class Argument
     const TYPE_FLOAT   = 2;
     const TYPE_INTEGER = 4;
     const TYPE_BOOLEAN = 8;
+
     /**
      * Parent function description.
      *
@@ -179,5 +180,21 @@ class Argument
     public function end()
     {
         return $this->parent;
+    }
+
+    /**
+     * Get argument description as array.
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return [
+            'name'        => $this->name,
+            'description' => $this->description,
+            'optional'    => $this->optional,
+            'default'     => $this->default,
+            'type'        => $this->type,
+        ];
     }
 }

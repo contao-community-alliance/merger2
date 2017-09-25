@@ -17,15 +17,18 @@ use Contao\ManagerBundle\ContaoManagerBundle;
 use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
+use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use ContaoCommunityAlliance\Merger2\CcaMerger2Bundle;
 use SunCat\MobileDetectBundle\MobileDetectBundle;
+use Symfony\Component\Config\Loader\LoaderResolverInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Contao Manager plugin.
  *
  * @package ContaoCommunityAlliance\Merger2\ContaoManager
  */
-class Plugin implements BundlePluginInterface
+class Plugin implements BundlePluginInterface, RoutingPluginInterface
 {
     /**
      * {@inheritdoc}
@@ -38,5 +41,15 @@ class Plugin implements BundlePluginInterface
                 ->setReplace(['merger2'])
                 ->setLoadAfter([ContaoCoreBundle::class, ContaoManagerBundle::class,MobileDetectBundle::class])
         ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRouteCollection(LoaderResolverInterface $resolver, KernelInterface $kernel)
+    {
+        return $resolver
+            ->resolve(dirname(__DIR__) . '/Resources/config/routing.yml')
+            ->load(dirname(__DIR__) . '/Resources/config/routing.yml');
     }
 }

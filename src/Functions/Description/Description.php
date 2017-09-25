@@ -121,4 +121,23 @@ class Description
     {
         return $this->arguments;
     }
+
+    /**
+     * Get description as array.
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return [
+            'name'        => $this->name,
+            'description' => $this->description,
+            'arguments'   => array_map(
+                function (Argument $argument) {
+                    return $argument->toArray();
+                },
+                $this->arguments
+            ),
+        ];
+    }
 }
