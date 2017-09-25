@@ -8,11 +8,11 @@ function merger2updateEditButton(button)
         var moduleID = select.value;
 
         if (/^\d+$/.exec(moduleID)) {
-            image.src       = image.src.replace('edit_.gif', 'edit.gif');
+            image.src       = image.src.replace('edit_.svg', 'edit.svg');
             button.moduleID = moduleID;
             button.setStyle('cursor', '');
         } else {
-            image.src       = image.src.replace('edit.gif', 'edit_.gif');
+            image.src       = image.src.replace('edit.svg', 'edit_.svg');
             button.moduleID = null;
             button.setStyle('cursor', 'default');
         }
