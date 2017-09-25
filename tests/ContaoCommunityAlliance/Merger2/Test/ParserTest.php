@@ -21,13 +21,13 @@ use ContaoCommunityAlliance\Merger2\Constraint\Node\StringNode;
 use ContaoCommunityAlliance\Merger2\Constraint\Node\VariableNode;
 use ContaoCommunityAlliance\Merger2\Constraint\Parser\InputStream;
 use ContaoCommunityAlliance\Merger2\Constraint\Parser\Parser;
-use ContaoCommunityAlliance\Merger2\Functions\FunctionCollectionCollection;
+use ContaoCommunityAlliance\Merger2\Functions\FunctionCollection;
 
 class ParserTest extends \PHPUnit_Framework_TestCase
 {
     public function testParserVariable()
     {
-        $functions = new FunctionCollectionCollection([]);
+        $functions = new FunctionCollection([]);
         $stream    = new InputStream('$foo');
         $parser    = new Parser($functions);
         $node      = $parser->parse($stream);
@@ -40,7 +40,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
     public function testParserCall()
     {
-        $functions = new FunctionCollectionCollection([]);
+        $functions = new FunctionCollection([]);
         $stream = new InputStream('foo()');
         $parser = new Parser($functions);
         $node   = $parser->parse($stream);
@@ -53,7 +53,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
     public function testParserCallOneParameter()
     {
-        $functions = new FunctionCollectionCollection([]);
+        $functions = new FunctionCollection([]);
         $stream = new InputStream('foo(bar)');
         $parser = new Parser($functions);
         $node   = $parser->parse($stream);
@@ -66,7 +66,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
     public function testParserCallTwoParameter()
     {
-        $functions = new FunctionCollectionCollection([]);
+        $functions = new FunctionCollection([]);
         $stream = new InputStream('foo(bar, zap)');
         $parser = new Parser($functions);
         $node   = $parser->parse($stream);
@@ -79,7 +79,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
     public function testParserCallComplexParameter()
     {
-        $functions = new FunctionCollectionCollection([]);
+        $functions = new FunctionCollection([]);
         $stream = new InputStream('foo(true && false)');
         $parser = new Parser($functions);
         $node   = $parser->parse($stream);
@@ -92,7 +92,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
     public function testParserCallMultipleSimpleAndComplexParameter()
     {
-        $functions = new FunctionCollectionCollection([]);
+        $functions = new FunctionCollection([]);
         $stream = new InputStream('foo(yes, true && false, bar(no))');
         $parser = new Parser($functions);
         $node   = $parser->parse($stream);
@@ -112,7 +112,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
     public function testParserComplexStatement()
     {
-        $functions = new FunctionCollectionCollection([]);
+        $functions = new FunctionCollection([]);
         $stream = new InputStream('foo(yes) || bar(no) && (yes || no)');
         $parser = new Parser($functions);
         $node   = $parser->parse($stream);
@@ -136,7 +136,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
     public function testIssue9()
     {
-        $functions = new FunctionCollectionCollection([]);
+        $functions = new FunctionCollection([]);
         $stream = new InputStream('page(6) | page(7) | page(9) | page(10) | depth(>1)');
         $parser = new Parser($functions);
         $node   = $parser->parse($stream);
