@@ -36,7 +36,7 @@ class Module extends Backend
         if (\Input::get('table') == 'tl_module' && \Input::get('act') == 'edit') {
             $module = \ModuleModel::findByPk($dataContainer->id);
             if ($module && $module->type == 'Merger2') {
-                $GLOBALS['TL_JAVASCRIPT'][] = 'bundles/ccamerger2bundle/merger2.js';
+                $GLOBALS['TL_JAVASCRIPT'][] = 'bundles/ccamerger2/merger2.js';
             }
         }
     }
