@@ -18,7 +18,7 @@ namespace ContaoCommunityAlliance\Merger2\Functions\Description;
  *
  * @package ContaoCommunityAlliance\Merger2\Functions\Description
  */
-class Description
+final class Description
 {
     /**
      * Name of the function description.

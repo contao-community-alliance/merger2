@@ -18,7 +18,7 @@ namespace ContaoCommunityAlliance\Merger2\Functions\Description;
  *
  * @package ContaoCommunityAlliance\Merger2\Functions\Description
  */
-class Argument
+final class Argument
 {
     const TYPE_STRING  = 1;
     const TYPE_FLOAT   = 2;
