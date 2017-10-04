@@ -18,7 +18,7 @@ namespace ContaoCommunityAlliance\Merger2\Functions\Description;
  *
  * @package ContaoCommunityAlliance\Merger2\Functions\Description
  */
-final class Description
+final class Description implements \JsonSerializable
 {
     /**
      * Name of the function description.
@@ -126,8 +126,18 @@ final class Description
      * Get description as array.
      *
      * @return array
+     *
+     * @deprecated Use jsonSerialize instead. Will be removed in 4.0.0 stable release.
      */
     public function toArray()
+    {
+        return $this->jsonSerialize();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function jsonSerialize()
     {
         return [
             'name'        => $this->name,

@@ -13,7 +13,6 @@
 
 namespace ContaoCommunityAlliance\Merger2\Controller;
 
-use ContaoCommunityAlliance\Merger2\Functions\Description\Description;
 use ContaoCommunityAlliance\Merger2\Functions\FunctionCollectionInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -48,12 +47,7 @@ class AutoCompleteOptionsController
      */
     public function execute()
     {
-        $descriptions = array_map(
-            function (Description $description) {
-                return $description->toArray();
-            },
-            $this->functionCollection->getDescriptions()
-        );
+        $descriptions = $this->functionCollection->getDescriptions();
 
         return new JsonResponse($descriptions);
     }

@@ -18,7 +18,7 @@ namespace ContaoCommunityAlliance\Merger2\Functions\Description;
  *
  * @package ContaoCommunityAlliance\Merger2\Functions\Description
  */
-final class Argument
+final class Argument implements \JsonSerializable
 {
     const TYPE_STRING  = 1;
     const TYPE_FLOAT   = 2;
@@ -186,8 +186,18 @@ final class Argument
      * Get argument description as array.
      *
      * @return array
+     *
+     * @deprecated Use jsonSerialize instead. Will be removed in 4.0.0 stable release.
      */
     public function toArray()
+    {
+        return $this->jsonSerialize();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function jsonSerialize()
     {
         return [
             'name'        => $this->name,
