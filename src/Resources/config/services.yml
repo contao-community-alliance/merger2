@@ -63,6 +63,13 @@ services:
     tags:
       - { name: 'cca.merger2.function'}
 
+  cca.merger2.function.platform:
+    class: ContaoCommunityAlliance\Merger2\Functions\PlatformFunction
+    arguments:
+      - '@mobile_detect.mobile_detector'
+    tags:
+      - { name: 'cca.merger2.function'}
+
   cca.merger2.function.root:
     class: ContaoCommunityAlliance\Merger2\Functions\RootFunction
     arguments:
