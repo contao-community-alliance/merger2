@@ -6,10 +6,12 @@
  * @package   Merger²
  * @author    David Molineus <david.molineus@netzmacht.de>
  * @copyright 2013-2014 bit3 UG
- * @copyright 2015-2017 Contao Community Alliance
+ * @copyright 2015-2018 Contao Community Alliance
  * @license   https://github.com/contao-community-alliance/merger2/blob/master/LICENSE LGPL-3.0+
  * @link      https://github.com/contao-community-alliance/merger2
  */
+
+declare(strict_types=1);
 
 namespace ContaoCommunityAlliance\Merger2\Functions;
 
@@ -23,7 +25,7 @@ use ContaoCommunityAlliance\Merger2\PageProvider;
  *
  * @package ContaoCommunityAlliance\Merger2\Functions
  */
-class DepthFunction extends AbstractPageFunction
+final class DepthFunction extends AbstractPageFunction
 {
     /**
      * Contao framework.
@@ -56,7 +58,7 @@ class DepthFunction extends AbstractPageFunction
      *
      * @throws \RuntimeException When illegal depth value is given.
      */
-    public function __invoke($value)
+    public function __invoke(string $value): bool
     {
         if (!preg_match('#^(<|>|<=|>=|=|!=|<>)?\\s*(\\d+)$#', $value, $matches)) {
             throw new \RuntimeException('Illegal depth value: "'.$value.'"');
@@ -81,7 +83,7 @@ class DepthFunction extends AbstractPageFunction
     /**
      * {@inheritDoc}
      */
-    public function describe()
+    public function describe(): Description
     {
         return Description::create(static::getName())
             ->setDescription('Test the page depth.')

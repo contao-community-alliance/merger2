@@ -6,10 +6,12 @@
  * @package   Merger²
  * @author    David Molineus <david.molineus@netzmacht.de>
  * @copyright 2013-2014 bit3 UG
- * @copyright 2015-2017 Contao Community Alliance
+ * @copyright 2015-2018 Contao Community Alliance
  * @license   https://github.com/contao-community-alliance/merger2/blob/master/LICENSE LGPL-3.0+
  * @link      https://github.com/contao-community-alliance/merger2
  */
+
+declare(strict_types=1);
 
 namespace ContaoCommunityAlliance\Merger2\Functions;
 
@@ -47,7 +49,7 @@ class PlatformFunction extends AbstractFunction
      *
      * @return bool
      */
-    public function __invoke($platform)
+    public function __invoke(string $platform): bool
     {
         switch ($platform) {
             case 'desktop':
@@ -66,7 +68,7 @@ class PlatformFunction extends AbstractFunction
     /**
      * {@inheritDoc}
      */
-    public function describe()
+    public function describe(): Description
     {
         return Description::create(static::getName())
             ->setDescription('Test the user platform')

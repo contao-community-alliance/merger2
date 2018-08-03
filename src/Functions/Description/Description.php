@@ -6,10 +6,12 @@
  * @package   Merger²
  * @author    David Molineus <david.molineus@netzmacht.de>
  * @copyright 2013-2014 bit3 UG
- * @copyright 2015-2017 Contao Community Alliance
+ * @copyright 2015-2018 Contao Community Alliance
  * @license   https://github.com/contao-community-alliance/merger2/blob/master/LICENSE LGPL-3.0+
  * @link      https://github.com/contao-community-alliance/merger2
  */
+
+declare(strict_types=1);
 
 namespace ContaoCommunityAlliance\Merger2\Functions\Description;
 
@@ -32,7 +34,7 @@ final class Description implements \JsonSerializable
      *
      * @var string
      */
-    private $description;
+    private $description = '';
 
     /**
      * List of arguments.
@@ -46,7 +48,7 @@ final class Description implements \JsonSerializable
      *
      * @param string $name Name of the function description.
      */
-    public function __construct($name)
+    public function __construct(string $name)
     {
         $this->name = $name;
     }
@@ -58,7 +60,7 @@ final class Description implements \JsonSerializable
      *
      * @return static
      */
-    public static function create($name)
+    public static function create(string $name): self
     {
         return new static($name);
     }
@@ -70,7 +72,7 @@ final class Description implements \JsonSerializable
      *
      * @return $this
      */
-    public function setDescription($description)
+    public function setDescription(string $description): self
     {
         $this->description = $description;
 
@@ -82,7 +84,7 @@ final class Description implements \JsonSerializable
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -92,7 +94,7 @@ final class Description implements \JsonSerializable
      *
      * @return string
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }
@@ -104,7 +106,7 @@ final class Description implements \JsonSerializable
      *
      * @return Argument
      */
-    public function addArgument($name)
+    public function addArgument(string $name): Argument
     {
         $argument          = new Argument($this, $name);
         $this->arguments[] = $argument;
@@ -117,7 +119,7 @@ final class Description implements \JsonSerializable
      *
      * @return Argument[]|array
      */
-    public function getArguments()
+    public function getArguments(): array
     {
         return $this->arguments;
     }
@@ -126,10 +128,8 @@ final class Description implements \JsonSerializable
      * Get description as array.
      *
      * @return array
-     *
-     * @deprecated Use jsonSerialize instead. Will be removed in 4.0.0 stable release.
      */
-    public function toArray()
+    public function toArray(): array
     {
         return $this->jsonSerialize();
     }
@@ -137,7 +137,7 @@ final class Description implements \JsonSerializable
     /**
      * {@inheritDoc}
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return [
             'name'        => $this->name,

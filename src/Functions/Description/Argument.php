@@ -6,10 +6,12 @@
  * @package   Merger²
  * @author    David Molineus <david.molineus@netzmacht.de>
  * @copyright 2013-2014 bit3 UG
- * @copyright 2015-2017 Contao Community Alliance
+ * @copyright 2015-2018 Contao Community Alliance
  * @license   https://github.com/contao-community-alliance/merger2/blob/master/LICENSE LGPL-3.0+
  * @link      https://github.com/contao-community-alliance/merger2
  */
+
+declare(strict_types=1);
 
 namespace ContaoCommunityAlliance\Merger2\Functions\Description;
 
@@ -42,7 +44,7 @@ final class Argument implements \JsonSerializable
     /**
      * Type of the argument.
      *
-     * @var string
+     * @var int
      */
     private $type = self::TYPE_STRING;
 
@@ -51,7 +53,7 @@ final class Argument implements \JsonSerializable
      *
      * @var string
      */
-    private $description;
+    private $description = '';
 
     /**
      * Optional flag.
@@ -73,7 +75,7 @@ final class Argument implements \JsonSerializable
      * @param Description $parent Parent function description.
      * @param string      $name   Argument name.
      */
-    public function __construct(Description $parent, $name)
+    public function __construct(Description $parent, string $name)
     {
         $this->parent = $parent;
         $this->name   = $name;
@@ -84,7 +86,7 @@ final class Argument implements \JsonSerializable
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -94,7 +96,7 @@ final class Argument implements \JsonSerializable
      *
      * @return string
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }
@@ -106,7 +108,7 @@ final class Argument implements \JsonSerializable
      *
      * @return $this
      */
-    public function setDescription($description)
+    public function setDescription(string $description): self
     {
         $this->description = $description;
 
@@ -116,9 +118,9 @@ final class Argument implements \JsonSerializable
     /**
      * Get type.
      *
-     * @return string
+     * @return int
      */
-    public function getType()
+    public function getType(): int
     {
         return $this->type;
     }
@@ -126,11 +128,11 @@ final class Argument implements \JsonSerializable
     /**
      * Set type.
      *
-     * @param string $type Type.
+     * @param int $type Type.
      *
      * @return $this
      */
-    public function setType($type)
+    public function setType(int $type): self
     {
         $this->type = $type;
 
@@ -144,7 +146,7 @@ final class Argument implements \JsonSerializable
      *
      * @return $this
      */
-    public function setDefaultValue($value)
+    public function setDefaultValue($value): self
     {
         $this->default  = $value;
         $this->optional = true;
@@ -157,7 +159,7 @@ final class Argument implements \JsonSerializable
      *
      * @return bool
      */
-    public function isOptional()
+    public function isOptional(): bool
     {
         return $this->optional;
     }
@@ -177,7 +179,7 @@ final class Argument implements \JsonSerializable
      *
      * @return Description
      */
-    public function end()
+    public function end(): Description
     {
         return $this->parent;
     }
@@ -186,10 +188,8 @@ final class Argument implements \JsonSerializable
      * Get argument description as array.
      *
      * @return array
-     *
-     * @deprecated Use jsonSerialize instead. Will be removed in 4.0.0 stable release.
      */
-    public function toArray()
+    public function toArray(): array
     {
         return $this->jsonSerialize();
     }
@@ -197,7 +197,7 @@ final class Argument implements \JsonSerializable
     /**
      * {@inheritDoc}
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return [
             'name'        => $this->name,

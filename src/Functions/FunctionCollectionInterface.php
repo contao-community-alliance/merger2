@@ -6,10 +6,12 @@
  * @package   Merger²
  * @author    David Molineus <david.molineus@netzmacht.de>
  * @copyright 2013-2014 bit3 UG
- * @copyright 2015-2017 Contao Community Alliance
+ * @copyright 2015-2018 Contao Community Alliance
  * @license   https://github.com/contao-community-alliance/merger2/blob/master/LICENSE LGPL-3.0+
  * @link      https://github.com/contao-community-alliance/merger2
  */
+
+declare(strict_types=1);
 
 namespace ContaoCommunityAlliance\Merger2\Functions;
 
@@ -29,7 +31,7 @@ interface FunctionCollectionInterface
      *
      * @return bool
      */
-    public function supports($name);
+    public function supports(string $name): bool;
 
     /**
      * Execute the function
@@ -39,12 +41,12 @@ interface FunctionCollectionInterface
      *
      * @return mixed
      */
-    public function execute($name, array $arguments);
+    public function execute(string $name, array $arguments);
 
     /**
      * Describe all supported functions with their arguments.
      *
      * @return Description[]|array
      */
-    public function getDescriptions();
+    public function getDescriptions(): array;
 }
