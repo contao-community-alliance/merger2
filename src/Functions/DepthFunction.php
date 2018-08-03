@@ -70,7 +70,11 @@ final class DepthFunction extends AbstractPageFunction
         /** @var PageModel $pageAdapter */
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
         $depth       = 0;
-        $page        = $pageAdapter->findByPk($this->pageProvider->getPage()->id);
+        $page        = $this->pageProvider->getPage();
+
+        if (!$page) {
+            return false;
+        }
 
         while ($page->pid > 0 && $page->type != 'root') {
             ++$depth;
