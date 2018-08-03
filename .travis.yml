@@ -1,14 +1,14 @@
 language: php
 
 php:
-  - "5.6"
-  - "7.0"
   - "7.1"
+  - "7.2"
+  - "nightly"
 
 env:
   - CONTAO_VERSION=contao/core-bundle ~4.4.0
+  - CONTAO_VERSION=contao/core-bundle ~4.5.0
 
-# Exclude impossible Contao Version combinations.
 matrix:
   exclude:
 
@@ -22,8 +22,7 @@ install:
 script: ant -keep-going
 
 allow_failure:
-    - php: "7.0"
-    - php: "nightly"
+  - php: "nightly"
 
 # Hack to make things work again - we can not use a shallow repository.
 git:
