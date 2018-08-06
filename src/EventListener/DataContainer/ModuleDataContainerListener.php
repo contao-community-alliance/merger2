@@ -13,7 +13,7 @@
 
 declare(strict_types=1);
 
-namespace ContaoCommunityAlliance\Merger2\DataContainer;
+namespace ContaoCommunityAlliance\Merger2\EventListener\DataContainer;
 
 use Contao\Backend;
 use Contao\DataContainer;
@@ -23,7 +23,7 @@ use Contao\DataContainer;
  *
  * @package ContaoCommunityAlliance\Merger2\DataContainer
  */
-class Module extends Backend
+final class ModuleDataContainerListener extends Backend
 {
     /**
      * Onload callback.
@@ -34,7 +34,7 @@ class Module extends Backend
      *
      * @SuppressWarnings(PHPMD.Superglobals)
      */
-    public function onload(DataContainer $dataContainer)
+    public function onload(DataContainer $dataContainer): void
     {
         if (\Input::get('table') == 'tl_module' && \Input::get('act') == 'edit') {
             $module = \ModuleModel::findByPk($dataContainer->id);
@@ -51,7 +51,7 @@ class Module extends Backend
      *
      * @SuppressWarnings(PHPMD.Superglobals)
      */
-    public function getModules()
+    public function getModules(): array
     {
         // Get all modules from DB
         $modules = array(
@@ -84,7 +84,7 @@ class Module extends Backend
      *
      * @return string
      */
-    public function getEditButton()
+    public function getEditButton(): string
     {
         $icon = \Image::getHtml('edit.gif');
 

@@ -11,6 +11,9 @@
  * @link      https://github.com/contao-community-alliance/merger2
  */
 
+declare(strict_types=1);
+
+use ContaoCommunityAlliance\Merger2\EventListener\DataContainer\ArticleDataContainerListener;
 
 /*
  * Add palettes to tl_article
@@ -27,14 +30,13 @@ $GLOBALS['TL_DCA']['tl_article']['palettes']['default'] = preg_replace(
  * Add fields to tl_article
  */
 
-$GLOBALS['TL_DCA']['tl_article']['fields']['inheritable'] = array
-(
+$GLOBALS['TL_DCA']['tl_article']['fields']['inheritable'] = [
     'label'     => &$GLOBALS['TL_LANG']['tl_article']['inheritable'],
     'exclude'   => true,
     'default'   => 1,
     'inputType' => 'checkbox',
     'sql'       => 'char(1) NOT NULL default \'1\'',
-);
+];
 
 
 /*
@@ -44,7 +46,7 @@ $GLOBALS['TL_DCA']['tl_article']['fields']['inheritable'] = array
 $GLOBALS['TL_DCA']['tl_article']['fields']['inColumn']['merger_original_options_callback'] =
     $GLOBALS['TL_DCA']['tl_article']['fields']['inColumn']['options_callback'];
 
-$GLOBALS['TL_DCA']['tl_article']['fields']['inColumn']['options_callback'] = array(
-    'ContaoCommunityAlliance\Merger2\DataContainer\Article',
-    'getActiveLayoutSections'
-);
+$GLOBALS['TL_DCA']['tl_article']['fields']['inColumn']['options_callback'] = [
+    ArticleDataContainerListener::class,
+    'getActiveLayoutSections',
+];

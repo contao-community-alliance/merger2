@@ -14,14 +14,14 @@
 
 declare(strict_types=1);
 
-namespace ContaoCommunityAlliance\Merger2\DataContainer;
+namespace ContaoCommunityAlliance\Merger2\EventListener\DataContainer;
 
 use Contao\LayoutModel;
 
 /**
  * Class Article.
  */
-class Article
+final class ArticleDataContainerListener
 {
     /**
      * Get active layout section.
@@ -32,7 +32,7 @@ class Article
      *
      * @SuppressWarnings(PHPMD.Superglobals)
      */
-    public function getActiveLayoutSections(\DataContainer $dataContainer)
+    public function getActiveLayoutSections(\DataContainer $dataContainer): array
     {
         $sections = $this->callOriginalActiveLayoutSectionsCallback($dataContainer);
 
@@ -89,7 +89,7 @@ class Article
      *
      * @return void
      */
-    private function joinLayoutModules($layout, &$sections)
+    private function joinLayoutModules(?LayoutModel $layout, array &$sections): void
     {
         if ($layout === null) {
             return;
@@ -120,7 +120,7 @@ class Article
      *
      * @SuppressWarnings(PHPMD.Superglobals)
      */
-    protected function joinModule($column, $moduleId, &$sections)
+    private function joinModule($column, $moduleId, &$sections)
     {
         $module = \ModuleModel::findByPk($moduleId);
 
