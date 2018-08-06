@@ -18,6 +18,7 @@ namespace ContaoCommunityAlliance\Merger2\Functions;
 use ContaoCommunityAlliance\Merger2\Functions\Description\Argument;
 use ContaoCommunityAlliance\Merger2\Functions\Description\Description;
 use ContaoCommunityAlliance\Merger2\PageProvider;
+use ContaoCommunityAlliance\Merger2\Util\CompareUtil;
 use Doctrine\DBAL\Connection;
 
 /**
@@ -52,15 +53,23 @@ final class ChildrenFunction extends AbstractPageFunction
      *
      * Test if the page have the specific count of children.
      *
-     * @param int  $count              Count of children.
-     * @param bool $includeUnpublished Include unpublished pages.
+     * @param string $count              Count of children, additional starting with comparator.
+     * @param bool   $includeUnpublished Include unpublished pages.
      *
      * @return bool
      *
+     * @throws \RuntimeException When an illegal count value if given.
+     *
      * @SuppressWarnings(PHPMD.Superglobals)
      */
-    public function __invoke(int $count, bool $includeUnpublished = false): bool
+    public function __invoke(string $count, bool $includeUnpublished = false): bool
     {
+        if (!preg_match('#^(<|>|<=|>=|=|!=|<>)?\\s*(\\d+)$#', $count, $matches)) {
+            throw new \RuntimeException('Illegal count value: "'.$count.'"');
+        }
+
+        $cmp   = $matches[1] ? $matches[1] : '=';
+        $count = intval($matches[2]);
         $time  = time();
         $query = 'SELECT COUNT(id) as count FROM tl_page WHERE pid=?';
 
@@ -77,7 +86,7 @@ final class ChildrenFunction extends AbstractPageFunction
         $statement->bindValue(1, $this->pageProvider->getPage()->id);
 
         if ($statement->execute()) {
-            return $statement->fetchColumn(0) >= $count;
+            return CompareUtil::compare($statement->fetchColumn(0), $count, $cmp);
         }
 
         return false;

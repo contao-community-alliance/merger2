@@ -19,6 +19,7 @@ use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\PageModel;
 use ContaoCommunityAlliance\Merger2\Functions\Description\Description;
 use ContaoCommunityAlliance\Merger2\PageProvider;
+use ContaoCommunityAlliance\Merger2\Util\CompareUtil;
 
 /**
  * Class DepthFunction.
@@ -81,7 +82,7 @@ final class DepthFunction extends AbstractPageFunction
             $page = $pageAdapter->findByPk($page->pid);
         }
 
-        return $this->compareDepth($cmp, $depth, $expectedDepth);
+        return CompareUtil::compare($depth, $expectedDepth, $cmp);
     }
 
     /**
@@ -94,33 +95,5 @@ final class DepthFunction extends AbstractPageFunction
             ->addArgument('value')
                 ->setDescription('Depth with comparing operator, e.g. ">2".')
             ->end();
-    }
-
-    /**
-     * Compare the depth
-     *
-     * @param string $cmp           Compare operator.
-     * @param string $depth         Given depth.
-     * @param string $expectedDepth Expected depth.
-     *
-     * @return bool
-     */
-    private function compareDepth($cmp, $depth, $expectedDepth)
-    {
-        switch ($cmp) {
-            case '<':
-                return $depth < $expectedDepth;
-            case '>':
-                return $depth > $expectedDepth;
-            case '<=':
-                return $depth <= $expectedDepth;
-            case '>=':
-                return $depth >= $expectedDepth;
-            case '!=':
-            case '<>':
-                return $depth != $expectedDepth;
-            default:
-                return $depth == $expectedDepth;
-        }
     }
 }
