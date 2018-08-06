@@ -46,7 +46,8 @@
   "require-dev": {
     "phpcq/all-tasks": "~1.0",
     "contao/manager-plugin": "^2.0",
-    "phpunit/phpunit": "^6.0"
+    "phpunit/phpunit": "^6.0",
+    "php-http/guzzle6-adapter": "^1.1"
   },
   "replace": {
     "bi3/contao-merger2": "self.version",
