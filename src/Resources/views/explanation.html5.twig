@@ -1,0 +1,22 @@
+{% trans_default_domain 'merger2' %}
+<h2>Reference</h2>
+<table class="tl_help_table">
+    <tbody>
+{% for function in descriptions %}
+    <tr>
+        <td colspan="2" class="headline">
+            {{ function.name }}
+            ({% for argument in function.arguments %}{% if argument.isOptional %}<em> [{% endif %}{% if not loop.first %}, {% endif %}{{ argument.name }}: {{ argument.type | merger2ArgumentType }}{% if argument.isOptional %}]</em>{% endif %}{% endfor %})
+            <br><small>{{ function.description }}</small>
+        </td>
+    </tr>
+
+    {% for argument in function.arguments %}
+        <tr>
+            <td class="tl_label">{{ argument.name }}</td>
+            <td>{{ argument.description }}</td>
+        </tr>
+    {% endfor %}
+{% endfor %}
+    </tbody>
+</table>

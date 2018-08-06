@@ -62,6 +62,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['merger_container'] = array(
 $GLOBALS['TL_DCA']['tl_module']['fields']['merger_data'] = array(
     'label'     => &$GLOBALS['TL_LANG']['tl_module']['merger_data'],
     'inputType' => 'multiColumnWizard',
+    'explanation' => 'merger2Functions',
     'eval'      => array(
         'columnFields' => array
         (
@@ -91,7 +92,8 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['merger_data'] = array(
                 'label'                => &$GLOBALS['TL_LANG']['tl_module']['merger_data_edit'],
                 'input_field_callback' => array('ContaoCommunityAlliance\Merger2\DataContainer\Module', 'getEditButton')
             )
-        )
+        ),
+        'helpwizard' => true,
     ),
     'sql'       => 'text NULL',
 );

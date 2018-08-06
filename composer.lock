@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2538af6c36ebd64a4097b10cb43ae794",
+    "content-hash": "6df8fbcf9521d3a220ef4bde4babd391",
     "packages": [
         {
             "name": "ausi/slug-generator",
@@ -2750,17 +2750,6 @@
         {
             "name": "league/uri",
             "version": "5.3.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/thephpleague/uri.git",
-                "reference": "f2bceb755f1108758cf4cf925e4cd7699ce686aa"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/uri/zipball/f2bceb755f1108758cf4cf925e4cd7699ce686aa",
-                "reference": "f2bceb755f1108758cf4cf925e4cd7699ce686aa",
-                "shasum": ""
-            },
             "require": {
                 "ext-fileinfo": "*",
                 "ext-intl": "*",
@@ -7404,17 +7393,6 @@
         {
             "name": "phpcq/all-tasks",
             "version": "1.2.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/phpcq/all-tasks.git",
-                "reference": "cdfd8a2520b49541599f79a77b195e1440209206"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/phpcq/all-tasks/zipball/cdfd8a2520b49541599f79a77b195e1440209206",
-                "reference": "cdfd8a2520b49541599f79a77b195e1440209206",
-                "shasum": ""
-            },
             "require": {
                 "pdepend/pdepend": "^2.2.1",
                 "php": "^5.4 | ^7.0",
@@ -8153,16 +8131,16 @@
         },
         {
             "name": "phpspec/prophecy",
-            "version": "1.7.6",
+            "version": "1.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/prophecy.git",
-                "reference": "33a7e3c4fda54e912ff6338c48823bd5c0f0b712"
+                "reference": "4ba436b55987b4bf311cb7c6ba82aa528aac0a06"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/33a7e3c4fda54e912ff6338c48823bd5c0f0b712",
-                "reference": "33a7e3c4fda54e912ff6338c48823bd5c0f0b712",
+                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/4ba436b55987b4bf311cb7c6ba82aa528aac0a06",
+                "reference": "4ba436b55987b4bf311cb7c6ba82aa528aac0a06",
                 "shasum": ""
             },
             "require": {
@@ -8174,12 +8152,12 @@
             },
             "require-dev": {
                 "phpspec/phpspec": "^2.5|^3.2",
-                "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.5"
+                "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.5 || ^7.1"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.7.x-dev"
+                    "dev-master": "1.8.x-dev"
                 }
             },
             "autoload": {
@@ -8212,7 +8190,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2018-04-18T13:57:24+00:00"
+            "time": "2018-08-05T17:53:17+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -9416,7 +9394,8 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.1"
+        "php": ">=7.1",
+        "ext-json": "~1.2"
     },
     "platform-dev": []
 }

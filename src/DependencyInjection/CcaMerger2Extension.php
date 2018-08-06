@@ -38,5 +38,6 @@ final class CcaMerger2Extension extends Extension
         );
 
         $loader->load('services.yml');
+        $loader->load('listener.yml');
     }
 }

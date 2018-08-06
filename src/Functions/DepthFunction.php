@@ -92,7 +92,7 @@ final class DepthFunction extends AbstractPageFunction
         return Description::create(static::getName())
             ->setDescription('Test the page depth.')
             ->addArgument('value')
-                ->setDescription('Depth with comparing operator.')
+                ->setDescription('Depth with comparing operator, e.g. ">2".')
             ->end();
     }
 

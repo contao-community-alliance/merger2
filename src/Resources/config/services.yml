@@ -77,3 +77,7 @@ services:
       - '@contao.framework'
     tags:
       - { name: 'cca.merger2.function'}
+
+  ContaoCommunityAlliance\Merger2\Twig\ArgumentTypeExtension:
+    tags:
+      - { name: 'twig.extension' }
