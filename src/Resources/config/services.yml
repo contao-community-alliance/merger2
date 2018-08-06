@@ -1,6 +1,7 @@
 services:
   cca.merger2.constraint_parser:
     class: ContaoCommunityAlliance\Merger2\Constraint\Parser\Parser
+    public: true
     arguments:
       - "@cca.merger2.function_collection"
 
