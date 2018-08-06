@@ -77,7 +77,7 @@ final class ChildrenFunction extends AbstractPageFunction
         $statement->bindValue(1, $this->pageProvider->getPage()->id);
 
         if ($statement->execute()) {
-            return $statement->fetchColumn('count') >= $count;
+            return $statement->fetchColumn(0) >= $count;
         }
 
         return false;

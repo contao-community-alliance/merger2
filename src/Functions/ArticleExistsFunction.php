@@ -78,7 +78,7 @@ final class ArticleExistsFunction extends AbstractPageFunction
         $statement->bindValue(2, $column);
 
         if ($statement->execute()) {
-            return $statement->fetchColumn('count') > 0;
+            return $statement->fetchColumn(0) > 0;
         }
 
         return false;
