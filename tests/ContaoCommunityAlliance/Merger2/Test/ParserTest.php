@@ -16,6 +16,7 @@ use ContaoCommunityAlliance\Merger2\Constraint\Node\AndNode;
 use ContaoCommunityAlliance\Merger2\Constraint\Node\BooleanNode;
 use ContaoCommunityAlliance\Merger2\Constraint\Node\CallNode;
 use ContaoCommunityAlliance\Merger2\Constraint\Node\GroupNode;
+use ContaoCommunityAlliance\Merger2\Constraint\Node\IntNode;
 use ContaoCommunityAlliance\Merger2\Constraint\Node\OrNode;
 use ContaoCommunityAlliance\Merger2\Constraint\Node\StringNode;
 use ContaoCommunityAlliance\Merger2\Constraint\Parser\InputStream;
@@ -130,13 +131,13 @@ class ParserTest extends TestCase
 
         $this->assertEquals(
             new OrNode(
-                new CallNode('page', array(new StringNode('6')), $functions),
+                new CallNode('page', array(new IntNode(6)), $functions),
                 new OrNode(
-                    new CallNode('page', array(new StringNode('7')), $functions),
+                    new CallNode('page', array(new IntNode(7)), $functions),
                     new OrNode(
-                        new CallNode('page', array(new StringNode('9')), $functions),
+                        new CallNode('page', array(new IntNode(9)), $functions),
                         new OrNode(
-                            new CallNode('page', array(new StringNode('10')), $functions),
+                            new CallNode('page', array(new IntNode(10)), $functions),
                             new CallNode('depth', array(new StringNode('>1')), $functions)
                         )
                     )

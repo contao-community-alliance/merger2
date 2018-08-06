@@ -19,7 +19,9 @@ namespace ContaoCommunityAlliance\Merger2\Constraint\Parser;
 use ContaoCommunityAlliance\Merger2\Constraint\Node\AndNode;
 use ContaoCommunityAlliance\Merger2\Constraint\Node\BooleanNode;
 use ContaoCommunityAlliance\Merger2\Constraint\Node\CallNode;
+use ContaoCommunityAlliance\Merger2\Constraint\Node\FloatNode;
 use ContaoCommunityAlliance\Merger2\Constraint\Node\GroupNode;
+use ContaoCommunityAlliance\Merger2\Constraint\Node\IntNode;
 use ContaoCommunityAlliance\Merger2\Constraint\Node\NodeInterface;
 use ContaoCommunityAlliance\Merger2\Constraint\Node\NotNode;
 use ContaoCommunityAlliance\Merger2\Constraint\Node\OrNode;
@@ -138,7 +140,18 @@ final class Parser
 
         if ($token->is(InputToken::STRING)) {
             $value = $token->getValue();
-            $node  = new StringNode($value);
+
+            if (is_numeric($value)) {
+                $float = floatval($value);
+
+                if ($float && intval($float) != $float) {
+                    $node = new FloatNode($float);
+                } else {
+                    $node = new IntNode((int) $value);
+                }
+            } else {
+                $node = new StringNode($value);
+            }
 
             return $node;
         }
