@@ -15,8 +15,9 @@ namespace ContaoCommunityAlliance\Merger2\Test;
 use ContaoCommunityAlliance\Merger2\Constraint\Parser\InputStream;
 use ContaoCommunityAlliance\Merger2\Constraint\Parser\InputToken;
 use ContaoCommunityAlliance\Merger2\Constraint\Parser\ParserException;
+use PHPUnit\Framework\TestCase;
 
-class InputStreamTest extends \PHPUnit_Framework_TestCase
+class InputStreamTest extends TestCase
 {
     public function testTokens()
     {
@@ -107,30 +108,27 @@ class InputStreamTest extends \PHPUnit_Framework_TestCase
 
     public function testInvalidToken()
     {
-        $this->setExpectedException(
-            ParserException::class,
-            'Invalid token, expect a "word" character got ;'
-        );
+        $this->expectException(ParserException::class);
+        $this->expectExceptionMessage('Invalid token, expect a "word" character got ;');
+
         $stream = new InputStream(';');
         $stream->next();
     }
 
     public function testInvalidAnd()
     {
-        $this->setExpectedException(
-            ParserException::class,
-            'Invalid token, expect & got -'
-        );
+        $this->expectException(ParserException::class);
+        $this->expectExceptionMessage('Invalid token, expect & got -');
+
         $stream = new InputStream('&-');
         $stream->next();
     }
 
     public function testInvalidOr()
     {
-        $this->setExpectedException(
-            ParserException::class,
-            'Invalid token, expect | got -'
-        );
+        $this->expectException(ParserException::class);
+        $this->expectExceptionMessage('Invalid token, expect | got -');
+
         $stream = new InputStream('|-');
         $stream->next();
     }

@@ -18,26 +18,13 @@ use ContaoCommunityAlliance\Merger2\Constraint\Node\CallNode;
 use ContaoCommunityAlliance\Merger2\Constraint\Node\GroupNode;
 use ContaoCommunityAlliance\Merger2\Constraint\Node\OrNode;
 use ContaoCommunityAlliance\Merger2\Constraint\Node\StringNode;
-use ContaoCommunityAlliance\Merger2\Constraint\Node\VariableNode;
 use ContaoCommunityAlliance\Merger2\Constraint\Parser\InputStream;
 use ContaoCommunityAlliance\Merger2\Constraint\Parser\Parser;
 use ContaoCommunityAlliance\Merger2\Functions\FunctionCollection;
+use PHPUnit\Framework\TestCase;
 
-class ParserTest extends \PHPUnit_Framework_TestCase
+class ParserTest extends TestCase
 {
-    public function testParserVariable()
-    {
-        $functions = new FunctionCollection([]);
-        $stream    = new InputStream('$foo');
-        $parser    = new Parser($functions);
-        $node      = $parser->parse($stream);
-
-        $this->assertEquals(
-            new VariableNode('foo'),
-            $node
-        );
-    }
-
     public function testParserCall()
     {
         $functions = new FunctionCollection([]);
