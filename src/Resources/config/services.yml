@@ -74,6 +74,8 @@ services:
     tags:
       - { name: 'cca.merger2.function'}
 
-  ContaoCommunityAlliance\Merger2\Twig\ArgumentTypeExtension:
+  ContaoCommunityAlliance\Merger2\Twig\Merger2TwigExtension:
+    arguments:
+      - '@translator'
     tags:
       - { name: 'twig.extension' }

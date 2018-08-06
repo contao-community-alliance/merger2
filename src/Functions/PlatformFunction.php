@@ -73,7 +73,7 @@ final class PlatformFunction extends AbstractFunction
         return Description::create(static::getName())
             ->setDescription('Test the user platform')
             ->addArgument('platform')
-                ->setDescription('Platform type. Valid values are desktop, tablet,smartphone or mobile.')
+                ->setDescription('Platform type. Valid values are desktop, tablet, smartphone or mobile.')
             ->end();
     }
 }
