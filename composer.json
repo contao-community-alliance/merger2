@@ -36,14 +36,17 @@
     "contao/core-bundle": "~4.4",
     "menatwork/contao-multicolumnwizard": "^3.3.4",
     "suncat/mobile-detect-bundle":"^1.0.0",
-    "symfony/config": "~3.0",
-    "symfony/dependency-injection": "~3.0",
-    "symfony/http-kernel": "~3.0",
-    "symfony/yaml": "~3.0"
+    "symfony/config": "^3.0 || ^4.0 ",
+    "symfony/dependency-injection": "^3.0 || ^4.0",
+    "symfony/http-kernel": "^3.0 || ^4.0",
+    "symfony/templating": "^3.0 || ^4.0",
+    "symfony/translation": "^3.0 || ^4.0",
+    "symfony/yaml": "^3.0 || ^4.0"
   },
   "require-dev": {
     "phpcq/all-tasks": "~1.0",
-    "contao/manager-plugin": "^2.0"
+    "contao/manager-plugin": "^2.0",
+    "phpunit/phpunit": "^6.0"
   },
   "replace": {
     "bi3/contao-merger2": "self.version",
