@@ -7,9 +7,10 @@
  * @author    Tristan Lins <tristan.lins@bit3.de>
  * @author    Sven Baumann <baumann.sv@googlemail.com>
  * @author    David Molineus <david.molineus@netzmacht.de>
+ * @author    Ingolf Steinhardt <info@e-spin.de>
  * @link      http://bit3.de
  * @package   bit3/contao-merger2
- * @license   LGPL-3.0+
+ * @license   LGPL-3.0-OR-LATER
  */
 
 
@@ -57,6 +58,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['merger_data'] = array(
 	'label'     => &$GLOBALS['TL_LANG']['tl_module']['merger_data'],
 	'inputType' => 'multiColumnWizard',
 	'eval'      => array(
+		'dragAndDrop'  => true,
 		'columnFields' => array
 		(
 			'content'   => array
