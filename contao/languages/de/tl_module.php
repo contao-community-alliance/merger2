@@ -29,8 +29,8 @@ $GLOBALS['TL_LANG']['tl_module']['merger_data_disabled']  = array('<img src="sys
 $GLOBALS['TL_LANG']['tl_module']['merger_data_edit']      = array('&nbsp;');
 
 $GLOBALS['TL_LANG']['merger2']['mode']['all']                   = 'Alle auswerten';
-$GLOBALS['TL_LANG']['merger2']['mode']['upFirstFalse']          = 'Bis zum Ersten, dessen Bedingung als "falsch" ausgewerted wird.';
-$GLOBALS['TL_LANG']['merger2']['mode']['upFirstTrue']           = 'Bis zum Ersten, dessen Bedingung als "wahr" ausgewerted wird.';
+$GLOBALS['TL_LANG']['merger2']['mode']['upFirstFalse']          = 'Bis zum Ersten, dessen Bedingung als "falsch" ausgewertet wird.';
+$GLOBALS['TL_LANG']['merger2']['mode']['upFirstTrue']           = 'Bis zum Ersten, dessen Bedingung als "wahr" ausgewertet wird.';
 $GLOBALS['TL_LANG']['merger2']['legend_article']                = 'Inhalte';
 $GLOBALS['TL_LANG']['merger2']['article']                       = 'Artikel';
 $GLOBALS['TL_LANG']['merger2']['inherit_articles']              = 'Artikel von Elternseite erben';
