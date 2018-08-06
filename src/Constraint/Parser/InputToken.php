@@ -19,7 +19,7 @@ namespace ContaoCommunityAlliance\Merger2\Constraint\Parser;
 /**
  * An input token.
  */
-class InputToken
+final class InputToken
 {
     const OPEN_BRACKET = 'open_bracket';
 
@@ -44,8 +44,6 @@ class InputToken
     const FALSE = 'false';
 
     const CALL = 'call';
-
-    const VARIABLE = 'variable';
 
     const TOKEN_SEPARATOR = 'token_separator';
 

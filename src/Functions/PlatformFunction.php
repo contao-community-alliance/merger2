@@ -23,7 +23,7 @@ use Detection\MobileDetect;
  *
  * @package ContaoCommunityAlliance\Merger2\Functions
  */
-class PlatformFunction extends AbstractFunction
+final class PlatformFunction extends AbstractFunction
 {
     /**
      * Mobile detect service.

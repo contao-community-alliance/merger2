@@ -19,7 +19,7 @@ namespace ContaoCommunityAlliance\Merger2\Constraint\Parser;
 /**
  * The parser input stream.
  */
-class InputStream
+final class InputStream
 {
     /**
      * Raw input.
@@ -360,13 +360,6 @@ class InputStream
             }
 
             return new InputToken(InputToken::NOT);
-        }
-
-        if ($char == '$') {
-            $this->skip();
-            $name = $this->readWordSequence();
-
-            return new InputToken(InputToken::VARIABLE, $name);
         }
 
         if ($char == '"' || $char == "'") {

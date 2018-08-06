@@ -24,13 +24,12 @@ use ContaoCommunityAlliance\Merger2\Constraint\Node\NodeInterface;
 use ContaoCommunityAlliance\Merger2\Constraint\Node\NotNode;
 use ContaoCommunityAlliance\Merger2\Constraint\Node\OrNode;
 use ContaoCommunityAlliance\Merger2\Constraint\Node\StringNode;
-use ContaoCommunityAlliance\Merger2\Constraint\Node\VariableNode;
 use ContaoCommunityAlliance\Merger2\Functions\FunctionCollectionInterface;
 
 /**
  * Class Parser.
  */
-class Parser
+final class Parser
 {
     /**
      * Function collection.
@@ -133,13 +132,6 @@ class Parser
             $node = $this->parseNode($stream->next(), $stream);
             $node = new NotNode($node);
             $stream->next();
-
-            return $node;
-        }
-
-        if ($token->is(InputToken::VARIABLE)) {
-            $name = $token->getValue();
-            $node = new VariableNode($name);
 
             return $node;
         }

@@ -26,7 +26,7 @@ use ContaoCommunityAlliance\Merger2\PageProvider;
  *
  * @package ContaoCommunityAlliance\Merger2\Functions
  */
-class RootFunction extends AbstractPageFunction
+final class RootFunction extends AbstractPageFunction
 {
     /**
      * Contao framework.

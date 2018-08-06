@@ -22,7 +22,7 @@ use ContaoCommunityAlliance\Merger2\Functions\Description\Description;
  *
  * @package ContaoCommunityAlliance\Merger2\Functions
  */
-class LanguageFunction extends AbstractPageFunction
+final class LanguageFunction extends AbstractPageFunction
 {
     /**
      * Function: language(..).
