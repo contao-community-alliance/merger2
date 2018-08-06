@@ -43,7 +43,7 @@ final class PageModuleRenderer
      */
     public function render($page, $moduleId, $columnName = 'main', $inheritableOnly = false)
     {
-        if (!is_object($moduleId) && !strlen($moduleId)) {
+        if (!is_object($moduleId) && (is_string($moduleId) && !strlen($moduleId))) {
             return '';
         }
 
