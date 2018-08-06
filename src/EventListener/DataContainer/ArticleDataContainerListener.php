@@ -43,7 +43,7 @@ final class ArticleDataContainerListener
         $page = \PageModel::findWithDetails($dataContainer->activeRecord->pid);
 
         // Get the layout sections
-        foreach (array('layout', 'mobileLayout') as $key) {
+        foreach (['layout', 'mobileLayout'] as $key) {
             if (!$page->$key) {
                 continue;
             }
@@ -84,8 +84,8 @@ final class ArticleDataContainerListener
     /**
      * Joint modules of a layout.
      *
-     * @param LayoutModel $layout   Layout model.
-     * @param array       $sections Sections.
+     * @param LayoutModel|null $layout   Layout model.
+     * @param array            $sections Sections.
      *
      * @return void
      */
@@ -134,13 +134,13 @@ final class ArticleDataContainerListener
             if (!$row['disabled']) {
                 if (in_array(
                     $row['content'],
-                    array(
+                    [
                         'article',
                         'inherit_articles',
                         'inherit_all_articles',
                         'inherit_articles_fallback',
-                        'inherit_all_articles_fallback'
-                    )
+                        'inherit_all_articles_fallback',
+                    ]
                 )) {
                     $sections[$column] = isset($GLOBALS['TL_LANG']['COLS'][$column])
                         ? $GLOBALS['TL_LANG']['COLS'][$column]

@@ -21,13 +21,13 @@ class InputStreamTest extends TestCase
 {
     public function testTokens()
     {
-        $stream = new InputStream('$foo()NOT[]!AND&&OR||name true,false"double-quote"\'single-quote\'');
+        $stream = new InputStream('foo()NOT[]!AND&&OR||name true,false"double-quote"\'single-quote\'');
 
         $this->assertTrue($stream->hasMore());
         $this->assertFalse($stream->isEmpty());
 
         $token = $stream->next();
-        $this->assertEquals(InputToken::VARIABLE, $token->getType());
+        $this->assertEquals(InputToken::CALL, $token->getType());
         $this->assertEquals('foo', $token->getValue());
 
         $token = $stream->next();
