@@ -1,3 +1,0 @@
-merger2_autocomplete:
- path: /contao/merger2/functions.json
- defaults: { _controller: 'cca.merger2.controller.auto_complete_options:execute'}
