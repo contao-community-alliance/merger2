@@ -17,7 +17,7 @@ Merger² v4 requires at least Contao 4.4 and is prepared for the Contao Managed 
 Condition Reference
 -------------------
 
-Each condition is an expression which may contain different functions. Function may be combined with `&&` or `||` constraints.
+Each condition is an expression which may contain different functions. Function may be combined with `&&` or `||` constraints and you can exclude conditions with `!` as NOT.
 
 ### articleExists(column: `string` [, includeUnpublished: `bool`])
 Test if an article exists in the column.
