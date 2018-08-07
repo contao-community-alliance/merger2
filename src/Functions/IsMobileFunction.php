@@ -35,7 +35,7 @@ final class IsMobileFunction extends AbstractPageFunction
     /**
      * IsMobileFunction constructor.
      *
-     * @param ContaoFrameworkInterface $framework Contao framework.
+     * @param ContaoFrameworkInterface $framework    Contao framework.
      * @param PageProvider             $pageProvider Page provider.
      */
     public function __construct(ContaoFrameworkInterface $framework, PageProvider $pageProvider)
