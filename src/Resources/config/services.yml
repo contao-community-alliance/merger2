@@ -37,6 +37,14 @@ services:
     tags:
       - { name: 'cca.merger2.function'}
 
+  cca.merger2.function.is_mobile:
+    class: ContaoCommunityAlliance\Merger2\Functions\IsMobileFunction
+    arguments:
+      - '@contao.framework'
+      - '@cca.merger2.page_provider'
+    tags:
+      - { name: 'cca.merger2.function'}
+
   cca.merger2.function.language:
     class: ContaoCommunityAlliance\Merger2\Functions\LanguageFunction
     arguments:

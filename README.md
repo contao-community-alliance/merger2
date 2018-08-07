@@ -19,7 +19,7 @@ Condition Reference
 
 Each condition is an expression which may contain different functions. Function may be combined with `&&` or `||` constraints.
 
-### rticleExists(column: `string` [, includeUnpublished: `bool`])
+### articleExists(column: `string` [, includeUnpublished: `bool`])
 Test if an article exists in the column.
 
  - **column**	Column or section name.
@@ -37,6 +37,13 @@ Test if the page have the specific count of children.
 Test the page depth.
 
  - **value**	Depth with comparing operator, e.g. ">2".
+
+
+### isMobile([cookieOnly: `bool`]) 
+Detect if page is rendered as mobile page.
+
+ - **cookieOnly**	If true only the TL_VIEW cookie is recognized. Otherwise the user agent might active mobile view
+   if an mobile layout exist.
 
 
 ### language(language: `string`) 
@@ -61,6 +68,7 @@ Test if page id or alias is in path.
 Test the user platform
 
  - **platform**	Platform type. Valid values are desktop, tablet,smartphone or mobile.
+
 
 ### root (pageId: `string|integer`)
 Test the root page id or alias.
