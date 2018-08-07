@@ -53,14 +53,16 @@ final class DepthFunction extends AbstractPageFunction
      *
      * Test the page depth.
      *
-     * @param string $value Depth with comparing operator.
+     * @param string|int $value Depth with comparing operator.
      *
      * @return bool
      *
      * @throws \RuntimeException When illegal depth value is given.
      */
-    public function __invoke(string $value): bool
+    public function __invoke($value): bool
     {
+        $value = (string) $value;
+
         if (!preg_match('#^(<|>|<=|>=|=|!=|<>)?\\s*(\\d+)$#', $value, $matches)) {
             throw new \RuntimeException('Illegal depth value: "'.$value.'"');
         }

@@ -53,8 +53,8 @@ final class ChildrenFunction extends AbstractPageFunction
      *
      * Test if the page have the specific count of children.
      *
-     * @param string $count              Count of children, additional starting with comparator.
-     * @param bool   $includeUnpublished Include unpublished pages.
+     * @param string|int $count              Count of children, additional starting with comparator.
+     * @param bool       $includeUnpublished Include unpublished pages.
      *
      * @return bool
      *
@@ -62,8 +62,10 @@ final class ChildrenFunction extends AbstractPageFunction
      *
      * @SuppressWarnings(PHPMD.Superglobals)
      */
-    public function __invoke(string $count, bool $includeUnpublished = false): bool
+    public function __invoke($count, bool $includeUnpublished = false): bool
     {
+        $count = (string) $count;
+
         if (!preg_match('#^(<|>|<=|>=|=|!=|<>)?\\s*(\\d+)$#', $count, $matches)) {
             throw new \RuntimeException('Illegal count value: "'.$count.'"');
         }
