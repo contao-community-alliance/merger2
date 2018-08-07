@@ -25,9 +25,9 @@ function merger2updateEditButton(button)
 function merger2buttonClick()
 {
     if (this.moduleID) {
-        var rt   = /[&\?](rt=[\d\w]+)/.exec(document.location.search);
+        var rt   = /[&\?](rt=[^&]+)/.exec(document.location.search);
         var href = 'contao?do=themes&table=tl_module&act=edit&id=' + this.moduleID
-            + '&amp;popup=1&amp;nb=1'
+            + '&popup=1&nb=1'
             + (rt ? '&' + rt[1] : '');
 
         Backend.openModalIframe(
