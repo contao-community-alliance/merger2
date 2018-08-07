@@ -57,7 +57,7 @@ final class IsMobileFunction extends AbstractPageFunction
         if ($cookieOnly) {
             $this->framework->initialize();
 
-            return $this->framework->getAdapter(Input::class)->cookie('TL_VIEW');
+            return $this->framework->getAdapter(Input::class)->cookie('TL_VIEW') === 'mobile';
         }
 
         return (bool) $this->pageProvider->getPage()->isMobile;
