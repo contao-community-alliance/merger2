@@ -65,9 +65,9 @@ Test if page id or alias is in path.
 
 
 ### platform (platform: `string`) 
-Test the user platform
+Test the user platform.
 
- - **platform**	Platform type. Valid values are desktop, tablet,smartphone or mobile.
+ - **platform**	Platform type. Valid values are desktop, tablet, smartphone or mobile.
 
 
 ### root (pageId: `string|integer`)
