@@ -1,19 +1,24 @@
 # OS
 .DS_Store
 Thumbs.db
+.directory
 
 # IDEs
 .buildpath
 .project
 .settings/
 .build/
+.external*/
 .idea/
 nbproject/
 
-# runtime files
-.tx/
-contao/.skip
+# composer related
+vendor/
+composer.lock
 
-# dependencies
-build
-vendor
+# build
+build/
+build.properties
+
+# Translations
+.tx
