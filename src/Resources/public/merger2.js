@@ -6,14 +6,17 @@ function merger2updateEditButton(button)
         var image    = button.getElement('img');
         var select   = button.getParent('tr').getElement('select');
         var moduleID = select.value;
+        var label    = select.options[select.selectedIndex].innerHTML;
 
         if (/^\d+$/.exec(moduleID)) {
-            image.src       = image.src.replace('edit_.svg', 'edit.svg');
-            button.moduleID = moduleID;
+            image.src          = image.src.replace('edit_.svg', 'edit.svg');
+            button.moduleID    = moduleID;
+            button.moduleTitle = label;
             button.setStyle('cursor', '');
         } else {
-            image.src       = image.src.replace('edit.svg', 'edit_.svg');
-            button.moduleID = null;
+            image.src          = image.src.replace('edit.svg', 'edit_.svg');
+            button.moduleID    = null;
+            button.moduleTitle = null;
             button.setStyle('cursor', 'default');
         }
     }
@@ -24,12 +27,12 @@ function merger2buttonClick()
     if (this.moduleID) {
         var rt   = /[&\?](rt=[\d\w]+)/.exec(document.location.search);
         var href = 'contao?do=themes&table=tl_module&act=edit&id=' + this.moduleID
-            + '&amp;popup=1&amp;nb=1&amp;'
+            + '&amp;popup=1&amp;nb=1'
             + (rt ? '&' + rt[1] : '');
 
         Backend.openModalIframe(
             {
-                'title': 'Edit module',
+                'title': this.moduleTitle,
                 'url': href
             }
         );
