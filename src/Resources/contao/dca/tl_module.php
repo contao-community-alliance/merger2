@@ -94,6 +94,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['merger_data'] = [
                 'input_field_callback' => [ModuleDataContainerListener::class, 'getEditButton'],
             ],
         ],
+        'dragAndDrop'  => true,
         'helpwizard'   => true,
     ],
     'sql'         => 'text NULL',
