@@ -5,6 +5,7 @@
  *
  * @package   Merger²
  * @author    David Molineus <david.molineus@netzmacht.de>
+ * @author    Ingolf Steinhardt <info@e-spin.de>
  * @copyright 2013-2014 bit3 UG
  * @copyright 2015-2018 Contao Community Alliance
  * @license   https://github.com/contao-community-alliance/merger2/blob/master/LICENSE LGPL-3.0-or-later
@@ -45,7 +46,7 @@ final class ModuleDataContainerListener extends Backend
     }
 
     /**
-     * Get all available modules.
+     * Get article content and all available modules.
      *
      * @return array
      *
@@ -53,7 +54,7 @@ final class ModuleDataContainerListener extends Backend
      */
     public function getModules(): array
     {
-        // Get all modules from DB
+        // Get article content.
         $modules = array(
             $GLOBALS['TL_LANG']['merger2']['legend_article']        => array(
                 'article'                       => $GLOBALS['TL_LANG']['merger2']['article'],
@@ -64,6 +65,7 @@ final class ModuleDataContainerListener extends Backend
             ),
         );
 
+        // Get all modules from DB.
         $themeCollection = \ThemeModel::findAll(array('order' => 'name'));
         while ($themeCollection->next()) {
             $modules[$themeCollection->name] = array();
@@ -71,7 +73,9 @@ final class ModuleDataContainerListener extends Backend
             $moduleCollection = \ModuleModel::findBy('pid', $themeCollection->id, array('order' => 'name'));
             if ($moduleCollection) {
                 while ($moduleCollection->next()) {
-                    $modules[$themeCollection->name][$moduleCollection->id] = $moduleCollection->name;
+                    $category           =
+                        sprintf($GLOBALS['TL_LANG']['merger2']['legend_module'], $moduleCollection->id);
+                    $modules[$category] = $moduleCollection->name;
                 }
             }
         }
