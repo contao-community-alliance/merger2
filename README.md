@@ -20,7 +20,7 @@ Condition Reference
 Each condition is an expression which may contain different functions. Function may be combined with `&&` or `||` constraints and you can turn back conditions with `!` as NOT.
 
 ### articleExists(column: `string` [, includeUnpublished: `bool`])
-Test if an article exists in the column.
+Test if an article exists in the specific column or section.
 
  - **column**	Column or section name.
  - **includeUnpublished**	If true also unpublished articles are recognized.

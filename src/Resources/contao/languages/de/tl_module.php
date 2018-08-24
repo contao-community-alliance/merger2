@@ -20,7 +20,7 @@
 $GLOBALS['TL_LANG']['tl_module']['merger_mode']      = array('Modus', 'Der Auswertemodus.');
 $GLOBALS['TL_LANG']['tl_module']['merger_data']      = array(
     'Inhalte',
-    'Bitte wählen Sie die einzufügenden Inhalte aus.'
+    'Wählen Sie die einzufügenden Inhalte aus und definieren die gewünschten Bedingungen.'
 );
 $GLOBALS['TL_LANG']['tl_module']['merger_template']  = array(
     'Template',
@@ -28,7 +28,7 @@ $GLOBALS['TL_LANG']['tl_module']['merger_template']  = array(
 );
 $GLOBALS['TL_LANG']['tl_module']['merger_container'] = array(
     'Container einfügen',
-    'Inhalte in Container einpacken. Der Container ist erforderlich, wenn CSS-Id/Klasse oder Abstände gesetzt werden.'
+    'Inhalte in Container einpacken. Der Container ist erforderlich, wenn CSS-Id/Klasse gesetzt werden soll.'
 );
 
 
@@ -44,7 +44,7 @@ $GLOBALS['TL_LANG']['tl_module']['merger_data_edit']      = array('&nbsp;');
 $GLOBALS['TL_LANG']['merger2']['mode']['all']                   = 'Alle auswerten';
 $GLOBALS['TL_LANG']['merger2']['mode']['upFirstFalse']          = 'Bis zum Ersten, dessen Bedingung als "falsch" ausgewertet wird.';
 $GLOBALS['TL_LANG']['merger2']['mode']['upFirstTrue']           = 'Bis zum Ersten, dessen Bedingung als "wahr" ausgewertet wird.';
-$GLOBALS['TL_LANG']['merger2']['legend_article']                = 'Inhalte';
+$GLOBALS['TL_LANG']['merger2']['legend_article']                = 'Inhalte und Bedingungen';
 $GLOBALS['TL_LANG']['merger2']['article']                       = 'Artikel';
 $GLOBALS['TL_LANG']['merger2']['inherit_articles']              = 'Artikel von Elternseite erben';
 $GLOBALS['TL_LANG']['merger2']['inherit_all_articles']          = 'Artikel von Elternseite bis zur Wurzel erben';

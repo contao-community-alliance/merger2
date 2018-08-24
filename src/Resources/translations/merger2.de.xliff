@@ -4,7 +4,7 @@
         <body>
             <trans-unit id="function.article_exists">
                 <source>function.article_exists</source>
-                <target>Überprüfe ob ein Artikel in einer Spalte existiert.</target>
+                <target>Überprüfe ob ein Artikel in einer Spalte oder Layoutsection existiert.</target>
             </trans-unit>
             <trans-unit id="function.article_exists.column">
                 <source>function.article_exists.column</source>
