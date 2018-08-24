@@ -60,7 +60,5 @@ $(window).addEvent('domready', function () {
     $('opt_merger_container_0').addEvent('change', function () {
         $('ctrl_cssID_0').disabled = !this.checked;
         $('ctrl_cssID_1').disabled = !this.checked;
-        $('ctrl_space_0').disabled = !this.checked;
-        $('ctrl_space_1').disabled = !this.checked;
     });
 });
