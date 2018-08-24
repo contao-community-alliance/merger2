@@ -1,6 +1,7 @@
 language: php
 
 php:
+<<<<<<< HEAD
   - "7.1"
   - "7.2"
   - "nightly"
