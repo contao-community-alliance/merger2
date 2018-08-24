@@ -8,7 +8,7 @@
  * @author    Sven Baumann <baumann.sv@googlemail.com>
  * @author    David Molineus <david.molineus@netzmacht.de>
  * @author    Ingolf Steinhardt <info@e-spin.de>
- * @copyright 2013-2014 bit3 UG. 2015-2017 Contao Community Alliance
+ * @copyright 2013-2014 bit3 UG. 2015-2018 Contao Community Alliance
  * @license   https://github.com/contao-community-alliance/merger2/blob/master/LICENSE LGPL-3.0-or-later
  * @link      https://github.com/contao-community-alliance/merger2
  */
@@ -36,7 +36,7 @@ $GLOBALS['TL_DCA']['tl_module']['palettes']['Merger2'] = '{title_legend},name,he
     . ';{config_legend},merger_mode,merger_data'
     . ';{template_legend:hide},merger_template,merger_container'
     . ';{protected_legend:hide},protected'
-    . ';{expert_legend:hide},guests,cssID,space';
+    . ';{expert_legend:hide},guests,cssID';
 /** @codingStandardsIgnoreEnd */
 
 /*
@@ -47,6 +47,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['merger_mode'] = [
     'label'     => &$GLOBALS['TL_LANG']['tl_module']['merger_mode'],
     'inputType' => 'select',
     'options'   => &$GLOBALS['TL_LANG']['merger2']['mode'],
+    'eval'      => ['tl_class' => 'clr w50'],
     'sql'       => 'varchar(14) NOT NULL default \'\'',
 ];
 
@@ -76,13 +77,13 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['merger_data'] = [
                 'label'            => &$GLOBALS['TL_LANG']['tl_module']['merger_data_content'],
                 'inputType'        => 'select',
                 'options_callback' => [ModuleDataContainerListener::class, 'getModules'],
-                'eval'             => ['style' => 'width:320px', 'includeBlankOption' => true, 'chosen' => true],
+                'eval'             => ['style' => 'width:340px', 'includeBlankOption' => true, 'chosen' => true],
             ],
             'condition' => [
                 'label'     => &$GLOBALS['TL_LANG']['tl_module']['merger_data_condition'],
                 'exclude'   => true,
                 'inputType' => 'text',
-                'eval'      => ['style' => 'width:240px', 'allowHtml' => true, 'preserveTags' => true],
+                'eval'      => ['style' => 'width:340px', 'allowHtml' => true, 'preserveTags' => true],
             ],
             'disabled'  => [
                 'label'     => &$GLOBALS['TL_LANG']['tl_module']['merger_data_disabled'],
@@ -97,6 +98,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['merger_data'] = [
         ],
         'dragAndDrop'  => true,
         'helpwizard'   => true,
+        'tl_class'     => 'clr',
     ],
     'sql'         => 'text NULL',
 ];
