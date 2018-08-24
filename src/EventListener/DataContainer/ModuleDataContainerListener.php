@@ -73,9 +73,12 @@ final class ModuleDataContainerListener extends Backend
             $moduleCollection = \ModuleModel::findBy('pid', $themeCollection->id, array('order' => 'name'));
             if ($moduleCollection) {
                 while ($moduleCollection->next()) {
-                    $category           =
-                        sprintf($GLOBALS['TL_LANG']['merger2']['legend_module'], $moduleCollection->id);
-                    $modules[$category] = $moduleCollection->name;
+                    $category = sprintf(
+                        $GLOBALS['TL_LANG']['merger2']['legend_module'],
+                        $moduleCollection->id
+                    );
+
+                    $modules[$category][$moduleCollection->id] = $moduleCollection->name;
                 }
             }
         }
