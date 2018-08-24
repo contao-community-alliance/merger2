@@ -12,6 +12,9 @@ env:
 matrix:
   exclude:
 
+  allow_failure:
+    - php: "nightly"
+
 sudo: false
 
 install:
@@ -20,9 +23,6 @@ install:
   - travis_retry composer update --prefer-dist --no-interaction
 
 script: ant -keep-going
-
-allow_failure:
-  - php: "nightly"
 
 # Hack to make things work again - we can not use a shallow repository.
 git:
