@@ -7,14 +7,14 @@
     "layout",
     "module"
   ],
-  "type": "contao-module",
+  "type": "contao-bundle",
   "homepage": "http://c-c-a.org",
-  "license": "LGPL-3.0+",
+  "license": "LGPL-3.0-or-later",
   "authors": [
     {
       "name": "David Molineus",
       "email": "david.molineus@netzmacht.de",
-      "homepage": "http://netzmacht.de",
+      "homepage": "https://netzmacht.de",
       "role": "Developer"
     },
     {
@@ -31,34 +31,39 @@
     "source": "https://github.com/contao-community-alliance/merger2"
   },
   "require": {
-    "php": ">=5.3",
-    "contao/core": ">=3.2-dev,<4-dev",
-    "contao-community-alliance/composer-plugin": "~2",
-    "contao-community-alliance/mobile-detect-service": "~1.0",
-    "menatwork/contao-multicolumnwizard": "~3"
+    "php": ">=7.1",
+    "ext-json": "~1.2",
+    "contao/core-bundle": "~4.4",
+    "menatwork/contao-multicolumnwizard": "^3.3.4",
+    "suncat/mobile-detect-bundle":"^1.0.0",
+    "symfony/config": "^3.0 || ^4.0 ",
+    "symfony/dependency-injection": "^3.0 || ^4.0",
+    "symfony/http-kernel": "^3.0 || ^4.0",
+    "symfony/templating": "^3.0 || ^4.0",
+    "symfony/translation": "^3.0 || ^4.0",
+    "symfony/yaml": "^3.0 || ^4.0"
   },
   "require-dev": {
-    "phpcq/all-tasks": "~1.0"
+    "phpcq/all-tasks": "~1.0",
+    "contao/manager-plugin": "^2.0",
+    "phpunit/phpunit": "^6.0",
+    "php-http/guzzle6-adapter": "^1.1"
   },
-  "minimum-stability": "dev",
-  "prefer-stable": true,
   "replace": {
     "bi3/contao-merger2": "self.version",
     "contao-legacy/merger2": "self.version"
   },
   "autoload": {
-    "psr-0": {
-      "Bit3\\Contao\\Merger2": "src"
+    "psr-4": {
+      "ContaoCommunityAlliance\\Merger2\\": "src"
     }
   },
   "extra": {
-    "contao": {
-      "sources": {
-        "contao": "system/modules/merger2"
-      }
-    },
     "branch-alias": {
-      "dev-master": "3.0.x-dev"
-    }
+      "dev-master": "4.0.x-dev",
+      "dev-develop": "4.1.x-dev",
+      "dev-support/3.0.x": "3.0.x-dev"
+    },
+    "contao-manager-plugin": "ContaoCommunityAlliance\\Merger2\\ContaoManager\\Plugin"
   }
 }

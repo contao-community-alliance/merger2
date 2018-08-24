@@ -4,6 +4,6 @@
  For documentation visit:
    https://github.com/phpcq/phpcq
 -->
-<project name="merger2" default="build">
+<project name="contao-community-alliance/merger2" default="build">
 	<import file="vendor/phpcq/phpcq/phpcq.main.xml" />
 </project>

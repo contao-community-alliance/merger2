@@ -1,0 +1,89 @@
+services:
+  cca.merger2.constraint_parser:
+    class: ContaoCommunityAlliance\Merger2\Constraint\Parser\Parser
+    public: true
+    arguments:
+      - "@cca.merger2.function_collection"
+
+  cca.merger2.page_provider:
+    class: ContaoCommunityAlliance\Merger2\PageProvider
+
+  cca.merger2.function_collection:
+    class: ContaoCommunityAlliance\Merger2\Functions\FunctionCollection
+    arguments:
+      - []
+
+  cca.merger2.function.article_exists:
+    class: ContaoCommunityAlliance\Merger2\Functions\ArticleExistsFunction
+    arguments:
+      - '@cca.merger2.page_provider'
+      - '@database_connection'
+    tags:
+      - { name: 'cca.merger2.function'}
+
+  cca.merger2.function.children:
+    class: ContaoCommunityAlliance\Merger2\Functions\ChildrenFunction
+    arguments:
+      - '@cca.merger2.page_provider'
+      - '@database_connection'
+    tags:
+      - { name: 'cca.merger2.function'}
+
+  cca.merger2.function.depth:
+    class: ContaoCommunityAlliance\Merger2\Functions\DepthFunction
+    arguments:
+      - '@cca.merger2.page_provider'
+      - '@contao.framework'
+    tags:
+      - { name: 'cca.merger2.function'}
+
+  cca.merger2.function.is_mobile:
+    class: ContaoCommunityAlliance\Merger2\Functions\IsMobileFunction
+    arguments:
+      - '@contao.framework'
+      - '@cca.merger2.page_provider'
+    tags:
+      - { name: 'cca.merger2.function'}
+
+  cca.merger2.function.language:
+    class: ContaoCommunityAlliance\Merger2\Functions\LanguageFunction
+    arguments:
+      - '@cca.merger2.page_provider'
+    tags:
+      - { name: 'cca.merger2.function'}
+
+  cca.merger2.function.page:
+    class: ContaoCommunityAlliance\Merger2\Functions\PageFunction
+    arguments:
+      - '@cca.merger2.page_provider'
+    tags:
+      - { name: 'cca.merger2.function'}
+
+  cca.merger2.function.page_in_path:
+    class: ContaoCommunityAlliance\Merger2\Functions\PageInPathFunction
+    arguments:
+      - '@cca.merger2.page_provider'
+      - '@contao.framework'
+    tags:
+      - { name: 'cca.merger2.function'}
+
+  cca.merger2.function.platform:
+    class: ContaoCommunityAlliance\Merger2\Functions\PlatformFunction
+    arguments:
+      - '@mobile_detect.mobile_detector'
+    tags:
+      - { name: 'cca.merger2.function'}
+
+  cca.merger2.function.root:
+    class: ContaoCommunityAlliance\Merger2\Functions\RootFunction
+    arguments:
+      - '@cca.merger2.page_provider'
+      - '@contao.framework'
+    tags:
+      - { name: 'cca.merger2.function'}
+
+  ContaoCommunityAlliance\Merger2\Twig\Merger2TwigExtension:
+    arguments:
+      - '@translator'
+    tags:
+      - { name: 'twig.extension' }

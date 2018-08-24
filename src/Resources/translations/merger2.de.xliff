@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="function.article_exists">
+                <source>function.article_exists</source>
+                <target>Überprüfe ob ein Artikel in einer Spalte oder Layoutsection existiert.</target>
+            </trans-unit>
+            <trans-unit id="function.article_exists.column">
+                <source>function.article_exists.column</source>
+                <target>Name der Spalte oder Layoutsection.</target>
+            </trans-unit>
+            <trans-unit id="function.article_exists.include_unpublished">
+                <source>function.article_exists.include_unpublished</source>
+                <target>Falls true, werden nichtveröffentlichte Artikel mit berücksichtigt.</target>
+            </trans-unit>
+
+            <trans-unit id="function.children">
+                <source>function.children</source>
+                <target>Überprüfe ob die aktuelle Seite eine Mindestanzahl von Kindseiten besitzt.</target>
+            </trans-unit>
+            <trans-unit id="function.children.count">
+                <source>function.children.count</source>
+                <target>Anzahl der erforderlichen Kindelemente.</target>
+            </trans-unit>
+            <trans-unit id="function.children.include_unpublished">
+                <source>function.children.include_unpublished</source>
+                <target>Falls true, werden nichtveröffentlichte Seiten mit berücksichtigt.</target>
+            </trans-unit>
+
+            <trans-unit id="function.depth">
+                <source>function.depth</source>
+                <target>Überprüfe die aktuelle Seitentiefe</target>
+            </trans-unit>
+            <trans-unit id="function.depth.value">
+                <source>function.depth.value</source>
+                <target>Überprüfe die Tiefe der aktuellen Seite inkl. Operator, z.B. ">2".</target>
+            </trans-unit>
+
+            <trans-unit id="function.language">
+                <source>function.language</source>
+                <target>Überprüfe die aktuelle Seitensprache.</target>
+            </trans-unit>
+            <trans-unit id="function.language.language">
+                <source>function.language.language</source>
+                <target>Erwartete Sprache</target>
+            </trans-unit>
+
+            <trans-unit id="function.page">
+                <source>function.page</source>
+                <target>Überprüfe die Seiten-ID oder -alias.</target>
+            </trans-unit>
+            <trans-unit id="function.page.page_id">
+                <source>function.page.page_id</source>
+                <target>Erwartete Seiten-ID oder -alias.</target>
+            </trans-unit>
+
+            <trans-unit id="function.page_in_path">
+                <source>function.page_in_path</source>
+                <target>Überprüfe ob sich eine Seite im aktuellen Seitenpfad befindet.</target>
+            </trans-unit>
+            <trans-unit id="function.page_in_path.page_id">
+                <source>function.page_in_path.page_id</source>
+                <target>Seiten-ID oder -alias.</target>
+            </trans-unit>
+
+            <trans-unit id="function.platform">
+                <source>function.platform</source>
+                <target>Überprüfe die Benutzerplattform.</target>
+            </trans-unit>
+            <trans-unit id="function.platform.platform">
+                <source>function.platform.platform</source>
+                <target>Platformtyp. Mögliche Werte sind desktop, tablet, smartphone or mobile.</target>
+            </trans-unit>
+
+            <trans-unit id="function.root">
+                <source>function.root</source>
+                <target>Überprüfe ob eine Seite zur aktuellen Wurzelseite gehört.</target>
+            </trans-unit>
+            <trans-unit id="function.root.page_id">
+                <source>function.root.page_id</source>
+                <target>Seiten-ID oder -alias.</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
