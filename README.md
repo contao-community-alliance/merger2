@@ -12,7 +12,13 @@ The Contao Community Alliance merger² extension provides a powerful frontend mo
 Requirements
 ------------
 
-Merger² v4 requires at least Contao 4.4 and is prepared for the Contao Managed Edition.
+Merger² v4 requires at least Contao 4.4 with PHP 7.1 and is prepared for the Contao Managed Edition.
+
+Documentation
+-------------
+
+The [documentation](https://github.com/contao-community-alliance/merger2/wiki) is managed as a wiki on Github. 
+Feel free to contribute. 
 
 Condition Reference
 -------------------
