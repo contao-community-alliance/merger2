@@ -50,4 +50,4 @@ $GLOBALS['TL_LANG']['merger2']['inherit_articles']              = 'Inherit artic
 $GLOBALS['TL_LANG']['merger2']['inherit_all_articles']          = 'Inherit articles from parent to root page';
 $GLOBALS['TL_LANG']['merger2']['inherit_articles_fallback']     = 'Inherit article of this site <em>or</em> from parent page';
 $GLOBALS['TL_LANG']['merger2']['inherit_all_articles_fallback'] = 'Inherit article of this site <em>or</em> from parent page to root page';
-$GLOBALS['TL_LANG']['merger2']['legend_module']                 = 'Modules: %s';
+$GLOBALS['TL_LANG']['merger2']['legend_module']                 = 'Modules: %s [ID %s]';

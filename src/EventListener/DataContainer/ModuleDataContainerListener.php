@@ -75,7 +75,8 @@ final class ModuleDataContainerListener extends Backend
                 while ($moduleCollection->next()) {
                     $category = sprintf(
                         $GLOBALS['TL_LANG']['merger2']['legend_module'],
-                        $moduleCollection->id
+                        $moduleCollection->getRelated('pid')->name,
+                        $moduleCollection->pid
                     );
 
                     $modules[$category][$moduleCollection->id] = $moduleCollection->name;
