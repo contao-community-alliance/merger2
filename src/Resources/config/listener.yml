@@ -1,5 +1,5 @@
-parameters:
-  cca.merger2.cache_file: '%kernel.cache_dir%/merger2/%%s.%%s.php'
+defaults:
+  public: true
 
 services:
   ContaoCommunityAlliance\Merger2\EventListener\Hook\LoadFunctionExplanationsListener:
