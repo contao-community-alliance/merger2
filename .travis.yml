@@ -1,20 +1,21 @@
+dist: xenial
+
+addons:
+  apt:
+    packages:
+      - ant-optional
+
 language: php
 
 php:
-<<<<<<< HEAD
-  - "7.1"
+  - "7.3"
   - "7.2"
-  - "nightly"
+  - "7.1"
 
 env:
   - CONTAO_VERSION=contao/core-bundle ~4.4.0
   - CONTAO_VERSION=contao/core-bundle ~4.5.0
-
-matrix:
-  exclude:
-
-  allow_failure:
-    - php: "nightly"
+  - CONTAO_VERSION=contao/core-bundle ~4.6.0
 
 sudo: false
 
