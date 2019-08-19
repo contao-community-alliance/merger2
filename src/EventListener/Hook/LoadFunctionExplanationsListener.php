@@ -6,7 +6,7 @@
  * @package   Merger²
  * @author    David Molineus <david.molineus@netzmacht.de>
  * @copyright 2013-2014 bit3 UG
- * @copyright 2015-2018 Contao Community Alliance
+ * @copyright 2015-2019 Contao Community Alliance
  * @license   https://github.com/contao-community-alliance/merger2/blob/master/LICENSE LGPL-3.0-or-later
  * @link      https://github.com/contao-community-alliance/merger2
  */
@@ -15,9 +15,8 @@ declare(strict_types=1);
 
 namespace ContaoCommunityAlliance\Merger2\EventListener\Hook;
 
-use ContaoCommunityAlliance\Merger2\Functions\Description\Argument;
 use ContaoCommunityAlliance\Merger2\Functions\FunctionCollection;
-use Symfony\Component\Templating\EngineInterface;
+use Twig\Environment;
 
 /**
  * Class LoadFunctionExplanationsListener generated the functions explanations at runtime.
@@ -34,24 +33,24 @@ final class LoadFunctionExplanationsListener
     private $functions;
 
     /**
-     * The templating engine.
+     * The twig environment.
      *
-     * @var EngineInterface
+     * @var Environment
      */
-    private $templating;
+    private $twig;
 
     /**
      * LoadFunctionExplanationsListener constructor.
      *
-     * @param FunctionCollection $functions  The function collection.
-     * @param EngineInterface    $templating The templating engine.
+     * @param FunctionCollection $functions The function collection.
+     * @param Environment        $twig      The twig templating engine.
      */
     public function __construct(
         FunctionCollection $functions,
-        EngineInterface $templating
+        Environment $twig
     ) {
-        $this->functions  = $functions;
-        $this->templating = $templating;
+        $this->functions = $functions;
+        $this->twig      = $twig;
     }
 
     /**
@@ -83,7 +82,7 @@ final class LoadFunctionExplanationsListener
     private function renderExplanation(string $language): string
     {
         $descriptions = $this->functions->getDescriptions();
-        $explanation  = $this->templating->render(
+        $explanation  = $this->twig->render(
             '@CcaMerger2/explanation.html5.twig',
             [
                 'descriptions' => $descriptions,

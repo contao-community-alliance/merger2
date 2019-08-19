@@ -34,14 +34,15 @@
     "php": ">=7.1",
     "ext-json": "~1.2",
     "contao/core-bundle": "~4.4",
-    "menatwork/contao-multicolumnwizard": "^3.3.4",
+    "menatwork/contao-multicolumnwizard-bundle": "^3.3.4",
     "suncat/mobile-detect-bundle":"^1.0.0",
     "symfony/config": "^3.0 || ^4.0 ",
     "symfony/dependency-injection": "^3.0 || ^4.0",
     "symfony/http-kernel": "^3.0 || ^4.0",
-    "symfony/templating": "^3.0 || ^4.0",
+    "symfony/twig-bundle": "^3.0 || ^4.0",
     "symfony/translation": "^3.0 || ^4.0",
-    "symfony/yaml": "^3.0 || ^4.0"
+    "symfony/yaml": "^3.0 || ^4.0",
+    "twig/twig": "^2.0 || ^1.35.0"
   },
   "require-dev": {
     "phpcq/all-tasks": "~1.0",
