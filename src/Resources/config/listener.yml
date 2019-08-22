@@ -5,4 +5,4 @@ services:
   ContaoCommunityAlliance\Merger2\EventListener\Hook\LoadFunctionExplanationsListener:
     arguments:
       - '@cca.merger2.function_collection'
-      - '@templating'
+      - '@twig'
