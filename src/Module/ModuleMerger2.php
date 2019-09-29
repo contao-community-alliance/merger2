@@ -18,6 +18,7 @@ namespace ContaoCommunityAlliance\Merger2\Module;
 
 use Contao\Module;
 use Contao\PageModel;
+use Contao\StringUtil;
 use ContaoCommunityAlliance\Merger2\Constraint\Parser\InputStream;
 use ContaoCommunityAlliance\Merger2\Renderer\PageModuleRenderer;
 
@@ -181,7 +182,7 @@ final class ModuleMerger2 extends Module
      */
     protected function generateContent()
     {
-        $modules = deserialize($this->merger_data);
+        $modules = StringUtil::deserialize($this->merger_data);
         $buffer  = '';
 
         foreach ($modules as $module) {
