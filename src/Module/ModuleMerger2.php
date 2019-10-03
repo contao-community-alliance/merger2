@@ -6,6 +6,7 @@
  * @package   Merger²
  * @author    Tristan Lins <tristan.lins@bit3.de>
  * @author    David Molineus <david.molineus@netzmacht.de>
+ * @author    Stefan Schulz-Lauterbach <ssl@clickpress.de>
  * @copyright 2013-2014 bit3 UG
  * @copyright 2015-2018 Contao Community Alliance
  * @license   https://github.com/contao-community-alliance/merger2/blob/master/LICENSE LGPL-3.0-or-later
@@ -18,6 +19,7 @@ namespace ContaoCommunityAlliance\Merger2\Module;
 
 use Contao\Module;
 use Contao\PageModel;
+use Contao\StringUtil;
 use ContaoCommunityAlliance\Merger2\Constraint\Parser\InputStream;
 use ContaoCommunityAlliance\Merger2\Renderer\PageModuleRenderer;
 
@@ -181,7 +183,7 @@ final class ModuleMerger2 extends Module
      */
     protected function generateContent()
     {
-        $modules = deserialize($this->merger_data);
+        $modules = StringUtil::deserialize($this->merger_data);
         $buffer  = '';
 
         foreach ($modules as $module) {
