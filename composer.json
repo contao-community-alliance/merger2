@@ -1,5 +1,6 @@
 {
   "name": "contao-community-alliance/merger2",
+  "type": "contao-bundle",
   "description": "Module merger V2 for Contao OpenSource CMS",
   "keywords": [
     "contao",
@@ -7,7 +8,6 @@
     "layout",
     "module"
   ],
-  "type": "contao-bundle",
   "homepage": "http://c-c-a.org",
   "license": "LGPL-3.0-or-later",
   "authors": [
@@ -24,40 +24,29 @@
       "role": "Developer"
     }
   ],
-  "support": {
-    "issues": "https://github.com/contao-community-alliance/merger2/issues",
-    "wiki": "https://github.com/contao-community-alliance/merger2/wiki",
-    "irc": "irc://irc.freenode.org/contao.dev",
-    "source": "https://github.com/contao-community-alliance/merger2"
-  },
   "require": {
     "php": ">=7.1",
     "ext-json": "~1.2",
     "contao/core-bundle": "~4.4",
     "menatwork/contao-multicolumnwizard-bundle": "^3.3.4",
-    "suncat/mobile-detect-bundle":"^1.0.0",
-    "symfony/config": "^3.0 || ^4.0 ",
+    "suncat/mobile-detect-bundle": "^1.0.0",
+    "symfony/config": "^3.0 || ^4.0",
     "symfony/dependency-injection": "^3.0 || ^4.0",
     "symfony/http-kernel": "^3.0 || ^4.0",
-    "symfony/twig-bundle": "^3.0 || ^4.0",
     "symfony/translation": "^3.0 || ^4.0",
+    "symfony/twig-bundle": "^3.0 || ^4.0",
     "symfony/yaml": "^3.0 || ^4.0",
     "twig/twig": "^2.0 || ^1.35.0"
-  },
-  "require-dev": {
-    "phpcq/all-tasks": "~1.0",
-    "contao/manager-plugin": "^2.0",
-    "phpunit/phpunit": "^6.0",
-    "php-http/guzzle6-adapter": "^1.1"
   },
   "replace": {
     "bi3/contao-merger2": "self.version",
     "contao-legacy/merger2": "self.version"
   },
-  "autoload": {
-    "psr-4": {
-      "ContaoCommunityAlliance\\Merger2\\": "src"
-    }
+  "require-dev": {
+    "contao/manager-plugin": "^2.0",
+    "php-http/guzzle6-adapter": "^1.1",
+    "phpcq/all-tasks": "~1.0",
+    "phpunit/phpunit": "^6.0"
   },
   "extra": {
     "branch-alias": {
@@ -66,5 +55,16 @@
       "dev-support/3.0.x": "3.0.x-dev"
     },
     "contao-manager-plugin": "ContaoCommunityAlliance\\Merger2\\ContaoManager\\Plugin"
+  },
+  "autoload": {
+    "psr-4": {
+      "ContaoCommunityAlliance\\Merger2\\": "src"
+    }
+  },
+  "support": {
+    "issues": "https://github.com/contao-community-alliance/merger2/issues",
+    "wiki": "https://github.com/contao-community-alliance/merger2/wiki",
+    "irc": "irc://irc.freenode.org/contao.dev",
+    "source": "https://github.com/contao-community-alliance/merger2"
   }
 }
