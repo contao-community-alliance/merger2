@@ -14,6 +14,12 @@ Requirements
 
 Merger² v4 requires at least Contao 4.4 with PHP 7.1 and is prepared for the Contao Managed Edition.
 
+
+Changelog
+---------
+
+See [CHANGELOG](CHANGELOG.md)
+
 Documentation
 -------------
 
