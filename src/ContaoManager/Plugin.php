@@ -20,7 +20,6 @@ use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use ContaoCommunityAlliance\Merger2\CcaMerger2Bundle;
-use SunCat\MobileDetectBundle\MobileDetectBundle;
 
 /**
  * Contao Manager plugin.
@@ -35,10 +34,9 @@ final class Plugin implements BundlePluginInterface
     public function getBundles(ParserInterface $parser)
     {
         return [
-            BundleConfig::create(MobileDetectBundle::class),
             BundleConfig::create(CcaMerger2Bundle::class)
                 ->setReplace(['merger2'])
-                ->setLoadAfter([ContaoCoreBundle::class, MobileDetectBundle::class])
+                ->setLoadAfter([ContaoCoreBundle::class])
         ];
     }
 }
