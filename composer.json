@@ -31,7 +31,7 @@
     "menatwork/contao-multicolumnwizard-bundle": "^3.3.4",
     "suncat/mobile-detect-bundle": "^1.0.0",
     "symfony/config": "^3.0 || ^4.0",
-    "symfony/dependency-injection": "^3.0 || ^4.1.12",
+    "symfony/dependency-injection": "^3.4.26 || ^4.1.12",
     "symfony/http-kernel": "^3.0 || ^4.0",
     "symfony/translation": "^3.0 || ^4.0",
     "symfony/twig-bundle": "^3.0 || ^4.0",
