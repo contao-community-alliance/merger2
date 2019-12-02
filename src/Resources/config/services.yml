@@ -13,6 +13,9 @@ services:
     arguments:
       - []
 
+  cca.merger2.mobile_detect:
+    class: Detection\MobileDetect
+
   cca.merger2.function.article_exists:
     class: ContaoCommunityAlliance\Merger2\Functions\ArticleExistsFunction
     arguments:
@@ -70,7 +73,7 @@ services:
   cca.merger2.function.platform:
     class: ContaoCommunityAlliance\Merger2\Functions\PlatformFunction
     arguments:
-      - '@mobile_detect.mobile_detector'
+      - '@cca.merger2.mobile_detect'
     tags:
       - { name: 'cca.merger2.function'}
 
