@@ -2,9 +2,23 @@
 
 ## [Unreleased]
 
+## [4.2.1] (2019-12-02)
+
+ - Fix `ext-json` requirement
+
+## [4.2.0] (2019-12-02)
+
 ### Changed
 
- - Do not require `suncat/mobile-detect-bundle` anymore but require `mobiledetect/mobiledetectlib` 
+ - Do not require `suncat/mobile-detect-bundle` anymore but require `mobiledetect/mobiledetectlib`
 
+## [4.1.0] (2019-12-02)
 
-[Unreleased]: https://github.com/contao-community-alliance/merger2/compare/4.0.7...develop
+### Fixed
+
+ - Require symfony/dependency-injection ^4.1.12. See [CVE-2019-10910](https://github.com/advisories/GHSA-pgwj-prpq-jpc2)
+
+[Unreleased]: https://github.com/contao-community-alliance/merger2/compare/master...develop
+[4.2.1]:  https://github.com/contao-community-alliance/merger2/compare/4.2.0...4.2.1
+[4.2.0]:  https://github.com/contao-community-alliance/merger2/compare/4.1.0...4.2.0
+[4.1.0]:  https://github.com/contao-community-alliance/merger2/compare/4.0.7...4.1.0
