@@ -35,6 +35,7 @@ $GLOBALS['TL_DCA']['tl_article']['fields']['inheritable'] = [
     'exclude'   => true,
     'default'   => 1,
     'inputType' => 'checkbox',
+    'eval'      => ['tl_class' => 'w50'],
     'sql'       => 'char(1) NOT NULL default \'1\'',
 ];
 
