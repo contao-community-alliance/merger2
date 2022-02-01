@@ -15,7 +15,7 @@ declare(strict_types=1);
 
 namespace ContaoCommunityAlliance\Merger2\Functions;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\PageModel;
 use ContaoCommunityAlliance\Merger2\Functions\Description\Argument;
 use ContaoCommunityAlliance\Merger2\Functions\Description\Description;
@@ -31,17 +31,17 @@ final class RootFunction extends AbstractPageFunction
     /**
      * Contao framework.
      *
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
     private $framework;
 
     /**
      * Construct.
      *
-     * @param PageProvider             $pageProvider Page provider.
-     * @param ContaoFrameworkInterface $framework    Contao framework.
+     * @param PageProvider    $pageProvider Page provider.
+     * @param ContaoFramework $framework    Contao framework.
      */
-    public function __construct(PageProvider $pageProvider, ContaoFrameworkInterface $framework)
+    public function __construct(PageProvider $pageProvider, ContaoFramework $framework)
     {
         parent::__construct($pageProvider);
 
@@ -63,8 +63,12 @@ final class RootFunction extends AbstractPageFunction
     {
         $page = $this->pageProvider->getPage();
 
+        if ($page === null) {
+            return false;
+        }
+
         if (is_numeric($pageId)) {
-            return intval($pageId) == $page->rootId;
+            return (int) $pageId === (int) $page->rootId;
         }
 
         /** @var PageModel $adapter */

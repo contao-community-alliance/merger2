@@ -39,9 +39,12 @@ final class PageFunction extends AbstractPageFunction
     public function __invoke($pageId): bool
     {
         $page = $this->pageProvider->getPage();
+        if ($page === null) {
+            return false;
+        }
 
         if (is_numeric($pageId)) {
-            return intval($pageId) == $page->id;
+            return (int) $pageId === (int) $page->id;
         }
 
         return $pageId === $page->alias;

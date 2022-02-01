@@ -41,7 +41,7 @@ final class ArticleDataContainerListener
     {
         $sections = $this->callOriginalActiveLayoutSectionsCallback($dataContainer);
 
-        if (!$dataContainer->activeRecord->pid) {
+        if (!$dataContainer->activeRecord || !$dataContainer->activeRecord->pid) {
             return $sections;
         }
 
@@ -129,7 +129,7 @@ final class ArticleDataContainerListener
     {
         $module = ModuleModel::findByPk($moduleId);
 
-        if (!$module || $module->type != 'Merger2') {
+        if (!$module || $module->type !== 'Merger2') {
             return;
         }
 

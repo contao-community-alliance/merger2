@@ -53,6 +53,6 @@ final class GroupNode implements NodeInterface
      */
     public function evaluate()
     {
-        return $this->child && $this->child->evaluate();
+        return $this->child->evaluate();
     }
 }

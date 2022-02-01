@@ -62,6 +62,11 @@ final class ArticleExistsFunction extends AbstractPageFunction
      */
     public function __invoke(string $column, bool $includeUnpublished = false): bool
     {
+        $page = $this->pageProvider->getPage();
+        if ($page === null) {
+            return false;
+        }
+
         $time  = time();
         $query = 'SELECT COUNT(id) as count FROM tl_article WHERE pid=? AND inColumn=?';
 
@@ -75,14 +80,10 @@ final class ArticleExistsFunction extends AbstractPageFunction
             $statement = $this->connection->prepare($query);
         }
 
-        $statement->bindValue(1, $this->pageProvider->getPage()->id);
+        $statement->bindValue(1, $page->id);
         $statement->bindValue(2, $column);
 
-        if ($statement->execute()) {
-            return $statement->fetchColumn(0) > 0;
-        }
-
-        return false;
+        return $statement->executeQuery()->fetchOne() > 0;
     }
 
     /**

@@ -16,19 +16,21 @@ declare(strict_types=1);
 
 namespace ContaoCommunityAlliance\Merger2\EventListener\DataContainer;
 
-use Contao\Backend;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\Input;
+use Contao\Model\Collection;
 use Contao\ModuleModel;
 use Contao\ThemeModel;
+
+use function assert;
 
 /**
  * Module data container helper class.
  *
  * @package ContaoCommunityAlliance\Merger2\DataContainer
  */
-final class ModuleDataContainerListener extends Backend
+final class ModuleDataContainerListener
 {
     /**
      * Onload callback.
@@ -43,7 +45,7 @@ final class ModuleDataContainerListener extends Backend
     {
         if (Input::get('table') === 'tl_module' && Input::get('act') === 'edit') {
             $module = ModuleModel::findByPk($dataContainer->id);
-            if ($module && $module->type == 'Merger2') {
+            if ($module && $module->type === 'Merger2') {
                 $GLOBALS['TL_JAVASCRIPT'][] = 'bundles/ccamerger2/merger2.js';
             }
         }
@@ -71,20 +73,20 @@ final class ModuleDataContainerListener extends Backend
 
         // Get all modules from DB.
         $themeCollection = ThemeModel::findAll(array('order' => 'name'));
-        while ($themeCollection->next()) {
-            $modules[$themeCollection->name] = array();
+        assert($themeCollection instanceof Collection || $themeCollection === null);
+        foreach ($themeCollection ?: [] as $theme) {
+            $modules[$theme->name] = array();
 
-            $moduleCollection = ModuleModel::findBy('pid', $themeCollection->id, array('order' => 'name'));
-            if ($moduleCollection) {
-                while ($moduleCollection->next()) {
-                    $category = sprintf(
-                        $GLOBALS['TL_LANG']['merger2']['legend_module'],
-                        $moduleCollection->getRelated('pid')->name,
-                        $moduleCollection->pid
-                    );
+            $moduleCollection = ModuleModel::findBy('pid', $theme->id, array('order' => 'name'));
+            assert($moduleCollection instanceof Collection || $moduleCollection === null);
+            foreach ($moduleCollection ?: [] as $module) {
+                $category = sprintf(
+                    $GLOBALS['TL_LANG']['merger2']['legend_module'],
+                    $theme->name,
+                    $module->pid
+                );
 
-                    $modules[$category][$moduleCollection->id] = $moduleCollection->name;
-                }
+                $modules[$category][$module->id] = $module->name;
             }
         }
 

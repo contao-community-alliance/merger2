@@ -27,6 +27,8 @@ use ContaoCommunityAlliance\Merger2\Constraint\Node\NotNode;
 use ContaoCommunityAlliance\Merger2\Constraint\Node\OrNode;
 use ContaoCommunityAlliance\Merger2\Constraint\Node\StringNode;
 use ContaoCommunityAlliance\Merger2\Functions\FunctionCollectionInterface;
+use function assert;
+use function is_string;
 
 /**
  * Class Parser.
@@ -53,7 +55,7 @@ final class Parser
     /**
      * {@inheritdoc}
      */
-    public function parse(InputStream $stream)
+    public function parse(InputStream $stream): ?NodeInterface
     {
         return $this->parseUntil($stream, InputToken::END_OF_STREAM);
     }
@@ -71,7 +73,7 @@ final class Parser
      * @SuppressWarnings(PHPMD.ShortVariable)
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    protected function parseUntil(InputStream $stream, $endToken, $_ = null)
+    protected function parseUntil(InputStream $stream, $endToken, $_ = null): ?NodeInterface
     {
         $endTokens = func_get_args();
         array_shift($endTokens);
@@ -101,8 +103,6 @@ final class Parser
                 $node = $this->parseNode($token, $stream);
             }
         }
-
-        return $node;
     }
 
     /**
@@ -115,6 +115,8 @@ final class Parser
      *
      * @SuppressWarnings(CyclomaticComplexity)
      * @SuppressWarnings(NPathComplexity)
+     *
+     * @psalm-suppress InvalidNullableReturnType
      */
     protected function parseNode(InputToken $token, InputStream $stream)
     {
@@ -124,6 +126,10 @@ final class Parser
 
         if ($token->is(InputToken::OPEN_BRACKET)) {
             $node = $this->parseUntil($stream, InputToken::CLOSE_BRACKET);
+            if ($node === null) {
+                $this->unexpected($token);
+            }
+            assert($node !== null);
             $node = new GroupNode($node);
             $stream->next();
 
@@ -149,27 +155,27 @@ final class Parser
                 } else {
                     $node = new IntNode((int) $value);
                 }
-            } else {
+            } elseif (is_string($value)) {
                 $node = new StringNode($value);
+            } else {
+                $this->unexpected($token);
             }
 
+            /** @psalm-suppress PossiblyUndefinedVariable */
             return $node;
         }
 
         if ($token->is(InputToken::TRUE)) {
-            $node = new BooleanNode(true);
-
-            return $node;
+            return new BooleanNode(true);
         }
 
         if ($token->is(InputToken::FALSE)) {
-            $node = new BooleanNode(false);
-
-            return $node;
+            return new BooleanNode(false);
         }
 
         if ($token->is(InputToken::CALL)) {
             $name = $token->getValue();
+            assert(is_string($name));
 
             $token = $stream->next();
 

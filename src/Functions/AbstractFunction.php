@@ -25,7 +25,7 @@ abstract class AbstractFunction implements FunctionInterface
     /**
      * Name of the function.
      *
-     * @var string
+     * @var array<class-string,string>
      */
     protected static $names = [];
 

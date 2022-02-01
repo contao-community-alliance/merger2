@@ -27,7 +27,7 @@ final class Merger2TwigExtension extends AbstractExtension
     /**
      * Argument type label reference.
      *
-     * @var array
+     * @var array<int,string>
      */
     private $types;
 
@@ -57,7 +57,7 @@ final class Merger2TwigExtension extends AbstractExtension
     /**
      * Get the filters.
      *
-     * @return array
+     * @return TwigFilter[]
      */
     public function getFilters(): array
     {
@@ -86,7 +86,7 @@ final class Merger2TwigExtension extends AbstractExtension
             }
         }
 
-        return implode($label, $separator);
+        return implode($separator, $label);
     }
 
     /**

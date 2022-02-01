@@ -13,7 +13,7 @@
 
 namespace ContaoCommunityAlliance\Merger2\Functions;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Input;
 use ContaoCommunityAlliance\Merger2\Functions\Description\Description;
 use ContaoCommunityAlliance\Merger2\PageProvider;
@@ -28,17 +28,17 @@ final class IsMobileFunction extends AbstractPageFunction
     /**
      * Contao framework.
      *
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
     private $framework;
 
     /**
      * IsMobileFunction constructor.
      *
-     * @param ContaoFrameworkInterface $framework    Contao framework.
-     * @param PageProvider             $pageProvider Page provider.
+     * @param ContaoFramework $framework    Contao framework.
+     * @param PageProvider    $pageProvider Page provider.
      */
-    public function __construct(ContaoFrameworkInterface $framework, PageProvider $pageProvider)
+    public function __construct(ContaoFramework $framework, PageProvider $pageProvider)
     {
         parent::__construct($pageProvider);
 
@@ -60,7 +60,12 @@ final class IsMobileFunction extends AbstractPageFunction
             return $this->framework->getAdapter(Input::class)->cookie('TL_VIEW') === 'mobile';
         }
 
-        return (bool) $this->pageProvider->getPage()->isMobile;
+        $page = $this->pageProvider->getPage();
+        if ($page === null) {
+            return false;
+        }
+
+        return (bool) $page->isMobile;
     }
 
     /**

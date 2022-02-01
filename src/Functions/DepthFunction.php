@@ -15,7 +15,7 @@ declare(strict_types=1);
 
 namespace ContaoCommunityAlliance\Merger2\Functions;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\PageModel;
 use ContaoCommunityAlliance\Merger2\Functions\Description\Description;
 use ContaoCommunityAlliance\Merger2\PageProvider;
@@ -31,17 +31,17 @@ final class DepthFunction extends AbstractPageFunction
     /**
      * Contao framework.
      *
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
     private $framework;
 
     /**
      * PageInPathFunction constructor.
      *
-     * @param PageProvider             $pageProvider Page provider.
-     * @param ContaoFrameworkInterface $framework    Contao framework.
+     * @param PageProvider    $pageProvider Page provider.
+     * @param ContaoFramework $framework    Contao framework.
      */
-    public function __construct(PageProvider $pageProvider, ContaoFrameworkInterface $framework)
+    public function __construct(PageProvider $pageProvider, ContaoFramework $framework)
     {
         parent::__construct($pageProvider);
 

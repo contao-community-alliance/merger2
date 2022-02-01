@@ -31,7 +31,7 @@ final class BooleanNode implements NodeInterface
     /**
      * BooleanNode constructor.
      *
-     * @param bool $value Boolean value.
+     * @param bool|mixed $value Boolean value.
      */
     public function __construct($value)
     {

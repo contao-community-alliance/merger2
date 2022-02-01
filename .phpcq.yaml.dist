@@ -66,7 +66,7 @@ tasks:
     - phpcpd
     - phpmd
     - phpcs
-#    - psalm
+    - psalm
     - phpunit
   build:
     - box

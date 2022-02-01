@@ -36,6 +36,9 @@ final class LanguageFunction extends AbstractPageFunction
     public function __invoke(string $language): bool
     {
         $page = $this->pageProvider->getPage();
+        if ($page === null) {
+            return false;
+        }
 
         return (strtolower($page->language) === strtolower($language));
     }

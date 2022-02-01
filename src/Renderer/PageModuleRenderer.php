@@ -20,9 +20,12 @@ use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\Input;
+use Contao\Model\Collection;
 use Contao\Module;
 use Contao\ModuleModel;
 use Contao\PageModel;
+use function array_pad;
+use function is_string;
 
 /**
  * Class PageModuleRenderer.
@@ -34,10 +37,10 @@ final class PageModuleRenderer
     /**
      * Generate a front end module and return it as HTML string.
      *
-     * @param PageModel $page            Page model.
-     * @param string    $moduleId        Frontend module id.
-     * @param string    $columnName      Column or section name.
-     * @param bool      $inheritableOnly If true only inheritable module is found.
+     * @param PageModel              $page            Page model.
+     * @param int|string|ModuleModel $moduleId        Frontend module id.
+     * @param string                 $columnName      Column or section name.
+     * @param bool                   $inheritableOnly If true only inheritable module is found.
      *
      * @return string
      *
@@ -74,7 +77,7 @@ final class PageModuleRenderer
         if ($page->type == 'regular' && Input::get('articles')) {
             $article = $this->renderColumnArticle($page, $columnName, $inheritableOnly);
 
-            if ($article !== false) {
+            if (is_string($article)) {
                 return $article;
             }
         }
@@ -87,7 +90,7 @@ final class PageModuleRenderer
         // Show all articles (no else block here, see #4740)
         $articleCollection = ArticleModel::findPublishedByPidAndColumn($page->id, $columnName);
 
-        if ($articleCollection === null) {
+        if (!$articleCollection instanceof Collection) {
             return '';
         }
 
@@ -96,12 +99,12 @@ final class PageModuleRenderer
         $multiMode = ($articleCollection->count() > 1);
         $last      = ($articleCollection->count() - 1);
 
-        while ($articleCollection->next()) {
-            if ($inheritableOnly && !$articleCollection->inheritable) {
+        foreach ($articleCollection as $articleModel) {
+            if ($inheritableOnly && !$articleModel->inheritable) {
                 continue;
             }
 
-            $return .= $this->renderArticle($columnName, $articleCollection->current(), $count, $last, $multiMode);
+            $return .= $this->renderArticle($columnName, $articleModel->current(), $count, $last, $multiMode);
             ++$count;
         }
 
@@ -121,7 +124,7 @@ final class PageModuleRenderer
      */
     private function renderColumnArticle($page, $columnName, $inheritableOnly)
     {
-        [$sectionName, $articleName] = explode(':', Input::get('articles'));
+        [$sectionName, $articleName] = array_pad(explode(':', Input::get('articles')), 2, null);
 
         if ($articleName === null) {
             $articleName = $sectionName;
@@ -130,6 +133,10 @@ final class PageModuleRenderer
 
         if ($sectionName == $columnName) {
             $article = ArticleModel::findByIdOrAliasAndPid($articleName, $page->id);
+
+            if ($article === null) {
+                return false;
+            }
 
             $this->guardArticleExists($article, $articleName);
             $this->guardArticleIsVisible($article, $articleName);
@@ -177,7 +184,7 @@ final class PageModuleRenderer
     private function guardArticleIsVisible($article, $articleName)
     {
         // Send a 403 header if the article cannot be accessed
-        if (!Controller::isVisibleElement($article)) {
+        if ($article && !Controller::isVisibleElement($article)) {
             throw new AccessDeniedException('Access denied: ' . $articleName);
         }
     }
@@ -217,7 +224,7 @@ final class PageModuleRenderer
      * @param int          $last       Position of the last article.
      * @param bool         $multiMode  If true, only teasers will be shown.
      *
-     * @return string
+     * @return string|bool
      */
     private function renderArticle($columnName, $article, $count, $last, $multiMode)
     {
@@ -242,8 +249,8 @@ final class PageModuleRenderer
     /**
      * Render a frontend module.
      *
-     * @param int|ModuleModel $moduleId   Frontend module id or model.
-     * @param string          $columnName Section or column name.
+     * @param int|string|ModuleModel $moduleId   Frontend module id or model.
+     * @param string                 $columnName Section or column name.
      *
      * @return string
      *
