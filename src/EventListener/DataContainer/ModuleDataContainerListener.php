@@ -7,7 +7,7 @@
  * @author    David Molineus <david.molineus@netzmacht.de>
  * @author    Ingolf Steinhardt <info@e-spin.de>
  * @copyright 2013-2014 bit3 UG
- * @copyright 2015-2018 Contao Community Alliance
+ * @copyright 2015-2022 Contao Community Alliance
  * @license   https://github.com/contao-community-alliance/merger2/blob/master/LICENSE LGPL-3.0-or-later
  * @link      https://github.com/contao-community-alliance/merger2
  */
@@ -18,6 +18,10 @@ namespace ContaoCommunityAlliance\Merger2\EventListener\DataContainer;
 
 use Contao\Backend;
 use Contao\DataContainer;
+use Contao\Image;
+use Contao\Input;
+use Contao\ModuleModel;
+use Contao\ThemeModel;
 
 /**
  * Module data container helper class.
@@ -37,8 +41,8 @@ final class ModuleDataContainerListener extends Backend
      */
     public function onload(DataContainer $dataContainer): void
     {
-        if (\Input::get('table') == 'tl_module' && \Input::get('act') == 'edit') {
-            $module = \ModuleModel::findByPk($dataContainer->id);
+        if (Input::get('table') === 'tl_module' && Input::get('act') === 'edit') {
+            $module = ModuleModel::findByPk($dataContainer->id);
             if ($module && $module->type == 'Merger2') {
                 $GLOBALS['TL_JAVASCRIPT'][] = 'bundles/ccamerger2/merger2.js';
             }
@@ -66,11 +70,11 @@ final class ModuleDataContainerListener extends Backend
         );
 
         // Get all modules from DB.
-        $themeCollection = \ThemeModel::findAll(array('order' => 'name'));
+        $themeCollection = ThemeModel::findAll(array('order' => 'name'));
         while ($themeCollection->next()) {
             $modules[$themeCollection->name] = array();
 
-            $moduleCollection = \ModuleModel::findBy('pid', $themeCollection->id, array('order' => 'name'));
+            $moduleCollection = ModuleModel::findBy('pid', $themeCollection->id, array('order' => 'name'));
             if ($moduleCollection) {
                 while ($moduleCollection->next()) {
                     $category = sprintf(
@@ -94,7 +98,7 @@ final class ModuleDataContainerListener extends Backend
      */
     public function getEditButton(): string
     {
-        $icon = \Image::getHtml('edit.gif');
+        $icon = Image::getHtml('edit.gif');
 
         return sprintf('<a href="javascript:void(0);" class="edit_module">%s</a>', $icon);
     }

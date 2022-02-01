@@ -6,7 +6,7 @@
  * @package   Merger²
  * @author    David Molineus <david.molineus@netzmacht.de>
  * @copyright 2013-2014 bit3 UG
- * @copyright 2015-2018 Contao Community Alliance
+ * @copyright 2015-2022 Contao Community Alliance
  * @license   https://github.com/contao-community-alliance/merger2/blob/master/LICENSE LGPL-3.0-or-later
  * @link      https://github.com/contao-community-alliance/merger2
  */
@@ -16,8 +16,10 @@ declare(strict_types=1);
 namespace ContaoCommunityAlliance\Merger2\Renderer;
 
 use Contao\ArticleModel;
+use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\Input;
 use Contao\Module;
 use Contao\ModuleModel;
 use Contao\PageModel;
@@ -69,7 +71,7 @@ final class PageModuleRenderer
     private function renderArticles($page, $columnName, $inheritableOnly)
     {
         // Show a particular article only
-        if ($page->type == 'regular' && \Input::get('articles')) {
+        if ($page->type == 'regular' && Input::get('articles')) {
             $article = $this->renderColumnArticle($page, $columnName, $inheritableOnly);
 
             if ($article !== false) {
@@ -119,7 +121,7 @@ final class PageModuleRenderer
      */
     private function renderColumnArticle($page, $columnName, $inheritableOnly)
     {
-        list($sectionName, $articleName) = explode(':', \Input::get('articles'));
+        [$sectionName, $articleName] = explode(':', Input::get('articles'));
 
         if ($articleName === null) {
             $articleName = $sectionName;
@@ -137,7 +139,7 @@ final class PageModuleRenderer
                 // Add the "first" and "last" classes (see #2583)
                 $article->classes = array('first', 'last');
 
-                return \Controller::getArticle($article);
+                return Controller::getArticle($article);
             }
 
             return '';
@@ -175,7 +177,7 @@ final class PageModuleRenderer
     private function guardArticleIsVisible($article, $articleName)
     {
         // Send a 403 header if the article cannot be accessed
-        if (!\Controller::isVisibleElement($article)) {
+        if (!Controller::isVisibleElement($article)) {
             throw new AccessDeniedException('Access denied: ' . $articleName);
         }
     }
@@ -195,7 +197,7 @@ final class PageModuleRenderer
         // HOOK: add custom logic
         if (isset($GLOBALS['TL_HOOKS']['getArticles']) && is_array($GLOBALS['TL_HOOKS']['getArticles'])) {
             foreach ($GLOBALS['TL_HOOKS']['getArticles'] as $callback) {
-                $return = \Controller::importStatic($callback[0])->{$callback[1]}($page->id, $columnName);
+                $return = Controller::importStatic($callback[0])->{$callback[1]}($page->id, $columnName);
 
                 if (is_string($return)) {
                     return $return;
@@ -234,14 +236,14 @@ final class PageModuleRenderer
             $article->classes = $cssClasses;
         }
 
-        return \Controller::getArticle($article, $multiMode, false, $columnName);
+        return Controller::getArticle($article, $multiMode, false, $columnName);
     }
 
     /**
      * Render a frontend module.
      *
-     * @param int|\ModuleModel $moduleId   Frontend module id or model.
-     * @param string           $columnName Section or column name.
+     * @param int|ModuleModel $moduleId   Frontend module id or model.
+     * @param string          $columnName Section or column name.
      *
      * @return string
      *
@@ -253,7 +255,7 @@ final class PageModuleRenderer
         if (is_object($moduleId)) {
             $articleRow = $moduleId;
         } else {
-            $articleRow = \ModuleModel::findByPk($moduleId);
+            $articleRow = ModuleModel::findByPk($moduleId);
 
             if ($articleRow === null) {
                 return '';
@@ -261,15 +263,15 @@ final class PageModuleRenderer
         }
 
         // Check the visibility (see #6311)
-        if (!\Controller::isVisibleElement($articleRow)) {
+        if (!Controller::isVisibleElement($articleRow)) {
             return '';
         }
 
-        $moduleClassName = \Module::findClass($articleRow->type);
+        $moduleClassName = Module::findClass($articleRow->type);
 
         // Return if the class does not exist
         if (!class_exists($moduleClassName)) {
-            \Controller::log(
+            Controller::log(
                 'Module class "' . $moduleClassName . '" (module "' . $articleRow->type . '") does not exist',
                 __METHOD__,
                 TL_ERROR
@@ -279,7 +281,7 @@ final class PageModuleRenderer
         }
 
         $articleRow->typePrefix = 'mod_';
-        /** @var \Module $module */
+        /** @var Module $module */
         $module = new $moduleClassName($articleRow, $columnName);
         $buffer = $module->generate();
         $buffer = $this->callGetFrontendModuleHook($articleRow, $buffer, $module);
@@ -311,7 +313,7 @@ final class PageModuleRenderer
             && is_array($GLOBALS['TL_HOOKS']['getFrontendModule'])
         ) {
             foreach ($GLOBALS['TL_HOOKS']['getFrontendModule'] as $callback) {
-                $buffer = \Controller::importStatic($callback[0])->{$callback[1]}($moduleModel, $buffer, $module);
+                $buffer = Controller::importStatic($callback[0])->{$callback[1]}($moduleModel, $buffer, $module);
             }
         }
 

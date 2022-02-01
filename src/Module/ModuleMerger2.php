@@ -8,7 +8,7 @@
  * @author    David Molineus <david.molineus@netzmacht.de>
  * @author    Stefan Schulz-Lauterbach <ssl@clickpress.de>
  * @copyright 2013-2014 bit3 UG
- * @copyright 2015-2018 Contao Community Alliance
+ * @copyright 2015-2022 Contao Community Alliance
  * @license   https://github.com/contao-community-alliance/merger2/blob/master/LICENSE LGPL-3.0-or-later
  * @link      https://github.com/contao-community-alliance/merger2
  */
@@ -17,6 +17,9 @@ declare(strict_types=1);
 
 namespace ContaoCommunityAlliance\Merger2\Module;
 
+use Contao\ArticleModel;
+use Contao\BackendTemplate;
+use Contao\FrontendTemplate;
 use Contao\Module;
 use Contao\PageModel;
 use Contao\StringUtil;
@@ -73,7 +76,7 @@ final class ModuleMerger2 extends Module
      */
     protected function getPageArticle($page, $articleId)
     {
-        $article = \ArticleModel::findByIdOrAliasAndPid($articleId, $page->id);
+        $article = ArticleModel::findByIdOrAliasAndPid($articleId, $page->id);
 
         if ($article === null) {
             return '';
@@ -93,7 +96,7 @@ final class ModuleMerger2 extends Module
      */
     protected function inheritArticle($page, $maxLevel = 0, $currentLevel = 0)
     {
-        $parentPage = \PageModel::findPublishedById($page->pid);
+        $parentPage = PageModel::findPublishedById($page->pid);
 
         if ($parentPage === null) {
             return '';
@@ -145,7 +148,7 @@ final class ModuleMerger2 extends Module
     public function generate()
     {
         if (TL_MODE == 'BE') {
-            $objTemplate = new \BackendTemplate('be_wildcard');
+            $objTemplate = new BackendTemplate('be_wildcard');
 
             $objTemplate->wildcard = '### MERGER2 ###';
             $objTemplate->title    = $this->headline;
@@ -207,7 +210,7 @@ final class ModuleMerger2 extends Module
             }
         }
 
-        $tpl          = new \FrontendTemplate($this->merger_template);
+        $tpl          = new FrontendTemplate($this->merger_template);
         $tpl->content = $buffer;
 
         return $tpl->parse();

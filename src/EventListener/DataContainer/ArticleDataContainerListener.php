@@ -7,7 +7,7 @@
  * @author    Tristan Lins <tristan.lins@bit3.de>
  * @author    David Molineus <david.molineus@netzmacht.de>
  * @copyright 2013-2014 bit3 UG
- * @copyright 2015-2018 Contao Community Alliance
+ * @copyright 2015-2022 Contao Community Alliance
  * @license   https://github.com/contao-community-alliance/merger2/blob/master/LICENSE LGPL-3.0-or-later
  * @link      https://github.com/contao-community-alliance/merger2
  */
@@ -16,7 +16,12 @@ declare(strict_types=1);
 
 namespace ContaoCommunityAlliance\Merger2\EventListener\DataContainer;
 
+use Contao\DataContainer;
 use Contao\LayoutModel;
+use Contao\ModuleModel;
+use Contao\PageModel;
+use Contao\StringUtil;
+use Contao\System;
 
 /**
  * Class Article.
@@ -26,13 +31,13 @@ final class ArticleDataContainerListener
     /**
      * Get active layout section.
      *
-     * @param \DataContainer $dataContainer Data container.
+     * @param DataContainer $dataContainer Data container.
      *
      * @return array
      *
      * @SuppressWarnings(PHPMD.Superglobals)
      */
-    public function getActiveLayoutSections(\DataContainer $dataContainer): array
+    public function getActiveLayoutSections(DataContainer $dataContainer): array
     {
         $sections = $this->callOriginalActiveLayoutSectionsCallback($dataContainer);
 
@@ -40,7 +45,7 @@ final class ArticleDataContainerListener
             return $sections;
         }
 
-        $page = \PageModel::findWithDetails($dataContainer->activeRecord->pid);
+        $page = PageModel::findWithDetails($dataContainer->activeRecord->pid);
 
         // Get the layout sections
         foreach (['layout', 'mobileLayout'] as $key) {
@@ -58,18 +63,18 @@ final class ArticleDataContainerListener
     /**
      * Call the original active layout sections callback.
      *
-     * @param \DataContainer $dataContainer Data container driver.
+     * @param DataContainer $dataContainer Data container driver.
      *
      * @return mixed
      *
      * @SuppressWarnings(PHPMD.Superglobals)
      */
-    private function callOriginalActiveLayoutSectionsCallback(\DataContainer $dataContainer)
+    private function callOriginalActiveLayoutSectionsCallback(DataContainer $dataContainer)
     {
         $callback = $GLOBALS['TL_DCA']['tl_article']['fields']['inColumn']['merger_original_options_callback'];
 
         if (is_array($callback)) {
-            $object     = \System::importStatic($callback[0]);
+            $object     = System::importStatic($callback[0]);
             $methodName = $callback[1];
             $sections   = $object->$methodName($dataContainer);
         } elseif (is_callable($callback)) {
@@ -95,7 +100,7 @@ final class ArticleDataContainerListener
             return;
         }
 
-        $modules = deserialize($layout->modules);
+        $modules = StringUtil::deserialize($layout->modules);
 
         if (empty($modules) || !is_array($modules)) {
             return;
@@ -122,13 +127,13 @@ final class ArticleDataContainerListener
      */
     private function joinModule($column, $moduleId, &$sections)
     {
-        $module = \ModuleModel::findByPk($moduleId);
+        $module = ModuleModel::findByPk($moduleId);
 
         if (!$module || $module->type != 'Merger2') {
             return;
         }
 
-        $data = deserialize($module->merger_data, true);
+        $data = StringUtil::deserialize($module->merger_data, true);
 
         foreach ($data as $row) {
             if (!$row['disabled']) {
