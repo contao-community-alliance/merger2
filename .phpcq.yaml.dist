@@ -68,6 +68,7 @@ tasks:
     - phpcs
     - psalm
     - phpunit
+#    - phpcompatibility
   build:
     - box
   default:
@@ -105,3 +106,10 @@ tasks:
     plugin: composer-normalize
     config:
       dry_run: false
+
+  phpcompatibility:
+    plugin: phpcs
+    config:
+      standard: PHPCompatibility
+      standard_paths:
+        - vendor/phpcompatibility/php-compatibility

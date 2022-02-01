@@ -42,8 +42,10 @@
   },
   "require-dev": {
     "contao/manager-plugin": "^2.0",
+    "phpcompatibility/php-compatibility": "dev-develop",
     "phpcq/coding-standard": "^2.1.2",
-    "phpcq/runner-bootstrap": "1.x-dev"
+    "phpcq/runner-bootstrap": "1.x-dev",
+    "phpcsstandards/phpcsutils": "^1.0@dev"
   },
   "replace": {
     "bi3/contao-merger2": "self.version",
@@ -61,7 +63,8 @@
     "allow-plugins": {
       "composer/package-versions-deprecated": true,
       "contao-components/installer": false,
-      "contao/manager-plugin": true
+      "contao/manager-plugin": true,
+      "dealerdirect/phpcodesniffer-composer-installer": true
     }
   },
   "extra": {
