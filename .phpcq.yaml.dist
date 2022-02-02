@@ -68,7 +68,7 @@ tasks:
     - phpcs
     - psalm
     - phpunit
-#    - phpcompatibility
+    - php-compatibility
   build:
     - box
   default:
@@ -107,9 +107,14 @@ tasks:
     config:
       dry_run: false
 
-  phpcompatibility:
+  php-compatibility:
     plugin: phpcs
     config:
       standard: PHPCompatibility
       standard_paths:
         - vendor/phpcompatibility/php-compatibility
+        - vendor/phpcsstandards/phpcsutils/PHPCS23Utils
+      custom_flags:
+        - --runtime-set
+        - testVersion
+        - "7.1-"
