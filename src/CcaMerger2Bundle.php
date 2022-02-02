@@ -26,11 +26,4 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 final class CcaMerger2Bundle extends Bundle
 {
-    /**
-     * {@inheritDoc}
-     */
-    public function build(ContainerBuilder $container): void
-    {
-        $container->addCompilerPass(new FunctionCollectionCompilerPass());
-    }
 }
