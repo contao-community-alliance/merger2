@@ -1,5 +1,6 @@
 phpcq:
   repositories:
+    - ./.phpcq/local/repository.json
     - https://phpcq.github.io/repository/repository.json
   directories:
     - src
@@ -39,6 +40,10 @@ phpcq:
     composer-normalize:
       version: ^1.0
       signed: false
+    author-validation:
+      version: ^1.0
+      signed: false
+
   trusted-keys:
     # composer-require-checker
     - 033E5F8D801A2F8D
@@ -61,6 +66,7 @@ tasks:
   verify:
     - composer-require-checker
     - composer-normalize
+    - author-validation
   analyze:
     - phploc
     - phpcpd

@@ -7,5 +7,7 @@ phpunit.xml
 .phpunit.result.cache
 
 # phpcq
+.phpcq/*
+!.phpcq/local
 .phpcq.yaml
-.phpcq
+

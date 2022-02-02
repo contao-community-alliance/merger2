@@ -43,9 +43,11 @@
   "require-dev": {
     "contao/manager-plugin": "^2.0",
     "phpcompatibility/php-compatibility": "dev-develop",
+    "phpcq/author-validation": "^1.5",
     "phpcq/coding-standard": "^2.1.2",
     "phpcq/runner-bootstrap": "1.x-dev",
-    "phpcsstandards/phpcsutils": "^1.0@dev"
+    "phpcsstandards/phpcsutils": "^1.0@dev",
+    "sebastian/diff": "^4.0"
   },
   "replace": {
     "bi3/contao-merger2": "self.version",
