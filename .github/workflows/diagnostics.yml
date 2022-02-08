@@ -26,6 +26,8 @@ jobs:
     steps:
       - name: Pull source
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Setup PHP with PECL extension
         uses: shivammathur/setup-php@v2
