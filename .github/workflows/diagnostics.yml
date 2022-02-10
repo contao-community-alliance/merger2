@@ -19,10 +19,15 @@ jobs:
           - php: 7.4
             output: '-o github-action -o default'
             phpcq_install: 'install'
-# Author validation does not support PHP 8 so far
-#          - php: 8.0
-#            output: '-o default'
-#            phpcq_install: 'update'
+            phpcq_run: 'php7'
+          - php: 8.0
+            output: '-o github-action -o default'
+            phpcq_install: 'install'
+            phpcq_run: 'default'
+          - php: 8.0
+            output: '-o github-action -o default'
+            phpcq_install: 'install'
+            phpcq_run: 'default'
 
     steps:
       - name: Pull source
@@ -70,7 +75,7 @@ jobs:
         run: ./vendor/bin/phpcq ${{ matrix.phpcq_install }} -v
 
       - name: Run tests
-        run: ./vendor/bin/phpcq run -v ${{ matrix.output }}
+        run: ./vendor/bin/phpcq run ${{ matrix.phpcq_run }} -v ${{ matrix.output }}
 
       - name: Upload build directory to artifact
         uses: actions/upload-artifact@v2

@@ -7,12 +7,6 @@ phpcq:
   artifact: .phpcq/build
 
   plugins:
-    box:
-      version: ^1.0
-      signed: false
-      requirements:
-        box:
-          signed: false
     phpunit:
       version: ^1.0
       signed: false
@@ -63,10 +57,12 @@ tasks:
   fix:
     - composer-normalize-fix
     - phpcbf
+
   verify:
     - composer-require-checker
     - composer-normalize
     - author-validation
+
   analyze:
     - phploc
     - phpcpd
@@ -75,10 +71,15 @@ tasks:
     - psalm
     - phpunit
     - php-compatibility
-  build:
-    - box
+
   default:
     - verify
+    - analyze
+
+  php7:
+    - composer-require-checker
+    - composer-normalize
+    - author-validation
     - analyze
 
   phpcpd:
