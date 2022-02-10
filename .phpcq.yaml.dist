@@ -61,7 +61,6 @@ tasks:
   verify:
     - composer-require-checker
     - composer-normalize
-    - author-validation
 
   analyze:
     - phploc
@@ -77,8 +76,7 @@ tasks:
     - analyze
 
   php7:
-    - composer-require-checker
-    - composer-normalize
+    - verify
     - author-validation
     - analyze
 
