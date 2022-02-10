@@ -34,7 +34,7 @@
     "mobiledetect/mobiledetectlib": "^2.8",
     "symfony/config": "^4.4 || ^5.1",
     "symfony/dependency-injection": "^4.4 || ^5.1",
-    "symfony/http-kernel": "^4.4 || ^5.1",
+    "symfony/http-kernel": "^4.4.13 || ^5.1.5",
     "symfony/translation-contracts": "^1.1 || ^2.0",
     "symfony/twig-bundle": "^4.4 || ^5.1",
     "symfony/yaml": "^4.4 || ^5.1",
