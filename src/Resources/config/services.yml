@@ -11,7 +11,7 @@ services:
   cca.merger2.function_collection:
     class: ContaoCommunityAlliance\Merger2\Functions\FunctionCollection
     arguments:
-      - []
+      - !tagged_iterator cca.merger2.function
 
   cca.merger2.mobile_detect:
     class: Detection\MobileDetect

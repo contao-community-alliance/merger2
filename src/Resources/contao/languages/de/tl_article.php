@@ -12,7 +12,11 @@
  */
 
 
-/**
+/*
  * Fields
  */
-$GLOBALS['TL_LANG']['tl_article']['inheritable'] = array('Vererbbar', 'Ist ein Artikel vererbbar, kann er durch den <em>Merger²</em> auf Unterseiten automatisch eingebunden werden.');
+
+$GLOBALS['TL_LANG']['tl_article']['inheritable'] = [
+    'Vererbbar',
+    'Ist ein Artikel vererbbar, kann er durch den <em>Merger²</em> auf Unterseiten automatisch eingebunden werden.'
+];

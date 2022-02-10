@@ -12,13 +12,18 @@
  */
 
 
-/**
+/*
  * Back end modules
  */
+
 $GLOBALS['TL_LANG']['MOD']['merger2'] = 'Merger² - Module Merger';
 
 
-/**
+/*
  * Front end modules
  */
-$GLOBALS['TL_LANG']['FMD']['Merger2'] = array('Merger²', 'Fügt mehrere Elemente (Artikel und Module) zusammen und ermöglicht bedingte Kontrolle über die Ausgabe.');
+
+$GLOBALS['TL_LANG']['FMD']['Merger2'] = [
+    'Merger²',
+    'Fügt mehrere Elemente (Artikel und Module) zusammen und ermöglicht bedingte Kontrolle über die Ausgabe.'
+];

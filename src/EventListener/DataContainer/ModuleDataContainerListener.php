@@ -7,7 +7,7 @@
  * @author    David Molineus <david.molineus@netzmacht.de>
  * @author    Ingolf Steinhardt <info@e-spin.de>
  * @copyright 2013-2014 bit3 UG
- * @copyright 2015-2018 Contao Community Alliance
+ * @copyright 2015-2022 Contao Community Alliance
  * @license   https://github.com/contao-community-alliance/merger2/blob/master/LICENSE LGPL-3.0-or-later
  * @link      https://github.com/contao-community-alliance/merger2
  */
@@ -16,15 +16,21 @@ declare(strict_types=1);
 
 namespace ContaoCommunityAlliance\Merger2\EventListener\DataContainer;
 
-use Contao\Backend;
 use Contao\DataContainer;
+use Contao\Image;
+use Contao\Input;
+use Contao\Model\Collection;
+use Contao\ModuleModel;
+use Contao\ThemeModel;
+
+use function assert;
 
 /**
  * Module data container helper class.
  *
  * @package ContaoCommunityAlliance\Merger2\DataContainer
  */
-final class ModuleDataContainerListener extends Backend
+final class ModuleDataContainerListener
 {
     /**
      * Onload callback.
@@ -37,9 +43,9 @@ final class ModuleDataContainerListener extends Backend
      */
     public function onload(DataContainer $dataContainer): void
     {
-        if (\Input::get('table') == 'tl_module' && \Input::get('act') == 'edit') {
-            $module = \ModuleModel::findByPk($dataContainer->id);
-            if ($module && $module->type == 'Merger2') {
+        if (Input::get('table') === 'tl_module' && Input::get('act') === 'edit') {
+            $module = ModuleModel::findByPk($dataContainer->id);
+            if ($module && $module->type === 'Merger2') {
                 $GLOBALS['TL_JAVASCRIPT'][] = 'bundles/ccamerger2/merger2.js';
             }
         }
@@ -66,21 +72,21 @@ final class ModuleDataContainerListener extends Backend
         );
 
         // Get all modules from DB.
-        $themeCollection = \ThemeModel::findAll(array('order' => 'name'));
-        while ($themeCollection->next()) {
-            $modules[$themeCollection->name] = array();
+        $themeCollection = ThemeModel::findAll(array('order' => 'name'));
+        assert($themeCollection instanceof Collection || $themeCollection === null);
+        foreach ($themeCollection ?: [] as $theme) {
+            $modules[$theme->name] = array();
 
-            $moduleCollection = \ModuleModel::findBy('pid', $themeCollection->id, array('order' => 'name'));
-            if ($moduleCollection) {
-                while ($moduleCollection->next()) {
-                    $category = sprintf(
-                        $GLOBALS['TL_LANG']['merger2']['legend_module'],
-                        $moduleCollection->getRelated('pid')->name,
-                        $moduleCollection->pid
-                    );
+            $moduleCollection = ModuleModel::findBy('pid', $theme->id, array('order' => 'name'));
+            assert($moduleCollection instanceof Collection || $moduleCollection === null);
+            foreach ($moduleCollection ?: [] as $module) {
+                $category = sprintf(
+                    $GLOBALS['TL_LANG']['merger2']['legend_module'],
+                    $theme->name,
+                    $module->pid
+                );
 
-                    $modules[$category][$moduleCollection->id] = $moduleCollection->name;
-                }
+                $modules[$category][$module->id] = $module->name;
             }
         }
 
@@ -94,7 +100,7 @@ final class ModuleDataContainerListener extends Backend
      */
     public function getEditButton(): string
     {
-        $icon = \Image::getHtml('edit.gif');
+        $icon = Image::getHtml('edit.gif');
 
         return sprintf('<a href="javascript:void(0);" class="edit_module">%s</a>', $icon);
     }

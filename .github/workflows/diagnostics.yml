@@ -1,0 +1,88 @@
+name: Code Quality Diagnostics
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    name: PHP ${{ matrix.php }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - php: 7.4
+            composer_install: 'install'
+            output: '-o github-action -o default'
+            phpcq_install: 'install'
+            phpcq_run: 'php7'
+          - php: 8.1
+            output: '-o github-action -o default'
+            composer_install: 'update --ignore-platform-reqs'
+            phpcq_install: 'update'
+            phpcq_run: 'default'
+          - php: 8.2
+            output: '-o github-action -o default'
+            composer_install: 'update --ignore-platform-reqs'
+            phpcq_install: 'update'
+            phpcq_run: 'default'
+
+    steps:
+      - name: Pull source
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Setup PHP with PECL extension
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+
+      - name: Cache composer cache directory
+        uses: actions/cache@v1
+        env:
+          cache-name: composer-cache-dir
+        with:
+          path: ~/.cache/composer
+          key: ${{ runner.os }}-${{ matrix.php }}-build-${{ env.cache-name }}
+
+      - name: Cache vendor directory
+        uses: actions/cache@v1
+        env:
+          cache-name: vendor
+        with:
+          path: vendor
+          key: ${{ runner.os }}-${{ matrix.php }}-build-${{ env.cache-name }}-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.php }}-build-${{ env.cache-name }}-
+
+      - name: Cache phpcq directory
+        uses: actions/cache@v1
+        env:
+          cache-name: phpcq
+        with:
+          path: .phpcq
+          key: ${{ runner.os }}-${{ matrix.php }}-build-${{ env.cache-name }}-${{ hashFiles('**/.phpcq.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.php }}-build-${{ env.cache-name }}-
+
+      - name: Install composer dependencies
+        run: composer ${{ matrix.composer_install }}
+
+      - name: Install phpcq toolchain
+        run: ./vendor/bin/phpcq ${{ matrix.phpcq_install }} -v
+
+      - name: Run tests
+        run: ./vendor/bin/phpcq run ${{ matrix.phpcq_run }} -v ${{ matrix.output }}
+
+      - name: Upload build directory to artifact
+        uses: actions/upload-artifact@v2
+        if: ${{ success() }} || ${{ failure() }}
+        with:
+          name: phpcq-builds-php-${{ matrix.php }}
+          path: .phpcq/build/

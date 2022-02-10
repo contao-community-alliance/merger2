@@ -1,0 +1,16 @@
+{
+  "plugins": {
+    "author-validation": [
+      {
+        "api-version": "1.0.0",
+        "version": "1.0.0",
+        "type": "php-file",
+        "url": "author-validation-plugin.php",
+        "checksum": {
+          "type": "sha-512",
+          "value": "ffc18168750d5d02f58a9f962317d3b57515e777744a1ba664d387cea25766a2680ec0d50dae65f059d8f30bd5723f260c4d2a6349d41dc4ee796b6fb6d56336"
+        }
+      }
+    ]
+  }
+}

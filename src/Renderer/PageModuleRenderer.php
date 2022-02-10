@@ -6,7 +6,7 @@
  * @package   Merger²
  * @author    David Molineus <david.molineus@netzmacht.de>
  * @copyright 2013-2014 bit3 UG
- * @copyright 2015-2018 Contao Community Alliance
+ * @copyright 2015-2022 Contao Community Alliance
  * @license   https://github.com/contao-community-alliance/merger2/blob/master/LICENSE LGPL-3.0-or-later
  * @link      https://github.com/contao-community-alliance/merger2
  */
@@ -16,11 +16,16 @@ declare(strict_types=1);
 namespace ContaoCommunityAlliance\Merger2\Renderer;
 
 use Contao\ArticleModel;
+use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\Input;
+use Contao\Model\Collection;
 use Contao\Module;
 use Contao\ModuleModel;
 use Contao\PageModel;
+use function array_pad;
+use function is_string;
 
 /**
  * Class PageModuleRenderer.
@@ -32,10 +37,10 @@ final class PageModuleRenderer
     /**
      * Generate a front end module and return it as HTML string.
      *
-     * @param PageModel $page            Page model.
-     * @param string    $moduleId        Frontend module id.
-     * @param string    $columnName      Column or section name.
-     * @param bool      $inheritableOnly If true only inheritable module is found.
+     * @param PageModel              $page            Page model.
+     * @param int|string|ModuleModel $moduleId        Frontend module id.
+     * @param string                 $columnName      Column or section name.
+     * @param bool                   $inheritableOnly If true only inheritable module is found.
      *
      * @return string
      *
@@ -69,10 +74,10 @@ final class PageModuleRenderer
     private function renderArticles($page, $columnName, $inheritableOnly)
     {
         // Show a particular article only
-        if ($page->type == 'regular' && \Input::get('articles')) {
+        if ($page->type == 'regular' && Input::get('articles')) {
             $article = $this->renderColumnArticle($page, $columnName, $inheritableOnly);
 
-            if ($article !== false) {
+            if (is_string($article)) {
                 return $article;
             }
         }
@@ -85,7 +90,7 @@ final class PageModuleRenderer
         // Show all articles (no else block here, see #4740)
         $articleCollection = ArticleModel::findPublishedByPidAndColumn($page->id, $columnName);
 
-        if ($articleCollection === null) {
+        if (!$articleCollection instanceof Collection) {
             return '';
         }
 
@@ -94,12 +99,12 @@ final class PageModuleRenderer
         $multiMode = ($articleCollection->count() > 1);
         $last      = ($articleCollection->count() - 1);
 
-        while ($articleCollection->next()) {
-            if ($inheritableOnly && !$articleCollection->inheritable) {
+        foreach ($articleCollection as $articleModel) {
+            if ($inheritableOnly && !$articleModel->inheritable) {
                 continue;
             }
 
-            $return .= $this->renderArticle($columnName, $articleCollection->current(), $count, $last, $multiMode);
+            $return .= $this->renderArticle($columnName, $articleModel->current(), $count, $last, $multiMode);
             ++$count;
         }
 
@@ -119,7 +124,7 @@ final class PageModuleRenderer
      */
     private function renderColumnArticle($page, $columnName, $inheritableOnly)
     {
-        list($sectionName, $articleName) = explode(':', \Input::get('articles'));
+        [$sectionName, $articleName] = array_pad(explode(':', Input::get('articles')), 2, null);
 
         if ($articleName === null) {
             $articleName = $sectionName;
@@ -129,6 +134,10 @@ final class PageModuleRenderer
         if ($sectionName == $columnName) {
             $article = ArticleModel::findByIdOrAliasAndPid($articleName, $page->id);
 
+            if ($article === null) {
+                return false;
+            }
+
             $this->guardArticleExists($article, $articleName);
             $this->guardArticleIsVisible($article, $articleName);
 
@@ -137,7 +146,7 @@ final class PageModuleRenderer
                 // Add the "first" and "last" classes (see #2583)
                 $article->classes = array('first', 'last');
 
-                return \Controller::getArticle($article);
+                return Controller::getArticle($article);
             }
 
             return '';
@@ -175,7 +184,7 @@ final class PageModuleRenderer
     private function guardArticleIsVisible($article, $articleName)
     {
         // Send a 403 header if the article cannot be accessed
-        if (!\Controller::isVisibleElement($article)) {
+        if ($article && !Controller::isVisibleElement($article)) {
             throw new AccessDeniedException('Access denied: ' . $articleName);
         }
     }
@@ -195,7 +204,7 @@ final class PageModuleRenderer
         // HOOK: add custom logic
         if (isset($GLOBALS['TL_HOOKS']['getArticles']) && is_array($GLOBALS['TL_HOOKS']['getArticles'])) {
             foreach ($GLOBALS['TL_HOOKS']['getArticles'] as $callback) {
-                $return = \Controller::importStatic($callback[0])->{$callback[1]}($page->id, $columnName);
+                $return = Controller::importStatic($callback[0])->{$callback[1]}($page->id, $columnName);
 
                 if (is_string($return)) {
                     return $return;
@@ -215,7 +224,7 @@ final class PageModuleRenderer
      * @param int          $last       Position of the last article.
      * @param bool         $multiMode  If true, only teasers will be shown.
      *
-     * @return string
+     * @return string|bool
      */
     private function renderArticle($columnName, $article, $count, $last, $multiMode)
     {
@@ -234,14 +243,14 @@ final class PageModuleRenderer
             $article->classes = $cssClasses;
         }
 
-        return \Controller::getArticle($article, $multiMode, false, $columnName);
+        return Controller::getArticle($article, $multiMode, false, $columnName);
     }
 
     /**
      * Render a frontend module.
      *
-     * @param int|\ModuleModel $moduleId   Frontend module id or model.
-     * @param string           $columnName Section or column name.
+     * @param int|string|ModuleModel $moduleId   Frontend module id or model.
+     * @param string                 $columnName Section or column name.
      *
      * @return string
      *
@@ -253,7 +262,7 @@ final class PageModuleRenderer
         if (is_object($moduleId)) {
             $articleRow = $moduleId;
         } else {
-            $articleRow = \ModuleModel::findByPk($moduleId);
+            $articleRow = ModuleModel::findByPk($moduleId);
 
             if ($articleRow === null) {
                 return '';
@@ -261,15 +270,15 @@ final class PageModuleRenderer
         }
 
         // Check the visibility (see #6311)
-        if (!\Controller::isVisibleElement($articleRow)) {
+        if (!Controller::isVisibleElement($articleRow)) {
             return '';
         }
 
-        $moduleClassName = \Module::findClass($articleRow->type);
+        $moduleClassName = Module::findClass($articleRow->type);
 
         // Return if the class does not exist
         if (!class_exists($moduleClassName)) {
-            \Controller::log(
+            Controller::log(
                 'Module class "' . $moduleClassName . '" (module "' . $articleRow->type . '") does not exist',
                 __METHOD__,
                 TL_ERROR
@@ -279,7 +288,7 @@ final class PageModuleRenderer
         }
 
         $articleRow->typePrefix = 'mod_';
-        /** @var \Module $module */
+        /** @var Module $module */
         $module = new $moduleClassName($articleRow, $columnName);
         $buffer = $module->generate();
         $buffer = $this->callGetFrontendModuleHook($articleRow, $buffer, $module);
@@ -311,7 +320,7 @@ final class PageModuleRenderer
             && is_array($GLOBALS['TL_HOOKS']['getFrontendModule'])
         ) {
             foreach ($GLOBALS['TL_HOOKS']['getFrontendModule'] as $callback) {
-                $buffer = \Controller::importStatic($callback[0])->{$callback[1]}($moduleModel, $buffer, $module);
+                $buffer = Controller::importStatic($callback[0])->{$callback[1]}($moduleModel, $buffer, $module);
             }
         }
 

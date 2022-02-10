@@ -15,6 +15,7 @@
 
 declare(strict_types=1);
 
+use Contao\Controller;
 use ContaoCommunityAlliance\Merger2\EventListener\DataContainer\ModuleDataContainerListener;
 
 /*
@@ -55,7 +56,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['merger_template'] = [
     'label'     => &$GLOBALS['TL_LANG']['tl_module']['merger_template'],
     'default'   => 'merger_default',
     'inputType' => 'select',
-    'options'   => $this->getTemplateGroup('merger_'),
+    'options'   => Controller::getTemplateGroup('merger_'),
     'eval'      => ['tl_class' => 'clr w50'],
     'sql'       => 'varchar(64) NOT NULL default \'merger_default\'',
 ];

@@ -6,7 +6,7 @@
  * @package   Merger²
  * @author    David Molineus <david.molineus@netzmacht.de>
  * @copyright 2013-2014 bit3 UG
- * @copyright 2015-2018 Contao Community Alliance
+ * @copyright 2015-2022 Contao Community Alliance
  * @license   https://github.com/contao-community-alliance/merger2/blob/master/LICENSE LGPL-3.0-or-later
  * @link      https://github.com/contao-community-alliance/merger2
  */
@@ -15,7 +15,7 @@ namespace ContaoCommunityAlliance\Merger2\Twig;
 
 use ContaoCommunityAlliance\Merger2\Functions\Description\Argument;
 use ContaoCommunityAlliance\Merger2\Functions\Description\Description;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
@@ -27,7 +27,7 @@ final class Merger2TwigExtension extends AbstractExtension
     /**
      * Argument type label reference.
      *
-     * @var array
+     * @var array<int,string>
      */
     private $types;
 
@@ -57,7 +57,7 @@ final class Merger2TwigExtension extends AbstractExtension
     /**
      * Get the filters.
      *
-     * @return array
+     * @return TwigFilter[]
      */
     public function getFilters(): array
     {
@@ -86,7 +86,7 @@ final class Merger2TwigExtension extends AbstractExtension
             }
         }
 
-        return implode($label, $separator);
+        return implode($separator, $label);
     }
 
     /**

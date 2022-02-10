@@ -6,7 +6,7 @@
  * @package   Merger²
  * @author    David Molineus <david.molineus@netzmacht.de>
  * @copyright 2013-2014 bit3 UG
- * @copyright 2015-2018 Contao Community Alliance
+ * @copyright 2015-2022 Contao Community Alliance
  * @license   https://github.com/contao-community-alliance/merger2/blob/master/LICENSE LGPL-3.0-or-later
  * @link      https://github.com/contao-community-alliance/merger2
  */
@@ -64,6 +64,11 @@ final class ChildrenFunction extends AbstractPageFunction
      */
     public function __invoke($count, bool $includeUnpublished = false): bool
     {
+        $page = $this->pageProvider->getPage();
+        if ($page === null) {
+            return false;
+        }
+
         $count = (string) $count;
 
         if (!preg_match('#^(<|>|<=|>=|=|!=|<>)?\\s*(\\d+)$#', $count, $matches)) {
@@ -85,13 +90,10 @@ final class ChildrenFunction extends AbstractPageFunction
             $statement = $this->connection->prepare($query);
         }
 
-        $statement->bindValue(1, $this->pageProvider->getPage()->id);
+        $statement->bindValue(1, $page->id);
+        $result = $statement->executeQuery();
 
-        if ($statement->execute()) {
-            return CompareUtil::compare($statement->fetchColumn(0), $count, $cmp);
-        }
-
-        return false;
+        return CompareUtil::compare($result->fetchOne(), $count, $cmp);
     }
 
     /**
@@ -99,7 +101,7 @@ final class ChildrenFunction extends AbstractPageFunction
      */
     public function describe(): Description
     {
-        return Description::create(static::getName())
+        return Description::create(self::getName())
             ->setDescription('Test if the page have the specific count of children.')
             ->addArgument('count')
                 ->setDescription('Count of children.')

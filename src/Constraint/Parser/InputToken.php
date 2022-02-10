@@ -7,7 +7,7 @@
  * @author    Tristan Lins <tristan.lins@bit3.de>
  * @author    David Molineus <david.molineus@netzmacht.de>
  * @copyright 2013-2014 bit3 UG
- * @copyright 2015-2018 Contao Community Alliance
+ * @copyright 2015-2022 Contao Community Alliance
  * @license   https://github.com/contao-community-alliance/merger2/blob/master/LICENSE LGPL-3.0-or-later
  * @link      https://github.com/contao-community-alliance/merger2
  */
@@ -21,35 +21,35 @@ namespace ContaoCommunityAlliance\Merger2\Constraint\Parser;
  */
 final class InputToken
 {
-    const OPEN_BRACKET = 'open_bracket';
+    public const OPEN_BRACKET = 'open_bracket';
 
-    const CLOSE_BRACKET = 'close_bracket';
+    public const CLOSE_BRACKET = 'close_bracket';
 
-    const OPEN_SQUARE_BRACKET = 'open_square_bracket';
+    public const OPEN_SQUARE_BRACKET = 'open_square_bracket';
 
-    const CLOSE_SQUARE_BRACKET = 'close_square_bracket';
+    public const CLOSE_SQUARE_BRACKET = 'close_square_bracket';
 
-    const AND_CONJUNCTION = 'and_conjunction';
+    public const AND_CONJUNCTION = 'and_conjunction';
 
-    const OR_CONJUNCTION = 'or_conjunction';
+    public const OR_CONJUNCTION = 'or_conjunction';
 
-    const NOT = 'not';
+    public const NOT = 'not';
 
-    const QUOTE = 'quote';
+    public const QUOTE = 'quote';
 
-    const STRING = 'string';
+    public const STRING = 'string';
 
-    const TRUE = 'true';
+    public const TRUE = 'true';
 
-    const FALSE = 'false';
+    public const FALSE = 'false';
 
-    const CALL = 'call';
+    public const CALL = 'call';
 
-    const TOKEN_SEPARATOR = 'token_separator';
+    public const TOKEN_SEPARATOR = 'token_separator';
 
-    const LIST_SEPARATOR = 'list_separator';
+    public const LIST_SEPARATOR = 'list_separator';
 
-    const END_OF_STREAM = 'end_of_stream';
+    public const END_OF_STREAM = 'end_of_stream';
 
     /**
      * Input token type.
@@ -61,7 +61,7 @@ final class InputToken
     /**
      * Input token value.
      *
-     * @var string
+     * @var string|null
      */
     protected $value;
 
@@ -71,7 +71,7 @@ final class InputToken
      * @param string $type  Input token type.
      * @param string $value Input token value.
      */
-    public function __construct($type, $value = null)
+    public function __construct(string $type, ?string $value = null)
     {
         $this->type  = $type;
         $this->value = $value;
@@ -86,7 +86,7 @@ final class InputToken
      *
      * @SuppressWarnings(PHPMD.ShortMethodName)
      */
-    public function is($type)
+    public function is(string $type): bool
     {
         return $this->type === $type;
     }
@@ -96,7 +96,7 @@ final class InputToken
      *
      * @return string
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
@@ -104,9 +104,9 @@ final class InputToken
     /**
      * Get the value.
      *
-     * @return string
+     * @return string|null
      */
-    public function getValue()
+    public function getValue(): ?string
     {
         return $this->value;
     }

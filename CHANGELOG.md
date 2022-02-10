@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### [4.2.3] (2022-02-10)
+
+### Changed
+
+ - Compatibility with Contao ^4.12, Symfony 5 and PHP 8
+
 ## [4.2.2] (2020-04-09)
 
 ### Fixed

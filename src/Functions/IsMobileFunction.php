@@ -6,14 +6,14 @@
  * @package   Merger²
  * @author    David Molineus <david.molineus@netzmacht.de>
  * @copyright 2013-2014 bit3 UG
- * @copyright 2015-2018 Contao Community Alliance
+ * @copyright 2015-2022 Contao Community Alliance
  * @license   https://github.com/contao-community-alliance/merger2/blob/master/LICENSE LGPL-3.0-or-later
  * @link      https://github.com/contao-community-alliance/merger2
  */
 
 namespace ContaoCommunityAlliance\Merger2\Functions;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Input;
 use ContaoCommunityAlliance\Merger2\Functions\Description\Description;
 use ContaoCommunityAlliance\Merger2\PageProvider;
@@ -28,17 +28,17 @@ final class IsMobileFunction extends AbstractPageFunction
     /**
      * Contao framework.
      *
-     * @var ContaoFrameworkInterface
+     * @var ContaoFramework
      */
     private $framework;
 
     /**
      * IsMobileFunction constructor.
      *
-     * @param ContaoFrameworkInterface $framework    Contao framework.
-     * @param PageProvider             $pageProvider Page provider.
+     * @param ContaoFramework $framework    Contao framework.
+     * @param PageProvider    $pageProvider Page provider.
      */
-    public function __construct(ContaoFrameworkInterface $framework, PageProvider $pageProvider)
+    public function __construct(ContaoFramework $framework, PageProvider $pageProvider)
     {
         parent::__construct($pageProvider);
 
@@ -60,7 +60,12 @@ final class IsMobileFunction extends AbstractPageFunction
             return $this->framework->getAdapter(Input::class)->cookie('TL_VIEW') === 'mobile';
         }
 
-        return (bool) $this->pageProvider->getPage()->isMobile;
+        $page = $this->pageProvider->getPage();
+        if ($page === null) {
+            return false;
+        }
+
+        return (bool) $page->isMobile;
     }
 
     /**

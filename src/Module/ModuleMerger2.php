@@ -8,7 +8,7 @@
  * @author    David Molineus <david.molineus@netzmacht.de>
  * @author    Stefan Schulz-Lauterbach <ssl@clickpress.de>
  * @copyright 2013-2014 bit3 UG
- * @copyright 2015-2018 Contao Community Alliance
+ * @copyright 2015-2022 Contao Community Alliance
  * @license   https://github.com/contao-community-alliance/merger2/blob/master/LICENSE LGPL-3.0-or-later
  * @link      https://github.com/contao-community-alliance/merger2
  */
@@ -17,14 +17,25 @@ declare(strict_types=1);
 
 namespace ContaoCommunityAlliance\Merger2\Module;
 
+use Contao\ArticleModel;
+use Contao\BackendTemplate;
+use Contao\FrontendTemplate;
 use Contao\Module;
 use Contao\PageModel;
 use Contao\StringUtil;
 use ContaoCommunityAlliance\Merger2\Constraint\Parser\InputStream;
+use ContaoCommunityAlliance\Merger2\Constraint\Parser\Parser;
 use ContaoCommunityAlliance\Merger2\Renderer\PageModuleRenderer;
 
 /**
- * Class ModuleMerger2.
+ * The merger frontend module.
+ *
+ * @property string     $merger_mode
+ * @property string     $merger_template
+ * @property string|int $merger_container
+ * @property string     $merger_data
+ *
+ * @psalm-suppress PropertyNotSetInConstructor
  */
 final class ModuleMerger2 extends Module
 {
@@ -38,17 +49,17 @@ final class ModuleMerger2 extends Module
     /**
      * Page module renderer.
      *
-     * @var PageModuleRenderer
+     * @var PageModuleRenderer|null
      */
     private $pageModuleRenderer;
 
     /**
      * Generate a front end module and return it as HTML string.
      *
-     * @param PageModel $page            Page model.
-     * @param string    $moduleId        Frontend module id.
-     * @param string    $columnName      Column or section name.
-     * @param bool      $inheritableOnly If true only inheritable module is found.
+     * @param PageModel  $page            Page model.
+     * @param string|int $moduleId        Frontend module id.
+     * @param string     $columnName      Column or section name.
+     * @param bool       $inheritableOnly If true only inheritable module is found.
      *
      * @return string
      *
@@ -69,17 +80,17 @@ final class ModuleMerger2 extends Module
      * @param PageModel $page      Page model.
      * @param int       $articleId Article id.
      *
-     * @return string
+     * @return string|bool
      */
     protected function getPageArticle($page, $articleId)
     {
-        $article = \ArticleModel::findByIdOrAliasAndPid($articleId, $page->id);
+        $article = ArticleModel::findByIdOrAliasAndPid($articleId, $page->id);
 
         if ($article === null) {
             return '';
         }
 
-        return $this->getArticle($article);
+        return self::getArticle($article);
     }
 
     /**
@@ -93,7 +104,7 @@ final class ModuleMerger2 extends Module
      */
     protected function inheritArticle($page, $maxLevel = 0, $currentLevel = 0)
     {
-        $parentPage = \PageModel::findPublishedById($page->pid);
+        $parentPage = PageModel::findPublishedById($page->pid);
 
         if ($parentPage === null) {
             return '';
@@ -112,9 +123,9 @@ final class ModuleMerger2 extends Module
      *
      * @return bool
      */
-    protected function isModeAll()
+    protected function isModeAll(): bool
     {
-        return $this->merger_mode == 'all';
+        return $this->merger_mode === 'all';
     }
 
     /**
@@ -122,9 +133,9 @@ final class ModuleMerger2 extends Module
      *
      * @return bool
      */
-    protected function isModeUpFirstFalse()
+    protected function isModeUpFirstFalse(): bool
     {
-        return $this->merger_mode == 'upFirstFalse';
+        return $this->merger_mode === 'upFirstFalse';
     }
 
     /**
@@ -132,9 +143,9 @@ final class ModuleMerger2 extends Module
      *
      * @return bool
      */
-    protected function isModeUpFirstTrue()
+    protected function isModeUpFirstTrue(): bool
     {
-        return $this->merger_mode == 'upFirstTrue';
+        return $this->merger_mode === 'upFirstTrue';
     }
 
     /**
@@ -142,10 +153,10 @@ final class ModuleMerger2 extends Module
      *
      * @return string
      */
-    public function generate()
+    public function generate(): string
     {
-        if (TL_MODE == 'BE') {
-            $objTemplate = new \BackendTemplate('be_wildcard');
+        if (TL_MODE === 'BE') {
+            $objTemplate = new BackendTemplate('be_wildcard');
 
             $objTemplate->wildcard = '### MERGER2 ###';
             $objTemplate->title    = $this->headline;
@@ -168,7 +179,7 @@ final class ModuleMerger2 extends Module
     /**
      * {@inheritdoc}
      */
-    protected function compile()
+    protected function compile(): void
     {
         $this->Template->content = $this->generateContent();
     }
@@ -207,7 +218,7 @@ final class ModuleMerger2 extends Module
             }
         }
 
-        $tpl          = new \FrontendTemplate($this->merger_template);
+        $tpl          = new FrontendTemplate($this->merger_template);
         $tpl->content = $buffer;
 
         return $tpl->parse();
@@ -226,9 +237,12 @@ final class ModuleMerger2 extends Module
         $condition = trim(html_entity_decode($module['condition']));
 
         if (strlen($condition)) {
-            $input  = new InputStream($condition);
-            $node   = $this->getContainer()->get('cca.merger2.constraint_parser')->parse($input);
-            $result = $node->evaluate();
+            $input = new InputStream($condition);
+            $node  = $this->getConstraintParser()->parse($input);
+
+            if ($node) {
+                $result = $node->evaluate();
+            }
         }
 
         return $result;
@@ -323,5 +337,18 @@ final class ModuleMerger2 extends Module
     private function validateModeUpCondition($result)
     {
         return $result && $this->isModeUpFirstTrue() || !$result && $this->isModeUpFirstFalse();
+    }
+
+    /**
+     * Get the constraint parser from the container.
+     *
+     * @return Parser
+     */
+    private function getConstraintParser(): Parser
+    {
+        $parser = self::getContainer()->get('cca.merger2.constraint_parser');
+        assert($parser instanceof Parser);
+
+        return $parser;
     }
 }

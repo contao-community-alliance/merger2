@@ -6,7 +6,7 @@
  * @package   Merger²
  * @author    David Molineus <david.molineus@netzmacht.de>
  * @copyright 2013-2014 bit3 UG
- * @copyright 2015-2018 Contao Community Alliance
+ * @copyright 2015-2022 Contao Community Alliance
  * @license   https://github.com/contao-community-alliance/merger2/blob/master/LICENSE LGPL-3.0-or-later
  * @link      https://github.com/contao-community-alliance/merger2
  */
@@ -39,9 +39,12 @@ final class PageFunction extends AbstractPageFunction
     public function __invoke($pageId): bool
     {
         $page = $this->pageProvider->getPage();
+        if ($page === null) {
+            return false;
+        }
 
         if (is_numeric($pageId)) {
-            return intval($pageId) == $page->id;
+            return (int) $pageId === (int) $page->id;
         }
 
         return $pageId === $page->alias;

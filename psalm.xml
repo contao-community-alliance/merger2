@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<psalm
+    errorLevel="3"
+    hideExternalErrors="true"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="https://getpsalm.org/schema/config"
+    xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
+>
+    <projectFiles>
+        <directory name="src" />
+        <ignoreFiles>
+            <directory name="vendor/contao/core-bundle/src/Resources/contao"/>
+        </ignoreFiles>
+    </projectFiles>
+
+    <issueHandlers>
+        <DeprecatedMethod>
+            <errorLevel type="suppress">
+                <referencedMethod name="Contao\System::log"/>
+            </errorLevel>
+        </DeprecatedMethod>
+        <InternalMethod>
+            <errorLevel type="suppress">
+                <referencedMethod name="Contao\CoreBundle\Framework\ContaoFramework::getAdapter"/>
+                <referencedMethod name="Contao\CoreBundle\Framework\ContaoFramework::initialize"/>
+            </errorLevel>
+        </InternalMethod>
+        <UndefinedConstant>
+            <errorLevel type="suppress">
+                <file name="src/Renderer/PageModuleRenderer.php"/>
+                <file name="src/Module/ModuleMerger2.php"/>
+            </errorLevel>
+        </UndefinedConstant>
+    </issueHandlers>
+
+    <universalObjectCrates>
+        <class name="Contao\ArticleModel"/>
+        <class name="Contao\BackendTemplate"/>
+        <class name="Contao\ModuleModel"/>
+        <class name="Contao\PageModel"/>
+        <class name="Contao\ThemeModel"/>
+    </universalObjectCrates>
+</psalm>
