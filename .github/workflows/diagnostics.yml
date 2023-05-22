@@ -81,7 +81,7 @@ jobs:
         run: ./vendor/bin/phpcq run ${{ matrix.phpcq_run }} -v ${{ matrix.output }}
 
       - name: Upload build directory to artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: ${{ success() }} || ${{ failure() }}
         with:
           name: phpcq-builds-php-${{ matrix.php }}
