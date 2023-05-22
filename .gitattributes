@@ -1,7 +1,7 @@
 .ddev export-ignore
 .github export-ignore
 .phpcq export-ignore
-.composer-require-checker export-ignore
+.composer-require-checker.json export-ignore
 .gitattributes export-ignore
 .gitignore export-ignore
 .phpcq.lock export-ignore
