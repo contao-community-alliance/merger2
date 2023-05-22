@@ -1,6 +1,5 @@
 phpcq:
   repositories:
-    - ./.phpcq/local/repository.json
     - https://phpcq.github.io/repository/repository.json
   directories:
     - src
@@ -34,9 +33,6 @@ phpcq:
     composer-normalize:
       version: ^1.0
       signed: false
-    author-validation:
-      version: ^1.0
-      signed: false
 
   trusted-keys:
     # composer-require-checker
@@ -52,6 +48,8 @@ phpcq:
     - 31C7E470E2138192
     # Composer normalize
     - C00543248C87FB13
+    # PHPMD
+    - A4E55EA12C7C085C
 
 tasks:
   fix:
@@ -77,7 +75,6 @@ tasks:
 
   php7:
     - verify
-    - author-validation
     - analyze
 
   phpcpd:
@@ -118,7 +115,7 @@ tasks:
       standard: PHPCompatibility
       standard_paths:
         - vendor/phpcompatibility/php-compatibility
-        - vendor/phpcsstandards/phpcsutils/PHPCS23Utils
+        - vendor/phpcsstandards/phpcsutils/PHPCSUtils
       custom_flags:
         - --runtime-set
         - testVersion

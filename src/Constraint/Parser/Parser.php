@@ -129,7 +129,6 @@ final class Parser
             if ($node === null) {
                 $this->unexpected($token);
             }
-            assert($node !== null);
             $node = new GroupNode($node);
             $stream->next();
 
@@ -261,6 +260,7 @@ final class Parser
         return $items;
     }
 
+    // @codingStandardsIgnoreStart
     /**
      * Create the unexpected exception.
      *
@@ -268,7 +268,7 @@ final class Parser
      * @param string     $expected Optional pass an expected value.
      * @param string     $_        List of arguments.
      *
-     * @return void
+     * @return never
      *
      * @throws ParserException Is always thrown.
      *
@@ -297,4 +297,5 @@ final class Parser
 
         throw new ParserException($message);
     }
+    // @codingStandardsIgnoreEnd
 }
