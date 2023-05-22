@@ -26,6 +26,7 @@ use Contao\StringUtil;
 use ContaoCommunityAlliance\Merger2\Constraint\Parser\InputStream;
 use ContaoCommunityAlliance\Merger2\Constraint\Parser\Parser;
 use ContaoCommunityAlliance\Merger2\Renderer\PageModuleRenderer;
+use const ENT_COMPAT;
 
 /**
  * The merger frontend module.
@@ -234,9 +235,9 @@ final class ModuleMerger2 extends Module
     protected function evaluateCondition($module)
     {
         $result    = null;
-        $condition = trim(html_entity_decode($module['condition']));
+        $condition = trim(html_entity_decode($module['condition'], ENT_COMPAT));
 
-        if (strlen($condition)) {
+        if ($condition !== '') {
             $input = new InputStream($condition);
             $node  = $this->getConstraintParser()->parse($input);
 

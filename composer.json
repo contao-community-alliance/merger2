@@ -31,7 +31,7 @@
     "contao/core-bundle": "~4.9",
     "doctrine/dbal": "^2.11 || ^3.1",
     "menatwork/contao-multicolumnwizard-bundle": "^3.3.4",
-    "mobiledetect/mobiledetectlib": "^2.8",
+    "mobiledetect/mobiledetectlib": "^2.8 || ^3.74",
     "symfony/config": "^4.4 || ^5.1",
     "symfony/dependency-injection": "^4.4 || ^5.1",
     "symfony/http-kernel": "^4.4.13 || ^5.1.5",
@@ -43,7 +43,6 @@
   "require-dev": {
     "contao/manager-plugin": "^2.0",
     "phpcompatibility/php-compatibility": "dev-develop",
-    "phpcq/author-validation": "^1.5",
     "phpcq/coding-standard": "^2.1.2",
     "phpcq/runner-bootstrap": "1.x-dev",
     "phpcsstandards/phpcsutils": "^1.0@dev",
@@ -66,14 +65,14 @@
       "composer/package-versions-deprecated": true,
       "contao-components/installer": false,
       "contao/manager-plugin": true,
-      "dealerdirect/phpcodesniffer-composer-installer": true
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "php-http/discovery": true
     }
   },
   "extra": {
     "branch-alias": {
-      "dev-develop": "4.1.x-dev",
-      "dev-master": "4.0.x-dev",
-      "dev-support/3.0.x": "3.0.x-dev"
+      "dev-develop": "4.4.x-dev",
+      "dev-master": "4.3.x-dev"
     },
     "contao-manager-plugin": "ContaoCommunityAlliance\\Merger2\\ContaoManager\\Plugin"
   }

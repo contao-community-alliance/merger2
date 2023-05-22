@@ -57,8 +57,6 @@ final class ArticleExistsFunction extends AbstractPageFunction
      * @param bool   $includeUnpublished If true also unpublished articles are recognized.
      *
      * @return bool
-     *
-     * @throws \Doctrine\DBAL\DBALException If an database exception occurs.
      */
     public function __invoke(string $column, bool $includeUnpublished = false): bool
     {

@@ -8,6 +8,5 @@ phpunit.xml
 
 # phpcq
 .phpcq/*
-!.phpcq/local
 .phpcq.yaml
 

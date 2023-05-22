@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+### [4.3.0] (2023-05-22)
+
+### Added
+
+ - Allow content composition for root pages ([#44](https://github.com/contao-community-alliance/merger2/issues/44))
+ - Add support for mobiledetectlib ^3.74 ([#47](https://github.com/contao-community-alliance/merger2/issues/47))
+
 ### [4.2.3] (2022-02-10)
 
 ### Changed
