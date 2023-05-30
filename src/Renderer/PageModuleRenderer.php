@@ -19,11 +19,14 @@ use Contao\ArticleModel;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\Input;
 use Contao\Model\Collection;
 use Contao\Module;
 use Contao\ModuleModel;
 use Contao\PageModel;
+use Psr\Log\LoggerInterface;
+
 use function array_pad;
 use function is_string;
 
@@ -34,6 +37,23 @@ use function is_string;
  */
 final class PageModuleRenderer
 {
+    /**
+     * Optional logger.
+     *
+     * @var LoggerInterface|null
+     */
+    private $logger;
+
+    /**
+     * Construct.
+     *
+     * @param LoggerInterface|null $logger Optional logger.
+     */
+    public function __construct(?LoggerInterface $logger = null)
+    {
+        $this->logger = $logger;
+    }
+
     /**
      * Generate a front end module and return it as HTML string.
      *
@@ -74,7 +94,7 @@ final class PageModuleRenderer
     private function renderArticles($page, $columnName, $inheritableOnly)
     {
         // Show a particular article only
-        if ($page->type == 'regular' && Input::get('articles')) {
+        if ($page->type === 'regular' && Input::get('articles')) {
             $article = $this->renderColumnArticle($page, $columnName, $inheritableOnly);
 
             if (is_string($article)) {
@@ -124,14 +144,15 @@ final class PageModuleRenderer
      */
     private function renderColumnArticle($page, $columnName, $inheritableOnly)
     {
-        [$sectionName, $articleName] = array_pad(explode(':', Input::get('articles')), 2, null);
+        /** @psalm-suppress PossiblyInvalidCast */
+        [$sectionName, $articleName] = array_pad(explode(':', (string) Input::get('articles')), 2, null);
 
         if ($articleName === null) {
             $articleName = $sectionName;
             $sectionName = 'main';
         }
 
-        if ($sectionName == $columnName) {
+        if ($sectionName === $columnName) {
             $article = ArticleModel::findByIdOrAliasAndPid($articleName, $page->id);
 
             if ($article === null) {
@@ -278,10 +299,13 @@ final class PageModuleRenderer
 
         // Return if the class does not exist
         if (!class_exists($moduleClassName)) {
-            Controller::log(
+            if (! $this->logger) {
+                return '';
+            }
+
+            $this->logger->error(
                 'Module class "' . $moduleClassName . '" (module "' . $articleRow->type . '") does not exist',
-                __METHOD__,
-                TL_ERROR
+                ['contao' => new ContaoContext(__METHOD__, ContaoContext::ERROR)]
             );
 
             return '';

@@ -8,9 +8,6 @@
 >
     <projectFiles>
         <directory name="src" />
-        <ignoreFiles>
-            <directory name="vendor/contao/core-bundle/src/Resources/contao"/>
-        </ignoreFiles>
     </projectFiles>
 
     <issueHandlers>
@@ -31,6 +28,11 @@
                 <file name="src/Module/ModuleMerger2.php"/>
             </errorLevel>
         </UndefinedConstant>
+        <UndefinedMagicPropertyFetch>
+            <errorLevel type="suppress">
+                <referencedProperty name="Contao\DataContainer::$activeRecord"/>
+            </errorLevel>
+        </UndefinedMagicPropertyFetch>
     </issueHandlers>
 
     <universalObjectCrates>
