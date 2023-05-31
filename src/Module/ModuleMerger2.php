@@ -82,7 +82,9 @@ final class ModuleMerger2 extends Module
     {
         if (!$this->pageModuleRenderer) {
             /** @psalm-suppress ArgumentTypeCoercion */
-            $this->pageModuleRenderer = new PageModuleRenderer(self::getContainer()->get('logger'));
+            $this->pageModuleRenderer = new PageModuleRenderer(
+                self::getContainer()->get('monolog.logger.contao.error')
+            );
         }
 
         return $this->pageModuleRenderer->render($page, $moduleId, $columnName, $inheritableOnly);

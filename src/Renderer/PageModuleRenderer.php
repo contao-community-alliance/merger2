@@ -305,7 +305,6 @@ final class PageModuleRenderer
 
             $this->logger->error(
                 'Module class "' . $moduleClassName . '" (module "' . $articleRow->type . '") does not exist',
-                ['contao' => new ContaoContext(__METHOD__, ContaoContext::ERROR)]
             );
 
             return '';
