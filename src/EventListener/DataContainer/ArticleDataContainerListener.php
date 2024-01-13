@@ -6,8 +6,9 @@
  * @package   Merger²
  * @author    Tristan Lins <tristan.lins@bit3.de>
  * @author    David Molineus <david.molineus@netzmacht.de>
+ * @author    Ingolf Steinhardt <dinfo@e-spin.de>
  * @copyright 2013-2014 bit3 UG
- * @copyright 2015-2022 Contao Community Alliance
+ * @copyright 2015-2024 Contao Community Alliance
  * @license   https://github.com/contao-community-alliance/merger2/blob/master/LICENSE LGPL-3.0-or-later
  * @link      https://github.com/contao-community-alliance/merger2
  */
@@ -108,7 +109,7 @@ final class ArticleDataContainerListener
 
         // Find all sections with an article module (see #6094)
         foreach ($modules as $module) {
-            if ($module['mod'] != 0 && $module['enable']) {
+            if ($module['mod'] !== 0 && $module['enable'] ?? false) {
                 $this->joinModule($module['col'], $module['mod'], $sections);
             }
         }
