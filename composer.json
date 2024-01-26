@@ -36,7 +36,7 @@
     "symfony/dependency-injection": "^4.4 || ^5.1 || ^6.0",
     "symfony/http-foundation": "^4.4 || ^5.1 || ^6.0",
     "symfony/http-kernel": "^4.4.13 || ^5.1.5 || ^6.0",
-    "symfony/translation-contracts": "^1.1 || ^2.0 || ^6.0",
+    "symfony/translation-contracts": "^1.1 || ^2.0 || ^3.0",
     "symfony/twig-bundle": "^4.4 || ^5.1 || ^6.0",
     "symfony/yaml": "^4.4 || ^5.1 || ^6.0",
     "twig/twig": "^2.0 || ^3.0"
