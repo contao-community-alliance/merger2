@@ -46,10 +46,12 @@ phpcq:
     - D2CCAC42F6295E7D
     # PHP_CodeSniffer
     - 31C7E470E2138192
+    - 5E6DDE998AB73B8E
     # Composer normalize
     - C00543248C87FB13
     # PHPMD
     - A4E55EA12C7C085C
+    - 9093F8B32E4815AA
 
 tasks:
   fix:
@@ -104,9 +106,15 @@ tasks:
       <<: *phpcs-config
       fix: true
 
+  composer-normalize:
+    config: &composer-normalize-config
+      ignore_output:
+        - '#> pre-command-run: Contao\\ManagerPlugin\\Composer\\ArtifactsPlugin->preCommandRun#'
+
   composer-normalize-fix:
     plugin: composer-normalize
     config:
+      <<: *composer-normalize-config
       dry_run: false
 
   php-compatibility:
@@ -119,4 +127,4 @@ tasks:
       custom_flags:
         - --runtime-set
         - testVersion
-        - "7.1-"
+        - "8.1-"

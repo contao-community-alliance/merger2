@@ -283,7 +283,7 @@ final class Parser
 
         $message = 'Unexpected token '.strtoupper($token->getType());
 
-        if ($token->getValue()) {
+        if ($token->getValue() !== null) {
             $message .= ', with value "'.$token->getValue().'"';
         }
 

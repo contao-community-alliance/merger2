@@ -79,7 +79,7 @@ final class DepthFunction extends AbstractPageFunction
             return false;
         }
 
-        while ($page->pid > 0 && $page->type != 'root') {
+        while ($page && $page->pid > 0 && $page->type !== 'root') {
             ++$depth;
             $page = $pageAdapter->findByPk($page->pid);
         }

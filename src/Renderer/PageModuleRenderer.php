@@ -94,7 +94,7 @@ final class PageModuleRenderer
     private function renderArticles($page, $columnName, $inheritableOnly)
     {
         // Show a particular article only
-        if ($page->type === 'regular' && Input::get('articles')) {
+        if ($page->type === 'regular' && Input::get('articles') !== null) {
             $article = $this->renderColumnArticle($page, $columnName, $inheritableOnly);
 
             if (is_string($article)) {

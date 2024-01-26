@@ -29,7 +29,7 @@ final class CompareUtil
      */
     public static function compare($value, $expected, ?string $comparator = null): bool
     {
-        $comparator = $comparator ?: '=';
+        $comparator = ($comparator ?? '=');
 
         switch ($comparator) {
             case '<':

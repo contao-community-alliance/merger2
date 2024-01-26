@@ -192,7 +192,7 @@ final class ModuleMerger2 extends Module
         }
 
         // generate the merger container
-        if ($this->merger_container) {
+        if ((bool) $this->merger_container) {
             return parent::generate();
         } else {
             // or only the content

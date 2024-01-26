@@ -4,5 +4,6 @@
 
     <rule ref="Generic.Files.LineLength">
         <exclude-pattern>src/Resources/contao/languages/*</exclude-pattern>
+        <exclude name="PHPCompatibility.Syntax.NewFunctionCallTrailingComma.FoundInFunctionCall"/>
     </rule>
 </ruleset>
