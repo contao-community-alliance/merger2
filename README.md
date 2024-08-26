@@ -1,7 +1,10 @@
+[![Build Status](https://github.com/contao-community-alliance/merger2/actions/workflows/diagnostics.yml/badge.svg)](https://github.com/contao-community-alliance/merger2/actions)
+[![Latest Version tagged](http://img.shields.io/github/tag/contao-community-alliance/merger2.svg)](https://github.com/contao-community-alliance/merger2/tags)
+[![Latest Version on Packagist](http://img.shields.io/packagist/v/contao-community-alliance/merger2.svg)](https://packagist.org/packages/contao-community-alliance/merger2)
+[![Installations via composer per month](http://img.shields.io/packagist/dm/contao-community-alliance/merger2.svg)](https://packagist.org/packages/contao-community-alliance/merger2)
+
 Merger²
 =======
-
-[![Build Status](https://travis-ci.org/contao-community-alliance/merger2.png?branch=master)](https://travis-ci.org/contao-community-alliance/merger2)
 
 The Contao Community Alliance merger² extension provides a powerful frontend module to merge various content:
 
@@ -12,7 +15,7 @@ The Contao Community Alliance merger² extension provides a powerful frontend mo
 Requirements
 ------------
 
-Merger² v4 requires at least Contao 4.4 with PHP 7.1 and is prepared for the Contao Managed Edition.
+Merger² v4 requires at least Contao 4.13 with PHP 7.4 or Contao 5 with PHP 8.0 higher and is prepared for the Contao Managed Edition.
 
 
 Changelog
