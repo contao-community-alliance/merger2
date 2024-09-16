@@ -108,7 +108,7 @@ final class ArticleDataContainerListener
 
         // Find all sections with an article module (see #6094)
         foreach ($modules as $module) {
-            if ($module['mod'] != 0 && $module['enable']) {
+            if ($module['mod'] !== '0' && ($module['enable'] ?? false)) {
                 $this->joinModule($module['col'], $module['mod'], $sections);
             }
         }
