@@ -17,11 +17,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - php: 7.4
-            composer_install: 'update'
-            output: '-o github-action -o default'
-            phpcq_install: 'update'
-            phpcq_run: 'php7'
           - php: 8.1
             output: '-o github-action -o default'
             composer_install: 'update'

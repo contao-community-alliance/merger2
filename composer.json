@@ -25,7 +25,7 @@
     "source": "https://github.com/contao-community-alliance/merger2"
   },
   "require": {
-    "php": "^7.4 || ^8.0",
+    "php": "^8.0",
     "ext-json": "*",
     "ext-mbstring": "*",
     "contao/core-bundle": "^4.13 || ^5.0",
