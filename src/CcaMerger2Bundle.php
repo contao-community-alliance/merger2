@@ -33,8 +33,7 @@ final class CcaMerger2Bundle extends Bundle
      */
     public function build(ContainerBuilder $container): void
     {
-        // We must load after \Terminal42\ServiceAnnotationBundle\DependencyInjection\Compiler\ServiceAnnotationPass
-        // which uses priority 110
-        $container->addCompilerPass(new RootContentCompositionPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 109);
+        // We must load before \Contao\CoreBundle\DependencyInjection\Compiler\RegisterPagesPass which uses priority 1
+        $container->addCompilerPass(new RootContentCompositionPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 2);
     }
 }

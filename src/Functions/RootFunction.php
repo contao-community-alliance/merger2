@@ -75,7 +75,7 @@ final class RootFunction extends AbstractPageFunction
         $adapter  = $this->framework->getAdapter(PageModel::class);
         $rootPage = $adapter->findByPK($page->rootId);
 
-        return $pageId === $rootPage->alias;
+        return $pageId === $rootPage?->alias;
     }
 
     /**

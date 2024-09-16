@@ -19,13 +19,24 @@ namespace ContaoCommunityAlliance\Merger2\Module;
 
 use Contao\ArticleModel;
 use Contao\BackendTemplate;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\FrontendTemplate;
 use Contao\Module;
 use Contao\PageModel;
 use Contao\StringUtil;
+use Contao\Template;
 use ContaoCommunityAlliance\Merger2\Constraint\Parser\InputStream;
 use ContaoCommunityAlliance\Merger2\Constraint\Parser\Parser;
 use ContaoCommunityAlliance\Merger2\Renderer\PageModuleRenderer;
+
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
+use Symfony\Component\HttpFoundation\RequestStack;
+
+use function assert;
+
+use function self;
+
 use const ENT_COMPAT;
 
 /**
@@ -35,6 +46,7 @@ use const ENT_COMPAT;
  * @property string     $merger_template
  * @property string|int $merger_container
  * @property string     $merger_data
+ * @property Template   $Template
  *
  * @psalm-suppress PropertyNotSetInConstructor
  */
@@ -69,7 +81,10 @@ final class ModuleMerger2 extends Module
     protected function getPageFrontendModule($page, $moduleId, $columnName = 'main', $inheritableOnly = false)
     {
         if (!$this->pageModuleRenderer) {
-            $this->pageModuleRenderer = new PageModuleRenderer();
+            /** @psalm-suppress ArgumentTypeCoercion */
+            $this->pageModuleRenderer = new PageModuleRenderer(
+                self::getContainer()->get('monolog.logger.contao.error')
+            );
         }
 
         return $this->pageModuleRenderer->render($page, $moduleId, $columnName, $inheritableOnly);
@@ -156,20 +171,28 @@ final class ModuleMerger2 extends Module
      */
     public function generate(): string
     {
-        if (TL_MODE === 'BE') {
+        $container = self::getContainer();
+        assert($container instanceof ContainerInterface);
+        $requestStack = $container->get('request_stack');
+        assert($requestStack instanceof RequestStack);
+        $request      = $requestStack->getMainRequest();
+        $scopeMatcher = $container->get('contao.routing.scope_matcher');
+        assert($scopeMatcher instanceof ScopeMatcher);
+
+        if ($request && $scopeMatcher->isBackendRequest($request)) {
             $objTemplate = new BackendTemplate('be_wildcard');
 
             $objTemplate->wildcard = '### MERGER2 ###';
             $objTemplate->title    = $this->headline;
             $objTemplate->id       = $this->id;
             $objTemplate->link     = $this->name;
-            $objTemplate->href     = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+            $objTemplate->href     = 'contao?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
 
             return $objTemplate->parse();
         }
 
         // generate the merger container
-        if ($this->merger_container) {
+        if ((bool) $this->merger_container) {
             return parent::generate();
         } else {
             // or only the content
