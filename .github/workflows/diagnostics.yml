@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - master
+      - develop
 
 jobs:
   build:
@@ -31,10 +32,15 @@ jobs:
             composer_install: 'update'
             phpcq_install: 'install'
             phpcq_run: 'default'
+          - php: 8.3
+            output: '-o github-action -o default'
+            composer_install: 'update'
+            phpcq_install: 'install'
+            phpcq_run: 'default'
 
     steps:
       - name: Pull source
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
