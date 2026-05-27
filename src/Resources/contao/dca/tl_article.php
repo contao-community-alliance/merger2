@@ -45,7 +45,7 @@ $GLOBALS['TL_DCA']['tl_article']['fields']['inheritable'] = [
  */
 
 $GLOBALS['TL_DCA']['tl_article']['fields']['inColumn']['merger_original_options_callback'] =
-    $GLOBALS['TL_DCA']['tl_article']['fields']['inColumn']['options_callback'];
+    $GLOBALS['TL_DCA']['tl_article']['fields']['inColumn']['options_callback'] ?? [];
 
 $GLOBALS['TL_DCA']['tl_article']['fields']['inColumn']['options_callback'] = [
     ArticleDataContainerListener::class,
