@@ -1,87 +1,86 @@
-name: Code Quality Diagnostics
+name: contao-bootrap-core
 
 on:
-  pull_request:
   push:
-    branches:
-      - master
-      - develop
+  pull_request:
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
-    name: PHP ${{ matrix.php }}
+    name: PHP ${{ matrix.name }}
 
     strategy:
       fail-fast: false
       matrix:
         include:
-          - php: 8.1
-            output: '-o github-action -o default'
-            composer_install: 'update'
+          - name: '8.1'
+            php: '8.1'
             phpcq_install: 'update'
-            phpcq_run: 'default'
-          - php: 8.2
-            output: '-o github-action -o default'
+            phpcq_flags: ''
+          - name: '8.2'
+            php: '8.2'
+            phpcq_install: 'update'
+            phpcq_flags: ''
             composer_install: 'update'
-            phpcq_install: 'install'
-            phpcq_run: 'default'
-          - php: 8.3
-            output: '-o github-action -o default'
+          - name: '8.3'
+            php: '8.3'
+            phpcq_install: 'update'
+            phpcq_flags: ''
             composer_install: 'update'
-            phpcq_install: 'install'
-            phpcq_run: 'default'
-
+          - name: '8.4'
+            php: '8.4'
+            phpcq_install: 'update'
+            phpcq_flags: ''
+            composer_install: 'update'
+          - name: '8.5'
+            php: '8.5'
+            phpcq_install: 'update'
+            phpcq_flags: ''
+            composer_install: 'update'
     steps:
-      - name: Pull source
-        uses: actions/checkout@v6
+      - name: PHP ${{ matrix.php }} Pull source
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
-      - name: Setup PHP with PECL extension
+      # see https://github.com/shivammathur/setup-php
+      - name: PHP ${{ matrix.php }} Setup PHP.
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
 
-      - name: Cache composer cache directory
+      - name: PHP ${{ matrix.php }} Cache composer cache directory
         uses: actions/cache@v5
         env:
-          cache-name: composer-cache-dir
+          cache-name: phpcq-composer-cache-dir-${{ matrix.php }}
         with:
           path: ~/.cache/composer
-          key: ${{ runner.os }}-${{ matrix.php }}-build-${{ env.cache-name }}
+          key: ${{ runner.os }}-build-${{ env.cache-name }}
 
-      - name: Cache vendor directory
+      - name: PHP ${{ matrix.php }} Cache vendor directory
         uses: actions/cache@v5
         env:
-          cache-name: vendor
+          cache-name: phpcq-composer-vendor-${{ matrix.php }}
         with:
           path: vendor
-          key: ${{ runner.os }}-${{ matrix.php }}-build-${{ env.cache-name }}-${{ hashFiles('**/composer.lock') }}
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
-            ${{ runner.os }}-${{ matrix.php }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-${{ env.cache-name }}-
 
-      - name: Cache phpcq directory
-        uses: actions/cache@v5
-        env:
-          cache-name: phpcq
-        with:
-          path: .phpcq
-          key: ${{ runner.os }}-${{ matrix.php }}-build-${{ env.cache-name }}-${{ hashFiles('**/.phpcq.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ matrix.php }}-build-${{ env.cache-name }}-
+      - name: PHP ${{ matrix.php }} Install composer dependencies
+        run: composer ${{ matrix.composer_install }} --prefer-stable --no-interaction --no-progress
 
-      - name: Install composer dependencies
-        run: composer ${{ matrix.composer_install }}
+      - name: PHP ${{ matrix.php }} Update phpcq
+        run: ./vendor/bin/phpcq self-update
 
-      - name: Install phpcq toolchain
+      - name: PHP ${{ matrix.php }} Install phpcq toolchain
         run: ./vendor/bin/phpcq ${{ matrix.phpcq_install }} -v
 
-      - name: Run tests
-        run: ./vendor/bin/phpcq run ${{ matrix.phpcq_run }} -v ${{ matrix.output }}
+      - name: PHP ${{ matrix.php }} Run tests
+        run: ./vendor/bin/phpcq run -v -o github-action -o default ${{ matrix.phpcq_flags }}
 
-      - name: Upload build directory to artifact
+      - name: PHP ${{ matrix.php }} Upload build directory to artifact
         uses: actions/upload-artifact@v7
         if: ${{ success() }} || ${{ failure() }}
         with:
