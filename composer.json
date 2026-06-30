@@ -69,7 +69,8 @@
   },
   "extra": {
     "branch-alias": {
-      "dev-release/4.4.0": "4.4.x-dev"
+      "dev-master": "4.4.x-dev",
+      "dev-develop": "4.5.x-dev"
     },
     "contao-manager-plugin": "ContaoCommunityAlliance\\Merger2\\ContaoManager\\Plugin"
   }
