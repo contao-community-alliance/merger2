@@ -42,6 +42,7 @@ class IntNode implements NodeInterface
      *
      * @return int
      */
+    #[\Override]
     public function evaluate(): int
     {
         return $this->value;

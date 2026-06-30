@@ -114,21 +114,10 @@ final class PageModuleRenderer
             return '';
         }
 
-        $return    = '';
-        $count     = 0;
         $multiMode = ($articleCollection->count() > 1);
         $last      = ($articleCollection->count() - 1);
 
-        foreach ($articleCollection as $articleModel) {
-            if ($inheritableOnly && !$articleModel->inheritable) {
-                continue;
-            }
-
-            $return .= $this->renderArticle($columnName, $articleModel->current(), $count, $last, $multiMode);
-            ++$count;
-        }
-
-        return $return;
+        return $this->compileArticles($articleCollection, $inheritableOnly, $columnName, $last, $multiMode);
     }
 
     /**
@@ -339,7 +328,8 @@ final class PageModuleRenderer
     private function callGetFrontendModuleHook($moduleModel, $buffer, $module)
     {
         // HOOK: add custom logic
-        if (isset($GLOBALS['TL_HOOKS']['getFrontendModule'])
+        if (
+            isset($GLOBALS['TL_HOOKS']['getFrontendModule'])
             && is_array($GLOBALS['TL_HOOKS']['getFrontendModule'])
         ) {
             foreach ($GLOBALS['TL_HOOKS']['getFrontendModule'] as $callback) {
@@ -348,5 +338,40 @@ final class PageModuleRenderer
         }
 
         return $buffer;
+    }
+
+    /**
+     * @param Collection<ArticleModel> $articleCollection
+     * @param bool                     $inheritableOnly
+     * @param string                   $columnName
+     * @param int                      $last
+     * @param bool                     $multiMode
+     *
+     * @return string
+     */
+    private function compileArticles(
+        Collection $articleCollection,
+        bool $inheritableOnly,
+        string $columnName,
+        int $last,
+        bool $multiMode,
+    ): string {
+        $return    = '';
+        $count     = 0;
+
+        foreach ($articleCollection as $articleModel) {
+            if ($inheritableOnly && ! $articleModel->inheritable) {
+                continue;
+            }
+
+            $rendered = $this->renderArticle($columnName, $articleModel, $count, $last, $multiMode);
+            if (is_bool($rendered)) {
+                continue;
+            }
+
+            $return .= $rendered;
+            ++$count;
+        }
+        return $return;
     }
 }

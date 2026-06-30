@@ -22,10 +22,10 @@ namespace ContaoCommunityAlliance\Merger2\Functions\Description;
  */
 final class Argument implements \JsonSerializable
 {
-    const TYPE_STRING  = 1;
-    const TYPE_FLOAT   = 2;
-    const TYPE_INTEGER = 4;
-    const TYPE_BOOLEAN = 8;
+    public const TYPE_STRING  = 1;
+    public const TYPE_FLOAT   = 2;
+    public const TYPE_INTEGER = 4;
+    public const TYPE_BOOLEAN = 8;
 
     /**
      * Parent function description.
@@ -197,6 +197,7 @@ final class Argument implements \JsonSerializable
     /**
      * {@inheritDoc}
      */
+    #[\Override]
     public function jsonSerialize(): array
     {
         return [

@@ -72,7 +72,7 @@ final class ChildrenFunction extends AbstractPageFunction
         $count = (string) $count;
 
         if (!preg_match('#^(<|>|<=|>=|=|!=|<>)?\\s*(\\d+)$#', $count, $matches)) {
-            throw new \RuntimeException('Illegal count value: "'.$count.'"');
+            throw new \RuntimeException('Illegal count value: "' . $count . '"');
         }
 
         $cmp   = $matches[1] ? $matches[1] : '=';
@@ -99,6 +99,7 @@ final class ChildrenFunction extends AbstractPageFunction
     /**
      * {@inheritDoc}
      */
+    #[\Override]
     public function describe(): Description
     {
         return Description::create(self::getName())

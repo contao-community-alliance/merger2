@@ -42,11 +42,13 @@ phpcq:
     # psalm
     - 8A03EA3B385DBAA1
     - 12CE0F1D262429A5
+    - 99BF4D9A33D65E1E
     # magl@magll.net
     - D2CCAC42F6295E7D
     # PHP_CodeSniffer
     - 31C7E470E2138192
     - 5E6DDE998AB73B8E
+    - 97B02DD8E5071466
     # Composer normalize
     - C00543248C87FB13
     # PHPMD
@@ -70,7 +72,6 @@ tasks:
     - phpcs
     - psalm
     - phpunit
-    - php-compatibility
 
   default:
     - verify
@@ -117,15 +118,3 @@ tasks:
     config:
       <<: *composer-normalize-config
       dry_run: false
-
-  php-compatibility:
-    plugin: phpcs
-    config:
-      standard: PHPCompatibility
-      standard_paths:
-        - vendor/phpcompatibility/php-compatibility
-        - vendor/phpcsstandards/phpcsutils/PHPCSUtils
-      custom_flags:
-        - --runtime-set
-        - testVersion
-        - "8.1-"

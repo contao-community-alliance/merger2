@@ -51,6 +51,7 @@ final class GroupNode implements NodeInterface
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function evaluate()
     {
         return $this->child->evaluate();

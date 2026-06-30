@@ -53,6 +53,7 @@ final class NotNode implements NodeInterface
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function evaluate(): bool
     {
         return !$this->child->evaluate();

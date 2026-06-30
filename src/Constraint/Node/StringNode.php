@@ -51,6 +51,7 @@ final class StringNode implements NodeInterface
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function evaluate(): string
     {
         return $this->value;

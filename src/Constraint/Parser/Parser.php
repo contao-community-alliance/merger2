@@ -27,6 +27,7 @@ use ContaoCommunityAlliance\Merger2\Constraint\Node\NotNode;
 use ContaoCommunityAlliance\Merger2\Constraint\Node\OrNode;
 use ContaoCommunityAlliance\Merger2\Constraint\Node\StringNode;
 use ContaoCommunityAlliance\Merger2\Functions\FunctionCollectionInterface;
+
 use function assert;
 use function is_string;
 
@@ -281,17 +282,17 @@ final class Parser
         $expected = func_get_args();
         array_shift($expected);
 
-        $message = 'Unexpected token '.strtoupper($token->getType());
+        $message = 'Unexpected token ' . strtoupper($token->getType());
 
         if ($token->getValue() !== null) {
-            $message .= ', with value "'.$token->getValue().'"';
+            $message .= ', with value "' . $token->getValue() . '"';
         }
 
         if ($expected) {
             if (count($expected) > 1) {
-                $message .= ', expect one of '.strtoupper(implode(', ', $expected));
+                $message .= ', expect one of ' . strtoupper(implode(', ', $expected));
             } else {
-                $message .= ', expect '.strtoupper($expected[0]);
+                $message .= ', expect ' . strtoupper($expected[0]);
             }
         }
 

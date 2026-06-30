@@ -24,6 +24,7 @@ final class AndNode extends ConjunctionNode
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function evaluate(): bool
     {
         return $this->left->evaluate() && $this->right->evaluate();

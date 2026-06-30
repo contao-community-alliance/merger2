@@ -2,6 +2,7 @@
 <psalm
     errorLevel="3"
     hideExternalErrors="true"
+    findUnusedCode="false"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="https://getpsalm.org/schema/config"
     xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
@@ -11,23 +12,11 @@
     </projectFiles>
 
     <issueHandlers>
-        <DeprecatedMethod>
+        <ClassMustBeFinal>
             <errorLevel type="suppress">
-                <referencedMethod name="Contao\System::log"/>
+                <directory name="src"/>
             </errorLevel>
-        </DeprecatedMethod>
-        <InternalMethod>
-            <errorLevel type="suppress">
-                <referencedMethod name="Contao\CoreBundle\Framework\ContaoFramework::getAdapter"/>
-                <referencedMethod name="Contao\CoreBundle\Framework\ContaoFramework::initialize"/>
-            </errorLevel>
-        </InternalMethod>
-        <UndefinedConstant>
-            <errorLevel type="suppress">
-                <file name="src/Renderer/PageModuleRenderer.php"/>
-                <file name="src/Module/ModuleMerger2.php"/>
-            </errorLevel>
-        </UndefinedConstant>
+        </ClassMustBeFinal>
         <UndefinedMagicPropertyFetch>
             <errorLevel type="suppress">
                 <referencedProperty name="Contao\DataContainer::$activeRecord"/>

@@ -27,6 +27,7 @@ final class RootContentCompositionPass implements CompilerPassInterface
     /**
      * {@inheritDoc}
      */
+    #[\Override]
     public function process(ContainerBuilder $container): void
     {
         if (! $container->hasDefinition(RootPageController::class)) {

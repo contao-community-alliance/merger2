@@ -83,6 +83,7 @@ final class CallNode implements NodeInterface
      *
      * @throws \RuntimeException When unknown function is called.
      */
+    #[\Override]
     public function evaluate()
     {
         return $this->functionCollection->execute($this->name, $this->getEvaluatedParameters());

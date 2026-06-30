@@ -59,6 +59,7 @@ final class Merger2TwigExtension extends AbstractExtension
      *
      * @return TwigFilter[]
      */
+    #[\Override]
     public function getFilters(): array
     {
         return [
@@ -133,7 +134,7 @@ final class Merger2TwigExtension extends AbstractExtension
      */
     private function toLowerCase(string $label): string
     {
-        return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $label));
+        return strtolower((string) preg_replace('/(?<!^)[A-Z]/', '_$0', $label));
     }
 
     /**
