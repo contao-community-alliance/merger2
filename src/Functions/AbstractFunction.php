@@ -34,6 +34,7 @@ abstract class AbstractFunction implements FunctionInterface
      *
      * @return string
      */
+    #[\Override]
     public static function getName(): string
     {
         $class = get_called_class();
@@ -49,6 +50,7 @@ abstract class AbstractFunction implements FunctionInterface
     /**
      * {@inheritDoc}
      */
+    #[\Override]
     public function invoke(array $arguments = [])
     {
         return call_user_func_array([$this, '__invoke'], $arguments);

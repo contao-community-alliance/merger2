@@ -214,7 +214,7 @@ final class InputStream
      */
     protected function checkWordCharacter($char)
     {
-        return preg_match('~^[\w<>=!\-\_\/]$~', $char);
+        return (int) preg_match('~^[\w<>=!\-\_\/]$~', $char);
     }
 
     /**
@@ -354,7 +354,7 @@ final class InputStream
 
             // special sequence behavior
             if ($this->head() == '=') {
-                $sequence = $char.$this->readWordSequence();
+                $sequence = $char . $this->readWordSequence();
 
                 return new InputToken(InputToken::STRING, $sequence);
             }

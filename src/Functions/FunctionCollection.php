@@ -44,6 +44,7 @@ final class FunctionCollection implements FunctionCollectionInterface
     /**
      * {@inheritDoc}
      */
+    #[\Override]
     public function supports(string $name): bool
     {
         return isset($this->functions[$name]);
@@ -54,6 +55,7 @@ final class FunctionCollection implements FunctionCollectionInterface
      *
      * @throws \RuntimeException If function is not supported.
      */
+    #[\Override]
     public function execute(string $name, array $arguments)
     {
         if (isset($this->functions[$name])) {
@@ -66,6 +68,7 @@ final class FunctionCollection implements FunctionCollectionInterface
     /**
      * {@inheritDoc}
      */
+    #[\Override]
     public function getDescriptions(): array
     {
         $description = [];

@@ -53,6 +53,7 @@ final class BooleanNode implements NodeInterface
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function evaluate()
     {
         return $this->value;

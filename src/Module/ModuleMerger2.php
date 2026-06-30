@@ -28,13 +28,10 @@ use Contao\Template;
 use ContaoCommunityAlliance\Merger2\Constraint\Parser\InputStream;
 use ContaoCommunityAlliance\Merger2\Constraint\Parser\Parser;
 use ContaoCommunityAlliance\Merger2\Renderer\PageModuleRenderer;
-
 use Symfony\Component\DependencyInjection\ContainerInterface;
-
 use Symfony\Component\HttpFoundation\RequestStack;
 
 use function assert;
-
 use function self;
 
 use const ENT_COMPAT;
@@ -169,6 +166,7 @@ final class ModuleMerger2 extends Module
      *
      * @return string
      */
+    #[\Override]
     public function generate(): string
     {
         $container = self::getContainer();
@@ -203,6 +201,7 @@ final class ModuleMerger2 extends Module
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     protected function compile(): void
     {
         $this->Template->content = $this->generateContent();

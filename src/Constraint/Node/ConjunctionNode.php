@@ -11,6 +11,7 @@
  * @license   https://github.com/contao-community-alliance/merger2/blob/master/LICENSE LGPL-3.0-or-later
  * @link      https://github.com/contao-community-alliance/merger2
  */
+
 declare(strict_types=1);
 
 namespace ContaoCommunityAlliance\Merger2\Constraint\Node;

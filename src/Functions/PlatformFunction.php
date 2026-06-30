@@ -68,6 +68,7 @@ final class PlatformFunction extends AbstractFunction
     /**
      * {@inheritDoc}
      */
+    #[\Override]
     public function describe(): Description
     {
         return Description::create(static::getName())

@@ -71,6 +71,7 @@ final class IsMobileFunction extends AbstractPageFunction
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function describe(): Description
     {
         return Description::create(static::getName())

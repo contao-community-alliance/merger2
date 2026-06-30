@@ -108,6 +108,7 @@ final class ArticleDataContainerListener
 
         // Find all sections with an article module (see #6094)
         foreach ($modules as $module) {
+            /** @psalm-suppress RiskyTruthyFalsyComparison */
             if ($module['mod'] !== '0' && ($module['enable'] ?? false)) {
                 $this->joinModule($module['col'], $module['mod'], $sections);
             }
@@ -137,16 +138,18 @@ final class ArticleDataContainerListener
 
         foreach ($data as $row) {
             if (!$row['disabled']) {
-                if (in_array(
-                    $row['content'],
-                    [
+                if (
+                    in_array(
+                        $row['content'],
+                        [
                         'article',
                         'inherit_articles',
                         'inherit_all_articles',
                         'inherit_articles_fallback',
                         'inherit_all_articles_fallback',
-                    ]
-                )) {
+                        ]
+                    )
+                ) {
                     $sections[$column] = isset($GLOBALS['TL_LANG']['COLS'][$column])
                         ? $GLOBALS['TL_LANG']['COLS'][$column]
                         : $column;

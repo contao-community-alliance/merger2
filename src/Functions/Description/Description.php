@@ -137,6 +137,7 @@ final class Description implements \JsonSerializable
     /**
      * {@inheritDoc}
      */
+    #[\Override]
     public function jsonSerialize(): array
     {
         return [

@@ -87,6 +87,7 @@ final class ArticleExistsFunction extends AbstractPageFunction
     /**
      * {@inheritDoc}
      */
+    #[\Override]
     public function describe(): Description
     {
         return Description::create(static::getName())

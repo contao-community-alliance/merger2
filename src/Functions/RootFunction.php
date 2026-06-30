@@ -81,6 +81,7 @@ final class RootFunction extends AbstractPageFunction
     /**
      * {@inheritDoc}
      */
+    #[\Override]
     public function describe(): Description
     {
         return Description::create(static::getName())

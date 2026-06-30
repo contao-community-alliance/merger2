@@ -64,7 +64,7 @@ final class DepthFunction extends AbstractPageFunction
         $value = (string) $value;
 
         if (!preg_match('#^(<|>|<=|>=|=|!=|<>)?\\s*(\\d+)$#', $value, $matches)) {
-            throw new \RuntimeException('Illegal depth value: "'.$value.'"');
+            throw new \RuntimeException('Illegal depth value: "' . $value . '"');
         }
 
         $cmp           = $matches[1] ? $matches[1] : '=';
@@ -90,6 +90,7 @@ final class DepthFunction extends AbstractPageFunction
     /**
      * {@inheritDoc}
      */
+    #[\Override]
     public function describe(): Description
     {
         return Description::create(static::getName())

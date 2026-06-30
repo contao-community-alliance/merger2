@@ -42,6 +42,7 @@ class FloatNode implements NodeInterface
      *
      * @return float
      */
+    #[\Override]
     public function evaluate(): float
     {
         return $this->value;

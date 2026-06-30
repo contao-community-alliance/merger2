@@ -11,7 +11,6 @@
  * @link      https://github.com/contao-community-alliance/merger2
  */
 
-
 /*
  * Fields
  */
